@@ -1,0 +1,22 @@
+- name: Prepare fragmented shell dir
+  shell: mkdir ~/.bash.d
+
+- name: Place default .bash_profile
+  template:
+    src: files/.bash_profile
+    dest: ~/.bash_profile
+
+- name: Place default .bashrc
+  template:
+    src: files/.bashrc
+    dest: ~/.bashrc
+
+- name: Place .vimrc
+  template:
+    src: files/.vimrc
+    dest: ~/.vimrc
+
+- name: Place .tmux.conf
+  template:
+    src: files/.tmux.conf
+    dest: ~/.tmux.conf

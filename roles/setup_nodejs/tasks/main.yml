@@ -1,0 +1,16 @@
+- name: Install nodejs from nodenv
+  shell: bash -l -c 'nodenv install {{ item }}'
+  register: result
+  with_items: '{{ NODEJS_VERSIONS }}'
+  failed_when: result.stderr.find('definition not found') != -1 or
+                (result.stderr.find('already exists') == -1 and
+                result.stdout.find('Installed') == -1)
+
+- name: Write yarn path
+  lineinfile:
+    dest: ~/.bash.d/yarn.sh
+    line: export PATH="$HOME/bin:$PATH"
+    create: yes
+
+- name: Grant execute attr
+  shell: chmod +x ~/.bash.d/yarn.sh

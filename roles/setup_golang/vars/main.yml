@@ -1,0 +1,16 @@
+GOLANG_VERSIONS:
+  - 1.9.7
+  - 1.10.3
+
+GOLANG_LIBERARIES:
+  - { url: golang.org/x/tools/cmd/goimports }
+  - { url: github.com/golang/lint/golint }
+  - { url: github.com/golang/dep/cmd/dep }
+  - { url: github.com/pseudomuto/protoc-gen-doc/cmd/... }
+  - { url: github.com/golang/protobuf/protoc-gen-go }
+  - { url: go.mozilla.org/sops/cmd/sops }
+  - { url: honnef.co/go/tools/cmd/megacheck }
+  - { url: github.com/peco/peco/cmd/peco }
+  - { url: github.com/goldeneggg/lsec2 }
+  - { url: github.com/derekparker/delve/cmd/dlv }
+  - { url: github.com/timakin/md2mid }

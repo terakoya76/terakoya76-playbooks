@@ -1,0 +1,12 @@
+- name: Install ctags/gtags
+  shell: |
+    brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+    pip install pygments
+    brew install global
+
+- name: Install ricty font
+  shell: |
+    brew tap sanemat/font
+    brew install ricty
+    cp -f /usr/local/opt/ricty/share/fonts/Ricty*.ttf ~/Library/Fonts/
+    fc-cache -vf

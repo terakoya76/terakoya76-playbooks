@@ -1,0 +1,15 @@
+- name: Brew Tap -> bundle core dupes services versions
+  homebrew_tap:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - homebrew/bundle
+    - homebrew/core
+    - homebrew/services
+    - homebrew/cask
+
+- name: Brew Install/Cask w/ Brewfile
+  template:
+    src: file/Brewfile
+    dest: ~/Brewfile
+  shell: brew bundle

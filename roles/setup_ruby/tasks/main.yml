@@ -1,0 +1,37 @@
+- name: Set prefix
+  set_fact:
+    rubybuild_prefix: 'RUBY_CONFIGURE_OPTS="--with-openssl-dir=`brew --prefix openssl` --with-readline-dir=`brew --prefix readline`" '
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Set prefix
+  set_fact:
+    rubybuild_prefix: ''
+  when: "ansible_os_family == 'Debian'"
+
+- name: Ensure rbenv installed
+  shell: bash -l -c 'which rbenv'
+  changed_when: false
+
+- name: Check installed ruby version
+  shell: bash -l -c 'rbenv versions'
+  register: RBENV_INSTALLED
+  changed_when: false
+
+- name: Install ruby from rbenv
+  shell: bash -l -c '{{ rubybuild_prefix }}rbenv install {{ item }}'
+  when: 'item not in RBENV_INSTALLED.stdout'
+  with_items: '{{ RUBY_VERSIONS }}'
+
+- name: Install bundler
+  gem:
+    name: bundler
+    executable: ~/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem
+    state: present
+    user_install: no
+  with_items: '{{ RUBY_VERSIONS }}'
+
+- name: update rubygem
+  shell: ~/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document
+  register: gem_update
+  with_items: '{{ RUBY_VERSIONS }}'
+  changed_when: gem_update.stdout.find('Latest version already installed') == -1

@@ -1,0 +1,8 @@
+- name: Install Stack
+  shell: |
+    curl -fsSL https://get.haskellstack.org/ | sh
+    stack setup
+    stack upgrade
+
+- name: Install ghc-mod, hlint
+  shell: stack install ghc-mod hlint

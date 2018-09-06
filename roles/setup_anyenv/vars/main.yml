@@ -1,0 +1,5 @@
+ANYENV_ENVS:
+  - goenv
+  - nodenv
+  - pyenv
+  - rbenv

@@ -1,0 +1,26 @@
+- name: Install anyenv
+  git:
+    repo: https://github.com/riywo/anyenv
+    dest: ~/.anyenv
+
+- name: Write anyenv init
+  lineinfile:
+    dest: ~/.bash.d/anyenv.sh
+    line: '{{ item }}'
+    create: yes
+  with_items:
+    - export PATH=$HOME/.anyenv/bin:$PATH
+    - eval "$(anyenv init -)"
+
+- name: Grant execute attr
+  shell: chmod +x ~/.bash.d/anyenv.sh
+
+- name: Check env installed
+  shell: bash -l -c 'anyenv version'
+  register: anyenv_version
+  changed_when: false
+
+- name: Install env tools
+  shell: bash -l -c 'export; anyenv install {{ item }}'
+  with_items: '{{ ANYENV_ENVS }}'
+  when: 'item not in anyenv_version.stdout'
