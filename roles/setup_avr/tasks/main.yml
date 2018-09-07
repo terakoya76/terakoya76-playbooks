@@ -1,0 +1,16 @@
+- name: Brew Tap
+  shell: brew tap '{{ item }}'
+  with_items:
+    - osx-cross/avr
+    - PX4/homebrew-px4
+
+- name: Brew Update
+  shell: brew update
+
+- name: Brew Install
+  shell: brew install '{{ item }}'
+  with_items:
+    - avr-gcc@7
+    - dfu-programmer
+    - gcc-arm-none-eabi
+    - avrdude

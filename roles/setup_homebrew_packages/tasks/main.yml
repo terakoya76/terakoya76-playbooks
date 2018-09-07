@@ -8,6 +8,9 @@
     - homebrew/services
     - homebrew/cask
 
+- name: Brew Update
+  shell: brew update
+
 - name: Brew Install/Cask w/ Brewfile
   template:
     src: file/Brewfile
