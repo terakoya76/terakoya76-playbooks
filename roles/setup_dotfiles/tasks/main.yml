@@ -8,10 +8,15 @@
     src: files/.bashrc
     dest: ~/.bashrc
 
-- name: Place .vimrc
+- name: Place .vimrc for vim
   template:
     src: files/.vimrc
     dest: ~/.vimrc
+
+- name: Place .vimrc for nvim
+  template:
+    src: files/.vimrc
+    dest: ~/.config/nvim/init.vim
 
 - name: Place .tmux.conf
   template:
