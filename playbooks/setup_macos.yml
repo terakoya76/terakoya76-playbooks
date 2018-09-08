@@ -11,4 +11,5 @@
     - setup_python
     - setup_ruby
     - setup_rust
+    - setup_avr
     - setup_tools
