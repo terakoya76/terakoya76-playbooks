@@ -3,6 +3,11 @@
     repo: https://github.com/riywo/anyenv
     dest: ~/.anyenv
 
+- name: Install anyenv-update
+  git:
+    repo:  https://github.com/znz/anyenv-update
+    dest: ~/.anyenv/plugins/anyenv-update
+
 - name: Write anyenv init
   lineinfile:
     dest: ~/.bash.d/anyenv.sh
@@ -24,3 +29,6 @@
   shell: bash -l -c 'export; anyenv install {{ item }}'
   with_items: '{{ ANYENV_ENVS }}'
   when: 'item not in anyenv_version.stdout'
+
+- name: Update exists tools
+  shell: anyenv update

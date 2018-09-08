@@ -1,5 +1,7 @@
 - name: Brew Tap
-  shell: brew tap '{{ item }}'
+  homebrew_tap:
+    name: '{{ item }}'
+    state: present
   with_items:
     - osx-cross/avr
     - PX4/homebrew-px4
@@ -8,7 +10,9 @@
   shell: brew update
 
 - name: Brew Install
-  shell: brew install '{{ item }}'
+  homebrew:
+    name: '{{ item }}'
+    state: present
   with_items:
     - avr-gcc@7
     - dfu-programmer

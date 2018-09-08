@@ -11,8 +11,11 @@
 - name: Brew Update
   shell: brew update
 
-- name: Brew Install/Cask w/ Brewfile
+- name: Copy Brewfile
   template:
-    src: file/Brewfile
-    dest: ~/Brewfile
-  shell: brew bundle
+    src: files/.Brewfile
+    dest: ~/.Brewfile
+
+- name: Brew bundle w/ Brewfile
+  shell: brew bundle --global
+  ignore_errors: yes

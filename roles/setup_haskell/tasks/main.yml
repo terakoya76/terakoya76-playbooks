@@ -1,8 +1,17 @@
 - name: Install Stack
-  shell: |
-    curl -fsSL https://get.haskellstack.org/ | sh
-    stack setup
-    stack upgrade
+  homebrew:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - haskell-stack
+
+- name: Place stack.yaml for specified version of ghc install
+  template:
+    src: files/stack.yaml
+    dest: ~/.stack/global-project/stack.yaml
+
+- name: Reinstall ghc
+  shell: stack setup
 
 - name: Install ghc-mod, hlint
   shell: stack install ghc-mod hlint

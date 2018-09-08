@@ -5,3 +5,4 @@
 - name: Install applications from App Store
   command: mas install '{{ item }}'
   with_items: '{{ APP_STORE_APPS }}'
+  ignore_errors: yes

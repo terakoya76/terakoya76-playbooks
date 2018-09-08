@@ -26,6 +26,12 @@ set mouse=a
 set clipboard=unnamedplus
 
 "plugins
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
 Plug 'bronson/vim-trailing-whitespace'
@@ -140,7 +146,7 @@ if executable('rg')
 endif
 
 "ctag
-set tags+=.git/tags
+set tags=./.git/tags;
 "augroup ctags
 "  autocmd!
 "  autocmd BufWritePost * silent !ctags -R --exclude=node_modules --exclude=vendor -f .git/tags
@@ -150,10 +156,10 @@ let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -R {OPTIONS} {DIRECT
 let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2>/dev/null"
 
 " gtags
-"let g:Gtags_Auto_Map = 0
-"let g:Gtags_OpenQuickfixWindow = 1
-"nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
-"nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
+let g:Gtags_Auto_Map = 0
+let g:Gtags_OpenQuickfixWindow = 1
+nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
+nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
 
 "let g:gen_tags#ctags_auto_gen = 1
 "let g:gen_tags#gtags_auto_gen = 1

@@ -1,4 +1,4 @@
-name: Ensure pyenv installed
+- name: Ensure pyenv installed
   shell: bash -l -c 'which pyenv'
   changed_when: false
 
@@ -8,21 +8,14 @@ name: Ensure pyenv installed
   changed_when: false
 
 - name: Install python from pyenv
-  shell: pyenv install {{ item }}
+  shell: bash -l -c 'pyenv install {{ item }}'
   when: 'item not in PYENV_INSTALLED.stdout'
   with_items: '{{ PYTHON_VERSIONS }}'
 
-- name: Set pyenv global individually
-  shell: pyenv global {{ PY3_VERSION }} {{ PY2_VERSION }}
-
-- name: Write python path
-  lineinfile:
+- name: Place python ver manage script
+  template:
+    src: files/manage_python_ver.sh
     dest: ~/.bash.d/manage_python_ver.sh
-    line: '{{ item  }}'
-    create: yes
-  with_items:
-    - export PATH="$HOME/.pyenv/versions/$PY3_VERSION/bin/:$PATH"
-    - export PATH="$HOME/.pyenv/versions/$PY2_VERSION/bin/:$PATH"
 
 - name: Grant execute attr
   shell: chmod +x ~/.bash.d/manage_python_ver.sh

@@ -1,8 +1,5 @@
 - name: Install rustup
-  shell: curl https://sh.rustup.rs -sSf | sh
-
-- name: Select 1 in the dialogue for default installation
-  pause: prompt="After that, Press Enter"
+  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 - name: Write rustup path
   lineinfile:

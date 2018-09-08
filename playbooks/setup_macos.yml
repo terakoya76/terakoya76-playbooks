@@ -1,14 +1,14 @@
 - hosts:
     - 'default'
   roles:
-    - role: setup_dotfiles
-    - role: setup_homebrew_packages
-    - role: setup_app_store_apps
-    - role: setup_anyenv
-    - role: setup_golang
-    - role: setup_haskell
-    - role: setup_nodejs
-    - role: setup_python
-    - role: setup_ruby
-    - role: setup_rust
-    - role: setup_tools
+    - setup_dotfiles
+    - setup_app_store_apps
+    - setup_homebrew_packages
+    - setup_anyenv
+    - setup_golang
+    - setup_haskell
+    - setup_nodejs
+    - setup_python
+    - setup_ruby
+    - setup_rust
+    - setup_tools

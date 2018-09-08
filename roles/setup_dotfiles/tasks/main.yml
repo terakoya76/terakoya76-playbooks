@@ -1,6 +1,3 @@
-- name: Prepare fragmented shell dir
-  shell: mkdir ~/.bash.d
-
 - name: Place default .bash_profile
   template:
     src: files/.bash_profile
@@ -20,3 +17,8 @@
   template:
     src: files/.tmux.conf
     dest: ~/.tmux.conf
+
+- name: Place .gitignore_global
+  template:
+    src: files/.gitignore_global
+    dest: ~/.gitignore_global

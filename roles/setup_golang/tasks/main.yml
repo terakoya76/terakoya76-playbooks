@@ -7,16 +7,16 @@
   register: GOENV_INSTALLED
   changed_when: false
 
-- name: Install golang from pyenv
-  shell: goenv install {{ item }}
+- name: Install golang from goenv
+  shell: bash -l -c 'goenv install {{ item }}'
   when: 'item not in GOENV_INSTALLED.stdout'
   with_items: '{{ GOLANG_VERSIONS }}'
 
 - name: Install golang libraries
-  shell: go get -u {{ item.url }}
+  shell: go get -u '{{ item.url }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
 
 - name: Install grpcurl
   shell: |
     go get -u github.com/fullstorydev/grpcurl
-		go install github.com/fullstorydev/grpcurl/cmd/grpcurl
+    go install github.com/fullstorydev/grpcurl/cmd/grpcurl
