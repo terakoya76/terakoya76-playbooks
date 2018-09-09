@@ -15,13 +15,12 @@ highlight StatusLine term=none cterm=none ctermfg=black ctermbg=grey
 highlight CursorLine term=none cterm=none ctermfg=none ctermbg=darkgray
 highlight ExtraWhitespace ctermbg=red guibg=red
 
-" File Types {{{
+" File Types
 augroup vimrc_filetype
   autocmd!
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd FileType vim setlocal shiftwidth=2 tabstop=2 foldmethod=marker
   autocmd FileType vim :highlight link FoldComment SpecialComment
-  autocmd FileType vim :match FoldComment /^".*\({{{\|}}}\)/
   autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
   autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
   autocmd FileType xml setlocal shiftwidth=2 tabstop=2
@@ -30,9 +29,9 @@ augroup vimrc_filetype
   autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
   autocmd FileType json setlocal shiftwidth=2 tabstop=2
 augroup END
-" }}}
+"
 
-"for US keyboard
+" for US keyboard
 nnoremap ; :
 nnoremap : ;
 
@@ -42,7 +41,16 @@ set mouse=a
 " enable yank to clipboard
 set clipboard+=unnamedplus
 
-"plugins
+" plugins
+if has('vim_starting')
+  set rtp+=~/.vim/plugged/vim-plug
+  if !isdirectory(expand('~/.vim/plugged/vim-plug'))
+    echo 'install vim-plug...'
+    call system('mkdir -p ~/.vim/plugged/vim-plug')
+    call system('git clone https://github.com/junegunn/vim-plug.git ~/.vim/plugged/vim-plug/autoload')
+  end
+endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
 Plug 'bronson/vim-trailing-whitespace'
@@ -76,10 +84,8 @@ set background=dark
 let g:solarized_termcolors=256
 colorscheme solarized
 
+" airline
 let g:airline#extensions#ale#enabled = 1
-
-" airline {{{
-let g:airline_theme = 'wombat'
 set laststatus=2
 " Show branch name
 let g:airline#extensions#branch#enabled = 1
@@ -93,9 +99,9 @@ let g:airline_section_x = '%{&filetype}'
 let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
 let g:airline#extensions#default#section_truncate_width = {}
 let g:airline#extensions#whitespace#enabled = 1
-" }}}
+"
 
-" ale {{{
+" ale
 let g:ale_lint_on_text_changed = 0
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
@@ -109,9 +115,9 @@ highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-" }}}
+"
 
-" denite {{{
+" denite
 nnoremap [denite] <Nop>
 nmap <C-c> [denite]
 
@@ -155,7 +161,7 @@ if executable('rg')
         \ ['rg', '--files', '--glob', '!.git'])
   call denite#custom#var('grep', 'command', ['rg'])
 endif
-" }}}
+"
 
 "ctag
 set tags=./.git/tags;

@@ -14,4 +14,4 @@
   shell: stack setup
 
 - name: Install ghc-mod, hlint, hdevtools
-  shell: stack install ghc-mod hlint, hdevtools
+  shell: stack install ghc-mod hlint hdevtools

@@ -31,4 +31,4 @@
   when: 'item not in anyenv_version.stdout'
 
 - name: Update exists tools
-  shell: anyenv update
+  shell: bash -l -c 'anyenv update'

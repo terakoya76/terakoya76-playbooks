@@ -8,10 +8,16 @@
     src: files/bashrc
     dest: ~/.bashrc
 
+- name: Create target directory for bash fragments
+  file: path=~/.bash.d state=directory mode=0755
+
 - name: Place .vimrc for vim
   template:
     src: files/vimrc
     dest: ~/.vimrc
+
+- name: Create target directory for nvim
+  file: path=~/.config/nvim state=directory mode=0755
 
 - name: Place .vimrc for nvim
   template:
@@ -27,3 +33,4 @@
   template:
     src: files/gitignore_global
     dest: ~/.gitignore_global
+
