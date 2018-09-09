@@ -15,6 +15,23 @@ highlight StatusLine term=none cterm=none ctermfg=black ctermbg=grey
 highlight CursorLine term=none cterm=none ctermfg=none ctermbg=darkgray
 highlight ExtraWhitespace ctermbg=red guibg=red
 
+" File Types {{{
+augroup vimrc_filetype
+  autocmd!
+  autocmd BufRead,BufNewFile *.md set filetype=markdown
+  autocmd FileType vim setlocal shiftwidth=2 tabstop=2 foldmethod=marker
+  autocmd FileType vim :highlight link FoldComment SpecialComment
+  autocmd FileType vim :match FoldComment /^".*\({{{\|}}}\)/
+  autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
+  autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+  autocmd FileType xml setlocal shiftwidth=2 tabstop=2
+  autocmd FileType html setlocal shiftwidth=2 tabstop=2
+  autocmd FileType vue setlocal shiftwidth=2 tabstop=2
+  autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+  autocmd FileType json setlocal shiftwidth=2 tabstop=2
+augroup END
+" }}}
+
 "for US keyboard
 nnoremap ; :
 nnoremap : ;
@@ -23,20 +40,14 @@ nnoremap : ;
 set mouse=a
 
 " enable yank to clipboard
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 
 "plugins
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'jiangmiao/auto-pairs'
-Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
 
 Plug 'Shougo/vimproc.vim'
 Plug 'Shougo/denite.nvim'
@@ -47,10 +58,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-easy-align'
 
 Plug 'szw/vim-tags'
-"Plug 'lighttiger2505/gtags.vim'
+Plug 'lighttiger2505/gtags.vim'
 "Plug 'jsfaint/gen_tags.vim'
 
-"Plug 'vim-syntastic/syntastic'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 
@@ -66,41 +76,42 @@ set background=dark
 let g:solarized_termcolors=256
 colorscheme solarized
 
-"lightline and ale
-let g:lightline = {
-\  'active': {
-\    'right': [['ale']]},
-\  'component_function': {
-\    'ale': 'LLAle',
-\  },
-\}
+let g:airline#extensions#ale#enabled = 1
 
-function! LLAle()
-  let l:count = ale#statusline#Count(bufnr(''))
-  let l:errors = l:count.error + l:count.style_error
-  let l:warnings = l:count.warning + l:count.style_warning
-  return l:count.total == 0 ? 'OK' : 'E:' . l:errors . ' W:' . l:warnings
-endfunction
+" airline {{{
+let g:airline_theme = 'wombat'
+set laststatus=2
+" Show branch name
+let g:airline#extensions#branch#enabled = 1
+" Show buffer's filename
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'y', 'z']]
+let g:airline_section_c = '%t'
+let g:airline_section_x = '%{&filetype}'
+let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
+let g:airline#extensions#default#section_truncate_width = {}
+let g:airline#extensions#whitespace#enabled = 1
+" }}}
 
-"linting w/ ale
-"let g:ale_lint_on_enter = 0
-let g:ale_linters = {
-\  'javascript': ['eslint'],
-\  'haskell': ['hlint'],
-\}
-let g:ale_fixers = {
-\  '*': ['remove_trailing_lines', 'trim_whitespace'],
-\  'javascript': ['prettier', 'eslint'],
-\  'ruby': ['rubocop'],
-\  'haskell': ['hlint'],
-\}
+" ale {{{
+let g:ale_lint_on_text_changed = 0
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
+let g:ale_javascript_prettier_use_local_config = 1
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
-let g:ale_javascript_prettier_use_local_config = 1
+let g:airline#extensions#ale#open_lnum_symbol = '('
+let g:airline#extensions#ale#close_lnum_symbol = ')'
+let g:ale_echo_msg_format = '[%linter%]%code: %%s'
+highlight link ALEErrorSign Tag
+highlight link ALEWarningSign StorageClass
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" }}}
 
-"denite
+" denite {{{
 nnoremap [denite] <Nop>
 nmap <C-c> [denite]
 
@@ -144,26 +155,24 @@ if executable('rg')
         \ ['rg', '--files', '--glob', '!.git'])
   call denite#custom#var('grep', 'command', ['rg'])
 endif
+" }}}
 
 "ctag
 set tags=./.git/tags;
-"augroup ctags
-"  autocmd!
-"  autocmd BufWritePost * silent !ctags -R --exclude=node_modules --exclude=vendor -f .git/tags
-"augroup END
 
-let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -R {OPTIONS} {DIRECTORY} 2>/dev/null"
+let g:vim_tags_auto_generate = 1
+let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -R --exclude=node_modules . 2>/dev/null"
 let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2>/dev/null"
 
 " gtags
-let g:Gtags_Auto_Map = 0
-let g:Gtags_OpenQuickfixWindow = 1
-nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
-nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
+"let g:Gtags_Auto_Map = 0
+"let g:Gtags_OpenQuickfixWindow = 1
+"nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
+"nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
 
 "let g:gen_tags#ctags_auto_gen = 1
 "let g:gen_tags#gtags_auto_gen = 1
-"let g:gen_tags#ctags_use_cache_dir = 0
+let g:gen_tags#ctags_use_cache_dir = 0
 
 "tagbar
 set statusline=%F%m%r%h%w\%=%{tagbar#currenttag('[%s]','')}\[Pos=%v,%l]\[Len=%L]

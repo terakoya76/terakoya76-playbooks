@@ -1,29 +1,29 @@
 - name: Place default .bash_profile
   template:
-    src: files/.bash_profile
+    src: files/bash_profile
     dest: ~/.bash_profile
 
 - name: Place default .bashrc
   template:
-    src: files/.bashrc
+    src: files/bashrc
     dest: ~/.bashrc
 
 - name: Place .vimrc for vim
   template:
-    src: files/.vimrc
+    src: files/vimrc
     dest: ~/.vimrc
 
 - name: Place .vimrc for nvim
   template:
-    src: files/.vimrc
+    src: files/vimrc
     dest: ~/.config/nvim/init.vim
 
 - name: Place .tmux.conf
   template:
-    src: files/.tmux.conf
+    src: files/tmux.conf
     dest: ~/.tmux.conf
 
 - name: Place .gitignore_global
   template:
-    src: files/.gitignore_global
+    src: files/gitignore_global
     dest: ~/.gitignore_global
