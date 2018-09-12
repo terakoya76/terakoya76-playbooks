@@ -11,7 +11,7 @@ PROMPT_COMMAND='share_history'
 
 # wrapper for lsec2
 lssh () {
-  IP=$(lsec2 $@ | peco | awk -F '\t' '{print $2}')
+  IP=$(lsec2 "$@" | peco | awk -F '\t' '{print $2}')
   if [ "$?" -eq 0 ] && [ "$IP" != "" ]
   then
     ssh st-step

@@ -9,7 +9,7 @@
 - name: Write yarn path
   lineinfile:
     dest: ~/.bash.d/yarn.sh
-    line: export PATH="$HOME/bin:$PATH"
+    line: export PATH="$HOME/.yarn/bin:$PATH"
     create: yes
 
 - name: Grant execute attr

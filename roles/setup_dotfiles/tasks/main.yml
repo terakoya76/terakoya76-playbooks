@@ -34,3 +34,5 @@
     src: files/gitignore_global
     dest: ~/.gitignore_global
 
+- name: Enable dotfiles
+  shell: git config --global core.excludesfile ~/.gitignore_global

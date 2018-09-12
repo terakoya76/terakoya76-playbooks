@@ -1,3 +1,6 @@
+- name: Install CLT
+  shell: xcode-select --install
+
 - name: Install mas command via Homebrew
   homebrew:
     name: mas
