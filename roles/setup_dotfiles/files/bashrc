@@ -8,6 +8,7 @@ function share_history {
   history -r
 }
 PROMPT_COMMAND='share_history'
+HISTSIZE=50000
 
 # wrapper for lsec2
 lssh () {
