@@ -71,18 +71,27 @@ Plug 'lighttiger2505/gtags.vim'
 
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'fatih/vim-go', {
 \ 'for': 'go',
 \ 'do': ':GoUpdateBinaries' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+
+Plug 'uplus/deoplete-solargraph', { 'for': 'ruby' }
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 call plug#end()
 
 "solarized personal conf
 set background=dark
 let g:solarized_termcolors=256
 colorscheme solarized
+
+"deoplete
+let g:deoplete#enable_at_startup = 1
+
+
 
 " airline
 let g:airline#extensions#ale#enabled = 1
@@ -115,7 +124,11 @@ highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-"
+
+
+" Disable haskell-vim omnifunc
+let g:haskellmode_completion_ghc = 0
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 " denite
 nnoremap [denite] <Nop>

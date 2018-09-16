@@ -13,7 +13,7 @@
 
 - name: Copy Brewfile
   template:
-    src: files/.Brewfile
+    src: files/Brewfile
     dest: ~/.Brewfile
 
 - name: Brew bundle w/ Brewfile
