@@ -19,6 +19,14 @@
 - name: Install nvim client
   shell: pip3 install neovim
 
+- name: Install Alacritty
+  shell: |
+    brew tap mscharley/homebrew
+    brew install --HEAD alacritty
+
+- name: Install onelogin-aws-cli
+  shell: pip3 install onelogin-aws-cli
+
 - name: Install Ruby Lang Server
   shell: |
     gem install solargraph -v "0.18.0"

@@ -29,6 +29,14 @@
     src: files/tmux.conf
     dest: ~/.tmux.conf
 
+- name: Create target directory for alacritty
+  file: path=~/.config/alacritty state=directory mode=0755
+
+- name: Place alacritty.yml
+  template:
+    src: files/alacritty.yml
+    dest: ~/.config/alacritty/alacritty.yml
+
 - name: Place .gitignore_global
   template:
     src: files/gitignore_global
