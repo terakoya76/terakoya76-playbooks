@@ -6,6 +6,9 @@
                 (result.stderr.find('already exists') == -1 and
                 result.stdout.find('Installed') == -1)
 
+- name: Set Global NodeJS
+  shell: nodenv global '{{ GLOBAL_VERSION }}'
+
 - name: Write yarn path
   lineinfile:
     dest: ~/.bash.d/yarn.sh

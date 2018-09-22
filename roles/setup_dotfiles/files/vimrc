@@ -63,11 +63,16 @@ Plug 'tpope/vim-fugitive' " manipulate git from vim
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/fzf'
 
 Plug 'szw/vim-tags'
 Plug 'lighttiger2505/gtags.vim'
 "Plug 'jsfaint/gen_tags.vim'
 
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -124,6 +129,13 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 " Disable haskell-vim omnifunc
 let g:haskellmode_completion_ghc = 0
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ }
 
 " denite
 nnoremap [denite] <Nop>

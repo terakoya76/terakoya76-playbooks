@@ -12,4 +12,5 @@
     - setup_ruby
     - setup_rust
     - setup_avr
+    - setup_lsp
     - setup_tools

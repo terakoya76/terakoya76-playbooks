@@ -27,12 +27,5 @@
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli
 
-- name: Install Ruby Lang Server
-  shell: |
-    gem install solargraph -v "0.18.0"
-    pip3 install solargraph-utils.py --user
-    yard gems
-    yard config --gem-install-yri
-
 - name: Enable dotfiles
   shell: . ~/.bash_profile
