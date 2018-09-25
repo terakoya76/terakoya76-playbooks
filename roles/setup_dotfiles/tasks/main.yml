@@ -37,6 +37,11 @@
     src: files/alacritty.yml
     dest: ~/.config/alacritty/alacritty.yml
 
+- name: Place my.cnf
+  template:
+    src: files/my.cnf
+    dest: ~/.my.cnf
+
 - name: Place .gitignore_global
   template:
     src: files/gitignore_global

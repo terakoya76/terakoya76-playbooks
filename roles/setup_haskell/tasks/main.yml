@@ -14,4 +14,10 @@
   shell: stack setup
 
 - name: Install ghc-mod, hlint, hdevtools
-  shell: stack install ghc-mod hlint hdevtools
+  shell: stack install '{{ item }}'
+  with_items:
+    - ghc-mod
+    - hlint
+    - hdevtools
+    - parsec
+    - regex-posix

@@ -40,6 +40,9 @@ set mouse=a
 " enable yank to clipboard
 set clipboard+=unnamedplus
 
+" Turn off paste mode when leaving insert
+autocmd InsertLeave * set nopaste
+
 " plugins
 if has('vim_starting')
   set rtp+=~/.vim/plugged/vim-plug
