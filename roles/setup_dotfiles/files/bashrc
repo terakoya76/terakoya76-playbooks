@@ -1,12 +1,11 @@
-# direnv
-eval "$(direnv hook bash)"
-
 # share history with each tab
 function share_history {
   history -a
   history -c
   history -r
 }
+HISTFILE=~/.bash_history
+HISTIGNORE=ls:history
 PROMPT_COMMAND='share_history'
 HISTSIZE=50000
 
@@ -27,7 +26,6 @@ function peco-select-history() {
   if [ -n "$READLINE_LINE" ] ; then
     echo "$READLINE_LINE" >&2
     eval "$READLINE_LINE"
-    history -d $((HISTCMD-1))
     history -s "$READLINE_LINE"
   fi
 }
@@ -42,3 +40,6 @@ function peco-pkill() {
   done
 }
 alias pk="peco-pkill"
+
+# direnv
+eval "$(direnv hook bash)"

@@ -21,3 +21,6 @@
     - hdevtools
     - parsec
     - regex-posix
+    - QuickCheck
+    - HDBC
+    - HDBC-sqlite3
