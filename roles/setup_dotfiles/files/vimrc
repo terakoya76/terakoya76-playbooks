@@ -67,6 +67,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf'
+Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'szw/vim-tags'
 Plug 'lighttiger2505/gtags.vim'
