@@ -78,7 +78,6 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 Plug 'w0rp/ale'
-Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
@@ -87,6 +86,7 @@ Plug 'fatih/vim-go', {
 \ 'do': ':GoUpdateBinaries' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 
+Plug 'sheerun/vim-polyglot'
 Plug 'uplus/deoplete-solargraph', { 'for': 'ruby' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 call plug#end()
@@ -129,6 +129,9 @@ highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" Disable vim-polyglot for vim-go compatiability
+let g:polyglot_disabled = ['go']
 
 " Disable haskell-vim omnifunc
 let g:haskellmode_completion_ghc = 0
