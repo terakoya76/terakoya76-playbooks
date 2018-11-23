@@ -17,6 +17,9 @@
   args:
     executable: /bin/bash
 
+- name: Create target directory for stack.yaml
+  file: path=~/.stack/global-project state=directory mode=0755
+
 - name: Place stack.yaml for specified version of ghc install
   template:
     src: files/stack.yaml
