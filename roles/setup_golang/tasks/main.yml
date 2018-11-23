@@ -13,6 +13,9 @@
   when: 'item not in GOENV_INSTALLED.stdout'
   with_items: '{{ GOLANG_VERSIONS }}'
 
+- name: Set Global version
+  shell: goenv global '{{ GLOBAL_VERSION }}'
+
 - name: Install golang libraries
   shell: go get -u '{{ item.url }}'
   with_items: '{{ GOLANG_LIBERARIES }}'

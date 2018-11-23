@@ -13,7 +13,7 @@
   when: 'item not in NODENV_INSTALLED.stdout'
   with_items: '{{ NODEJS_VERSIONS }}'
 
-- name: Set Global NodeJS
+- name: Set Global version
   shell: nodenv global '{{ GLOBAL_VERSION }}'
 
 - name: Write yarn path

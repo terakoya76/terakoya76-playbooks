@@ -23,6 +23,9 @@
   when: 'item not in RBENV_INSTALLED.stdout'
   with_items: '{{ RUBY_VERSIONS }}'
 
+- name: Set Global version
+  shell: rbenv global '{{ GLOBAL_VERSION }}'
+
 - name: Install bundler
   gem:
     name: bundler
