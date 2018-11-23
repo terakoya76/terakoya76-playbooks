@@ -1,3 +1,12 @@
+- name: copy goenv.sh
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/profile.d/{{ item.dest }}"
+    mode: 0755
+
+- name: source /etc/profile.d/goenv.sh
+  shell: bash -lc "source /etc/profile.d/goenv.sh"
+
 - name: Ensure goenv installed
   shell: bash -l -c 'which goenv'
   changed_when: false
