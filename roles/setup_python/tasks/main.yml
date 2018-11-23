@@ -1,3 +1,9 @@
+- name: Install Dependencies
+  apt:
+    name: '{{ APT_PACKAGES }}'
+    state: present
+  when: "ansible_os_family == 'Debian'"
+
 - name: Ensure pyenv installed
   shell: bash -l -c 'which pyenv'
   changed_when: false
