@@ -22,5 +22,5 @@
 - name: Place python ver manage script
   template:
     src: files/manage_python_ver.sh
-    dest: ~/.bash.d/manage_python_ver.sh
+    dest: "$HOME/.bash.d/manage_python_ver.sh"
     mode: 755

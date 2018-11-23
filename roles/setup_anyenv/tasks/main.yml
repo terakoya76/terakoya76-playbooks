@@ -1,34 +1,32 @@
 - name: Install anyenv
   git:
     repo: https://github.com/riywo/anyenv
-    dest: ~/.anyenv
+    dest: "$HOME/.anyenv"
 
 - name: Install anyenv-update
   git:
     repo: https://github.com/znz/anyenv-update
-    dest: ~/.anyenv/plugins/anyenv-update
+    dest: "$HOME/.anyenv/plugins/anyenv-update"
 
 - name: Write anyenv init
   lineinfile:
-    dest: ~/.bash.d/anyenv.sh
+    dest: "$HOME/.bash.d/anyenv.sh"
     line: '{{ item }}'
     create: yes
+    mode: 755
   with_items:
-    - export PATH=$HOME/.anyenv/bin:$PATH
+    - export PATH="$HOME/.anyenv/bin:$PATH"
     - eval "$(anyenv init -)"
 
-- name: Grant execute attr
-  shell: chmod +x ~/.bash.d/anyenv.sh
-
 - name: Check env installed
-  shell: bash -l -c 'anyenv version'
-  register: anyenv_version
+  shell: bash -l -c 'anyenv envs'
+  register: anyenv_envs
   changed_when: false
 
 - name: Install env tools
   shell: bash -l -c 'anyenv install {{ item }}'
   with_items: '{{ ANYENV_ENVS }}'
-  when: 'item not in anyenv_version.stdout'
+  when: 'item not in anyenv_envs.stdout'
 
 - name: Update exists tools
   shell: bash -l -c 'anyenv update'

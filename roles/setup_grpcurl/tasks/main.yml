@@ -13,11 +13,11 @@
 - name: Install grpcurl
   git:
     repo: https://github.com/fullstorydev/grpcurl
-    dest: ~/grpcurl
+    dest: "$HOME/grpcurl"
   when: "ansible_os_family == 'Debian'"
 
 - name: Install grpcurl
   shell: make install
   args:
-    chdir: ~/grpcurl/
+    chdir: "$HOME/grpcurl/"
   when: "ansible_os_family == 'Debian'"

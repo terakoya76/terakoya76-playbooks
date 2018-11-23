@@ -3,6 +3,6 @@
 
 - name: Write rustup path
   lineinfile:
-    dest: ~/.bash.d/rustup.sh
+    dest: "$HOME/.bash.d/rustup.sh"
     line: export PATH="$HOME/.cargo/bin:$PATH"
     create: yes

@@ -35,13 +35,13 @@
 - name: Install bundler
   gem:
     name: bundler
-    executable: ~/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem
+    executable: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
     state: present
     user_install: no
   with_items: '{{ RUBY_VERSIONS }}'
 
 - name: update rubygem
-  shell: ~/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document
+  shell: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
   args:
     executable: /bin/bash
   register: gem_update

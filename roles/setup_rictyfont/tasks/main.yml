@@ -13,7 +13,7 @@
   when: "ansible_os_family == 'Debian'"
 
 - name: Create target directory for Rictyfont
-  file: path=~/.fonts state=directory mode=0755
+  file: path="$HOME/.fonts" state=directory mode=0755
   when: "ansible_os_family == 'Debian'"
 
 - name: Create tmp directory
@@ -24,7 +24,7 @@
   shell: |
     wget http://iij.dl.sourceforge.jp/mix-mplus-ipa/59022/migu-1m-20130617.zip
     unzip migu-1m-*.zip
-    cp migu-1m-*/*.ttf ~/.fonts/
+    cp migu-1m-*/*.ttf "$HOME/.fonts/"
   args:
     executable: /bin/bash
     chdir: /tmp/ricty-XXXXX
@@ -39,7 +39,7 @@
 - name: Install Rictyfont
   shell: |
     sh ricty_generator.sh auto
-    cp *.ttf ~/.fonts/
+    cp *.ttf "$HOME/.fonts/"
   args:
     executable: /bin/bash
     chdir: /tmp/ricty-XXXXX/Ricty
