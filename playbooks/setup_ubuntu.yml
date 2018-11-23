@@ -1,6 +1,6 @@
 - hosts:
     - 'default'
-  sudo: yes
+  become: yes
   roles:
     - setup_dotfiles
     - setup_anyenv
