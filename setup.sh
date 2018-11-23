@@ -34,6 +34,8 @@ case "$1" in
 esac
 
 REPOSITORY_PATH="$HOME/terakoya76-playbooks"
+rm -fr "$REPOSITORY_PATH"
+git clone git@github.com:terakoya76/terakoya76-playbooks.git
 cd "$REPOSITORY_PATH"
 
 case "$1" in
