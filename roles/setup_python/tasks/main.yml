@@ -17,6 +17,4 @@
   template:
     src: files/manage_python_ver.sh
     dest: ~/.bash.d/manage_python_ver.sh
-
-- name: Grant execute attr
-  shell: chmod +x ~/.bash.d/manage_python_ver.sh
+    mode: 755

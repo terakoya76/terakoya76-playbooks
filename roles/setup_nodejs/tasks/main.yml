@@ -21,6 +21,4 @@
     dest: ~/.bash.d/yarn.sh
     line: export PATH="$HOME/.yarn/bin:$PATH"
     create: yes
-
-- name: Grant execute attr
-  shell: chmod +x ~/.bash.d/yarn.sh
+    mode: 755
