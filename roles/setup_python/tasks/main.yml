@@ -6,6 +6,7 @@
   shell: bash -l -c 'pyenv versions'
   register: PYENV_INSTALLED
   changed_when: false
+  ignore_errors: yes
 
 - name: Install python from pyenv
   shell: bash -l -c 'pyenv install {{ item }}'

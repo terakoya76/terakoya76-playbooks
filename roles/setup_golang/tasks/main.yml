@@ -6,6 +6,7 @@
   shell: bash -l -c 'goenv versions'
   register: GOENV_INSTALLED
   changed_when: false
+  ignore_errors: yes
 
 - name: Install golang from goenv
   shell: bash -l -c 'goenv install {{ item }}'

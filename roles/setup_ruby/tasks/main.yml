@@ -16,6 +16,7 @@
   shell: bash -l -c 'rbenv versions'
   register: RBENV_INSTALLED
   changed_when: false
+  ignore_errors: yes
 
 - name: Install ruby from rbenv
   shell: bash -l -c '{{ rubybuild_prefix }}rbenv install {{ item }}'

@@ -1,10 +1,17 @@
+- name: Ensure nodenv installed
+  shell: bash -l -c 'which nodenv'
+  changed_when: false
+
+- name: Check installed nodejs version
+  shell: bash -l -c 'nodenv versions'
+  register: NODENV_INSTALLED
+  changed_when: false
+  ignore_errors: yes
+
 - name: Install nodejs from nodenv
   shell: bash -l -c 'nodenv install {{ item }}'
-  register: result
+  when: 'item not in NODENV_INSTALLED.stdout'
   with_items: '{{ NODEJS_VERSIONS }}'
-  failed_when: result.stderr.find('definition not found') != -1 or
-                (result.stderr.find('already exists') == -1 and
-                result.stdout.find('Installed') == -1)
 
 - name: Set Global NodeJS
   shell: nodenv global '{{ GLOBAL_VERSION }}'
