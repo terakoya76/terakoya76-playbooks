@@ -4,9 +4,15 @@
     pip3 install solargraph-utils.py --user
     yard gems
     yard config --gem-install-yri
+  args:
+    executable: /bin/bash
 
 - name: Install Python Lnag Server
   shell: pip3 install python-language-server
+  args:
+    executable: /bin/bash
 
 - name: Install JS/TS Lang Server
   shell: npm i -g javascript-typescript-langserver
+  args:
+    executable: /bin/bash

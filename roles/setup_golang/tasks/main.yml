@@ -25,13 +25,8 @@
   with_items: '{{ GOLANG_VERSIONS }}'
 
 - name: Set Global version
-  shell: goenv global '{{ GLOBAL_VERSION }}'
+  shell: bash -l -c 'goenv global {{ GLOBAL_VERSION }}'
 
 - name: Install golang libraries
-  shell: go get -u '{{ item.url }}'
+  shell: bash -l -c 'go get -u {{ item.url }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
-
-- name: Install grpcurl
-  shell: |
-    go get -u github.com/fullstorydev/grpcurl
-    go install github.com/fullstorydev/grpcurl/cmd/grpcurl

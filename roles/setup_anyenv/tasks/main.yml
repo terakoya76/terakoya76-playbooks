@@ -5,7 +5,7 @@
 
 - name: Install anyenv-update
   git:
-    repo:  https://github.com/znz/anyenv-update
+    repo: https://github.com/znz/anyenv-update
     dest: ~/.anyenv/plugins/anyenv-update
 
 - name: Write anyenv init
@@ -26,7 +26,7 @@
   changed_when: false
 
 - name: Install env tools
-  shell: bash -l -c 'export; anyenv install {{ item }}'
+  shell: bash -l -c 'anyenv install {{ item }}'
   with_items: '{{ ANYENV_ENVS }}'
   when: 'item not in anyenv_version.stdout'
 

@@ -26,12 +26,13 @@
     unzip migu-1m-*.zip
     cp migu-1m-*/*.ttf ~/.fonts/
   args:
+    executable: /bin/bash
     chdir: /tmp/ricty-XXXXX
   when: "ansible_os_family == 'Debian'"
 
 - name: Fetch Ricty repo
   git:
-    repo: https://github.com/yascentur/Ricty.git
+    repo: https://github.com/yascentur/Ricty
     dest: /tmp/ricty-XXXXX/Ricty
   when: "ansible_os_family == 'Debian'"
 
@@ -40,10 +41,10 @@
     sh ricty_generator.sh auto
     cp *.ttf ~/.fonts/
   args:
+    executable: /bin/bash
     chdir: /tmp/ricty-XXXXX/Ricty
   when: "ansible_os_family == 'Debian'"
 
 - name: Cleanup tmp files
-  shell: |
-    rm -fr /tmp/ricty-XXXXX/
+  shell: rm -fr /tmp/ricty-XXXXX/
   when: "ansible_os_family == 'Debian'"

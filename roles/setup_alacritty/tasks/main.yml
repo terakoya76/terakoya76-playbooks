@@ -12,7 +12,8 @@
 
 - name: Fetch Alacritty repo
   git:
-    repo: https://github.com/jwilm/alacritty.git
+    repo: https://github.com/jwilm/alacritty
+    dest: ~/alacritty
   when: "ansible_os_family == 'Debian'"
 
 - name: Install Alacritty
@@ -20,5 +21,5 @@
     cargo install cargo-deb
     cargo deb --install
   args:
-    chdir: alacritty/
+    chdir: ~/alacritty/
   when: "ansible_os_family == 'Debian'"

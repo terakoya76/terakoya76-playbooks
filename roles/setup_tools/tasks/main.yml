@@ -20,9 +20,13 @@
 
 - name: Install nvim client
   shell: pip3 install neovim
+  args:
+    executable: /bin/bash
 
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli
+  args:
+    executable: /bin/bash
 
 - name: Enable dotfiles
   shell: . ~/.bash_profile

@@ -24,7 +24,7 @@
   with_items: '{{ RUBY_VERSIONS }}'
 
 - name: Set Global version
-  shell: rbenv global '{{ GLOBAL_VERSION }}'
+  shell: bash -l -c 'rbenv global {{ GLOBAL_VERSION }}'
 
 - name: Install bundler
   gem:
@@ -36,6 +36,8 @@
 
 - name: update rubygem
   shell: ~/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document
+  args:
+    executable: /bin/bash
   register: gem_update
   with_items: '{{ RUBY_VERSIONS }}'
   changed_when: gem_update.stdout.find('Latest version already installed') == -1

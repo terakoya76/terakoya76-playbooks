@@ -9,9 +9,13 @@
     if ! which stack > /dev/null 2>&1; then
       curl -sSL https://get.haskellstack.org/ | sh
     fi
+  args:
+    executable: /bin/bash
 
 - name: Upgrade Stack
   shell: stack upgrade
+  args:
+    executable: /bin/bash
 
 - name: Place stack.yaml for specified version of ghc install
   template:
@@ -20,7 +24,11 @@
 
 - name: Reinstall ghc
   shell: stack setup
+  args:
+    executable: /bin/bash
 
 - name: Install useful packages
   shell: stack install '{{ item }}'
+  args:
+    executable: /bin/bash
   with_items: '{{ STACK_PACKAGES }}'

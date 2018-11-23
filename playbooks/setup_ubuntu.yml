@@ -13,5 +13,6 @@
     - setup_rust
     - setup_lsp
     - setup_tools
+    - setup_grpcurl
     - setup_alacritty
     - setup_rictyfont
