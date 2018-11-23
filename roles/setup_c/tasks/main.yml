@@ -4,10 +4,6 @@
 
 - name: Install llvm/clang/lldb
   apt:
-    name: '{{ item }}'
+    name: '{{ APT_PACKAGES }}'
     state: present
-  with_items:
-    - clang
-    - llvm
-    - lldb
   when: "ansible_os_family == 'Debian'"

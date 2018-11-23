@@ -6,13 +6,8 @@
 
 - name: Install Alacritty Dependencies
   apt:
-    name: '{{ item }}'
+    name: '{{ APT_PACKAGES }}'
     state: present
-  with_items:
-    - cmake
-    - libfreetype6-dev
-    - libfontconfig1-dev
-    - xclip
   when: "ansible_os_family == 'Debian'"
 
 - name: Fetch Alacritty repo

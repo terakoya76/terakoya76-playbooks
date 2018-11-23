@@ -1,8 +1,7 @@
 - name: Install Dependencies
   apt:
-    name: '{{ item }}'
+    name: '{{ APT_PACKAGES }}'
     state: present
-  with_items: '{{ UBUNTU_DEPENDENCIES }}'
   when: "ansible_os_family == 'Debian'"
 
 - name: Install Stack

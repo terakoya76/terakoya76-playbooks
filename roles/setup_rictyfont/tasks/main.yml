@@ -8,11 +8,8 @@
 
 - name: Install Rictyfont Dependencies
   apt:
-    name: '{{ item }}'
+    name: '{{ APT_PACKAGES }}'
     state: present
-  with_items:
-    - fontforge
-    - fonts-inconsolata
   when: "ansible_os_family == 'Debian'"
 
 - name: Create target directory for Rictyfont
