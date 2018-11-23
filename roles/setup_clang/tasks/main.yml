@@ -1,2 +1,0 @@
-- name: Install llvm/clang/lldb
-  shell: brew install llvm --with-clang --with-lldb

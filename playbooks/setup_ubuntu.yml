@@ -3,6 +3,7 @@
   roles:
     - setup_dotfiles
     - setup_anyenv
+    - setup_c
     - setup_golang
     - setup_haskell
     - setup_nodejs

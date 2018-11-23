@@ -1,0 +1,13 @@
+- name: Install llvm/clang/lldb
+  shell: brew install llvm --with-clang --with-lldb
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install llvm/clang/lldb
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - clang
+    - llvm
+    - lldb
+  when: "ansible_os_family == 'Debian'"

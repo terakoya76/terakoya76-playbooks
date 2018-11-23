@@ -5,6 +5,7 @@
     - setup_app_store_apps
     - setup_homebrew_packages
     - setup_anyenv
+    - setup_c
     - setup_golang
     - setup_haskell
     - setup_nodejs
