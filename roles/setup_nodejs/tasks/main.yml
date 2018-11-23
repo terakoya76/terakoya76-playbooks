@@ -14,7 +14,7 @@
   with_items: '{{ NODEJS_VERSIONS }}'
 
 - name: Set Global version
-  shell: bash -l -c nodenv global '{{ GLOBAL_VERSION }}'
+  shell: bash -l -c 'nodenv global {{ GLOBAL_VERSION }}'
 
 - name: Write yarn path
   lineinfile:
