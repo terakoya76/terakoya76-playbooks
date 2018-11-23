@@ -8,6 +8,12 @@
     rubybuild_prefix: ''
   when: "ansible_os_family == 'Debian'"
 
+- name: Install Dependencies
+  apt:
+    name: '{{ APT_PACKAGES }}'
+    state: present
+  when: "ansible_os_family == 'Debian'"
+
 - name: Ensure rbenv installed
   shell: bash -l -c 'which rbenv'
   changed_when: false
