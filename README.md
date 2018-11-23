@@ -11,5 +11,5 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 Apply Dotfiles
 
 ```shell
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) -m
+$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) -d
 ```
