@@ -1,11 +1,13 @@
 - name: copy goenv.sh
   template:
     src: files/goenv.sh
-    dest: ~/.bash_profile
+    dest: /etc/profile.d/goenv.sh
     mode: 755
+  when: "ansible_os_family == 'Debian'"
 
 - name: source /etc/profile.d/goenv.sh
-  shell: bash -lc "source /etc/profile.d/goenv.sh"
+  shell: bash -l -c 'source /etc/profile.d/goenv.sh'
+  when: "ansible_os_family == 'Debian'"
 
 - name: Ensure goenv installed
   shell: bash -l -c 'which goenv'
