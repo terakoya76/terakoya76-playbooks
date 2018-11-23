@@ -2,11 +2,6 @@ STACK_PACKAGES:
   - ghc-mod
   - hlint
   - hdevtools
-  - parsec
-  - regex-posix
-  - QuickCheck
-  - HDBC
-  - HDBC-sqlite3
 
 APT_PACKAGES:
   - g++
