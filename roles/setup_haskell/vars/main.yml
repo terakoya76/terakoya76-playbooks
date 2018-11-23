@@ -1,0 +1,21 @@
+STACK_PACKAGES:
+  - ghc-mod
+  - hlint
+  - hdevtools
+  - parsec
+  - regex-posix
+  - QuickCheck
+  - HDBC
+  - HDBC-sqlite3
+
+UBUNTU_DEPENDENCIES:
+  - g++
+  - gcc
+  - libc6-dev
+  - libffi-dev
+  - libgmp-dev
+  - make
+  - xz-utils
+  - zlib1g-dev
+  - git
+  - gnupg

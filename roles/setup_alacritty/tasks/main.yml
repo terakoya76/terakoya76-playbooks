@@ -1,0 +1,29 @@
+- name: Install Alacritty
+  shell: |
+    brew tap mscharley/homebrew
+    brew install --HEAD alacritty
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install Alacritty Dependencies
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - cmake
+    - libfreetype6-dev
+    - libfontconfig1-dev
+    - xclip
+  when: "ansible_os_family == 'Debian'"
+
+- name: Fetch Alacritty repo
+  git:
+    repo: https://github.com/jwilm/alacritty.git
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Alacritty
+  shell: |
+    cargo install cargo-deb
+    cargo deb --install
+  args:
+    chdir: alacritty/
+  when: "ansible_os_family == 'Debian'"

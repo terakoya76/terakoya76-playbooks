@@ -3,13 +3,15 @@
     brew tap universal-ctags/universal-ctags
     brew install --HEAD universal-ctags/universal-ctags/universal-ctags
     brew install global --with-pygments
+  when: "ansible_os_family == 'Darwin'"
 
-- name: Install ricty font
+- name: Install ctags/gtags
   shell: |
-    brew tap sanemat/font
-    brew install ricty
-    cp -f /usr/local/opt/ricty/share/fonts/Ricty*.ttf ~/Library/Fonts/
-    fc-cache -vf
+    sudo apt install software-properties-common
+    sudo add-apt-repository ppa:hnakamur/universal-ctags
+    sudo apt update
+    sudo apt install universal-ctags
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install vim-plug
   shell: |
@@ -18,11 +20,6 @@
 
 - name: Install nvim client
   shell: pip3 install neovim
-
-- name: Install Alacritty
-  shell: |
-    brew tap mscharley/homebrew
-    brew install --HEAD alacritty
 
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli

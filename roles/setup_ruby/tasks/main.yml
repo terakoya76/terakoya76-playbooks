@@ -1,3 +1,13 @@
+- name: Set prefix
+  set_fact:
+    rubybuild_prefix: 'RUBY_CONFIGURE_OPTS="--with-openssl-dir=`brew --prefix openssl` --with-readline-dir=`brew --prefix readline`" '
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Set prefix
+  set_fact:
+    rubybuild_prefix: ''
+  when: "ansible_os_family == 'Debian'"
+
 - name: Ensure rbenv installed
   shell: bash -l -c 'which rbenv'
   changed_when: false
@@ -7,14 +17,8 @@
   register: RBENV_INSTALLED
   changed_when: false
 
-- name: Install ruby-build
-  homebrew:
-    name: '{{ item }}'
-  with_items:
-    - ruby-build
-
 - name: Install ruby from rbenv
-  shell: bash -l -c 'rbenv install {{ item }}'
+  shell: bash -l -c '{{ rubybuild_prefix }}rbenv install {{ item }}'
   when: 'item not in RBENV_INSTALLED.stdout'
   with_items: '{{ RUBY_VERSIONS }}'
 

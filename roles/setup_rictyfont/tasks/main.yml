@@ -1,0 +1,52 @@
+- name: Install Rictyfont
+  shell: |
+    brew tap sanemat/font
+    brew install ricty
+    cp -f /usr/local/opt/ricty/share/fonts/Ricty*.ttf ~/Library/Fonts/
+    fc-cache -vf
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install Rictyfont Dependencies
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - fontforge
+    - fonts-inconsolata
+  when: "ansible_os_family == 'Debian'"
+
+- name: Create target directory for Rictyfont
+  file: path=~/.fonts state=directory mode=0755
+  when: "ansible_os_family == 'Debian'"
+
+- name: Create tmp directory
+  file: path=/tmp/ricty-XXXXX state=directory mode=0755
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Migu 1M
+  shell: |
+    wget http://iij.dl.sourceforge.jp/mix-mplus-ipa/59022/migu-1m-20130617.zip
+    unzip migu-1m-*.zip
+    cp migu-1m-*/*.ttf ~/.fonts/
+  args:
+    chdir: /tmp/ricty-XXXXX
+  when: "ansible_os_family == 'Debian'"
+
+- name: Fetch Ricty repo
+  git:
+    repo: https://github.com/yascentur/Ricty.git
+    dest: /tmp/ricty-XXXXX/Ricty
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Rictyfont
+  shell: |
+    sh ricty_generator.sh auto
+    cp *.ttf ~/.fonts/
+  args:
+    chdir: /tmp/ricty-XXXXX/Ricty
+  when: "ansible_os_family == 'Debian'"
+
+- name: Cleanup tmp files
+  shell: |
+    rm -fr /tmp/ricty-XXXXX/
+  when: "ansible_os_family == 'Debian'"

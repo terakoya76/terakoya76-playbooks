@@ -1,9 +1,18 @@
-- name: Install Stack
-  homebrew:
+- name: Install Dependencies
+  apt:
     name: '{{ item }}'
     state: present
-  with_items:
-    - haskell-stack
+  with_items: '{{ UBUNTU_DEPENDENCIES }}'
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Stack
+  shell: |
+    if ! which stack > /dev/null 2>&1; then
+      curl -sSL https://get.haskellstack.org/ | sh
+    fi
+
+- name: Upgrade Stack
+  shell: stack upgrade
 
 - name: Place stack.yaml for specified version of ghc install
   template:
@@ -13,14 +22,6 @@
 - name: Reinstall ghc
   shell: stack setup
 
-- name: Install ghc-mod, hlint, hdevtools
+- name: Install useful packages
   shell: stack install '{{ item }}'
-  with_items:
-    - ghc-mod
-    - hlint
-    - hdevtools
-    - parsec
-    - regex-posix
-    - QuickCheck
-    - HDBC
-    - HDBC-sqlite3
+  with_items: '{{ STACK_PACKAGES }}'

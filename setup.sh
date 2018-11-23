@@ -4,8 +4,8 @@ set -eu
 
 REPOSITORY_PATH="$HOME/terakoya76-playbooks"
 
-if [ $# -gt 2 ]; then
-  echo "you can only pass 0~1 args" 1>&2
+if [ $# -ne 1 ]; then
+  echo "you must pass 1 args" 1>&2
   exit 1
 fi
 
@@ -23,13 +23,11 @@ fi
 
 cd "$REPOSITORY_PATH"
 
-if [ $# -eq 0 ]; then
-  ansible-playbook playbooks/setup_macos.yml -i inventory/mac-local.yml
-else
-  case "$1" in
-    -d)
-      ansible-playbook playbooks/setup_dotfiles.yml -i inventory/mac-local.yml ;;
-    *)
-      ansible-playbook playbooks/setup_macos.yml -i inventory/mac-local.yml ;;
-  esac
-fi
+case "$1" in
+  dot)
+    ansible-playbook playbooks/setup_dotfiles.yml -i inventory/mac-local.yml ;;
+  mac)
+    ansible-playbook playbooks/setup_mac.yml -i inventory/mac-local.yml ;;
+  ubuntu)
+    ansible-playbook playbooks/setup_ubuntu.yml -i inventory/ubuntu-local.yml ;;
+esac
