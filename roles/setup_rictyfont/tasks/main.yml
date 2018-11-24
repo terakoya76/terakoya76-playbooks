@@ -7,6 +7,7 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install Rictyfont Dependencies
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
@@ -30,19 +31,18 @@
     chdir: /tmp/ricty-XXXXX
   when: "ansible_os_family == 'Debian'"
 
-- name: Fetch Ricty repo
-  git:
-    repo: https://github.com/yascentur/Ricty
-    dest: /tmp/ricty-XXXXX/Ricty
-  when: "ansible_os_family == 'Debian'"
-
-- name: Install Rictyfont
+- name: Install Ricty
   shell: |
-    sh ricty_generator.sh auto
-    cp *.ttf "$HOME/.fonts/"
+    wget http://www.rs.tus.ac.jp/yyusa/ricty/ricty_generator.sh
+    wget http://www.rs.tus.ac.jp/yyusa/ricty/os2version_reviser.sh
+    chmod 755 ricty_generator.sh os2version_reviser.sh
+    ./ricty_generator.sh auto
+    ./os2version_reviser.sh Ricty*.ttf
+    cp -f Ricty*.ttf ~/.fonts/
+    fc-cache -vf
   args:
     executable: /bin/bash
-    chdir: /tmp/ricty-XXXXX/Ricty
+    chdir: /tmp/ricty-XXXXX
   when: "ansible_os_family == 'Debian'"
 
 - name: Cleanup tmp files

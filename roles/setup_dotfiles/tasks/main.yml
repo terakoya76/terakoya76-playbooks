@@ -1,51 +1,59 @@
 - name: Place default .bash_profile
   template:
     src: files/bash_profile
-    dest: ~/.bash_profile
+    dest: "$HOME/.bash_profile"
+    mode: 0755
 
 - name: Place default .bashrc
   template:
     src: files/bashrc
-    dest: ~/.bashrc
+    dest: "$HOME/.bashrc"
+    mode: 0755
 
 - name: Create target directory for bash fragments
-  file: path=~/.bash.d state=directory mode=0755
+  file: path="$HOME/.bash.d" state=directory mode=0755
 
 - name: Place .vimrc for vim
   template:
     src: files/vimrc
-    dest: ~/.vimrc
+    dest: "$HOME/.vimrc"
+    mode: 0755
 
 - name: Create target directory for nvim
-  file: path=~/.config/nvim state=directory mode=0755
+  file: path="$HOME/.config/nvim" state=directory mode=0755
 
 - name: Place .vimrc for nvim
   template:
     src: files/vimrc
-    dest: ~/.config/nvim/init.vim
+    dest: "$HOME/.config/nvim/init.vim"
+    mode: 0755
 
 - name: Place .tmux.conf
   template:
     src: files/tmux.conf
-    dest: ~/.tmux.conf
+    dest: "$HOME/.tmux.conf"
+    mode: 0755
 
 - name: Create target directory for alacritty
-  file: path=~/.config/alacritty state=directory mode=0755
+  file: path="$HOME/.config/alacritty" state=directory mode=0755
 
 - name: Place alacritty.yml
   template:
     src: files/alacritty.yml
-    dest: ~/.config/alacritty/alacritty.yml
+    dest: "$HOME/.config/alacritty/alacritty.yml"
+    mode: 0755
 
 - name: Place my.cnf
   template:
     src: files/my.cnf
-    dest: ~/.my.cnf
+    dest: "$HOME/.my.cnf"
+    mode: 0755
 
 - name: Place .gitignore_global
   template:
     src: files/gitignore_global
-    dest: ~/.gitignore_global
+    dest: "$HOME/.gitignore_global"
+    mode: 0755
 
 - name: Enable dotfiles
   shell: git config --global core.excludesfile ~/.gitignore_global

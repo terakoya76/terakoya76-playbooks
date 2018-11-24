@@ -8,25 +8,27 @@
     repo: https://github.com/znz/anyenv-update
     dest: "$HOME/.anyenv/plugins/anyenv-update"
 
-- name: Write anyenv init
-  lineinfile:
+- name: Place anyenv.sh
+  template:
+    src: files/anyenv.sh
     dest: "$HOME/.bash.d/anyenv.sh"
-    line: '{{ item }}'
-    create: yes
-    mode: 755
-  with_items:
-    - export PATH="$HOME/.anyenv/bin:$PATH"
-    - eval "$(anyenv init -)"
+    mode: 0755
+
+- name: Enable anyenv
+  shell: exec $SHELL -l
 
 - name: Check env installed
-  shell: bash -l -c 'anyenv envs'
+  shell: anyenv envs
   register: anyenv_envs
   changed_when: false
 
 - name: Install env tools
-  shell: bash -l -c 'anyenv install {{ item }}'
+  shell: anyenv install '{{ item }}'
   with_items: '{{ ANYENV_ENVS }}'
   when: 'item not in anyenv_envs.stdout'
 
+- name: Enable anyenv
+  shell: exec $SHELL -l
+
 - name: Update exists tools
-  shell: bash -l -c 'anyenv update'
+  shell: anyenv update

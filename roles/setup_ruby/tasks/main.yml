@@ -9,28 +9,29 @@
   when: "ansible_os_family == 'Debian'"
 
 - name: Install Dependencies
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
   when: "ansible_os_family == 'Debian'"
 
 - name: Ensure rbenv installed
-  shell: bash -l -c 'which rbenv'
+  shell: which rbenv
   changed_when: false
 
 - name: Check installed ruby version
-  shell: bash -l -c 'rbenv versions'
+  shell: rbenv versions
   register: RBENV_INSTALLED
   changed_when: false
   ignore_errors: yes
 
 - name: Install ruby from rbenv
-  shell: bash -l -c '{{ rubybuild_prefix }}rbenv install {{ item }}'
+  shell: '{{ rubybuild_prefix }}rbenv install {{ item }}'
   when: 'item not in RBENV_INSTALLED.stdout'
   with_items: '{{ RUBY_VERSIONS }}'
 
 - name: Set Global version
-  shell: bash -l -c 'rbenv global {{ GLOBAL_VERSION }}'
+  shell: rbenv global {{ GLOBAL_VERSION }}
 
 - name: Install bundler
   gem:

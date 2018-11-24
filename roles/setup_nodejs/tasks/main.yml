@@ -3,22 +3,24 @@
   changed_when: false
 
 - name: Check installed nodejs version
-  shell: bash -l -c 'nodenv versions'
+  shell: nodenv versions
   register: NODENV_INSTALLED
   changed_when: false
   ignore_errors: yes
 
 - name: Install nodejs from nodenv
-  shell: bash -l -c 'nodenv install {{ item }}'
+  shell: nodenv install '{{ item }}'
   when: 'item not in NODENV_INSTALLED.stdout'
   with_items: '{{ NODEJS_VERSIONS }}'
 
 - name: Set Global version
-  shell: bash -l -c 'nodenv global {{ GLOBAL_VERSION }}'
+  shell: nodenv global '{{ GLOBAL_VERSION }}'
 
-- name: Write yarn path
-  lineinfile:
+- name: Place yarn.sh for vim
+  template:
+    src: files/yarn.sh
     dest: "$HOME/.bash.d/yarn.sh"
-    line: export PATH="$HOME/.yarn/bin:$PATH"
-    create: yes
-    mode: 755
+    mode: 0755
+
+- name: Enable yarn
+  shell: exec $SHELL -l

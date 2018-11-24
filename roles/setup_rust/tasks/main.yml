@@ -1,8 +1,11 @@
 - name: Install rustup
   shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-- name: Write rustup path
-  lineinfile:
+- name: Place rustup path
+  template:
+    src: files/rustup.sh
     dest: "$HOME/.bash.d/rustup.sh"
-    line: export PATH="$HOME/.cargo/bin:$PATH"
-    create: yes
+    mode: 0755
+
+- name: Enable cargo
+  shell: exec $SHELL -l

@@ -5,12 +5,23 @@
     brew install global --with-pygments
   when: "ansible_os_family == 'Darwin'"
 
+- name: Install Dependencies
+  become: yes
+  apt:
+    name: software-properties-common
+    state: present
+  when: "ansible_os_family == 'Debian'"
+
+- name: Add Apt-Repository
+  apt_repository:
+    repo: ppa:hnakamur/universal-ctags
+  when: "ansible_os_family == 'Debian'"
+
 - name: Install ctags/gtags
-  shell: |
-    sudo apt install software-properties-common
-    sudo add-apt-repository ppa:hnakamur/universal-ctags
-    sudo apt update
-    sudo apt install universal-ctags
+  become: yes
+  apt:
+    name: universal-ctags
+    state: present
   when: "ansible_os_family == 'Debian'"
 
 - name: Install vim-plug
@@ -29,4 +40,4 @@
     executable: /bin/bash
 
 - name: Enable dotfiles
-  shell: . "$HOME/.bash_profile"
+  shell: exec $SHELL -l

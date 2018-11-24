@@ -1,6 +1,5 @@
 - hosts:
     - 'default'
-  become: yes
   roles:
     - setup_dotfiles
     - setup_anyenv

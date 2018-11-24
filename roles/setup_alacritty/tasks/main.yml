@@ -5,6 +5,7 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install Alacritty Dependencies
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present

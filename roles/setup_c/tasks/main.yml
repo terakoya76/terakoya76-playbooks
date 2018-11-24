@@ -3,6 +3,7 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install llvm/clang/lldb
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present

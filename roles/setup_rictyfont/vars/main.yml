@@ -1,3 +1,4 @@
 APT_PACKAGES:
+  - unzip
   - fontforge
   - fonts-inconsolata

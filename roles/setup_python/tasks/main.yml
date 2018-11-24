@@ -1,26 +1,33 @@
 - name: Install Dependencies
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
   when: "ansible_os_family == 'Debian'"
 
 - name: Ensure pyenv installed
-  shell: bash -l -c 'which pyenv'
+  shell: which pyenv
   changed_when: false
 
 - name: Check installed python version
-  shell: bash -l -c 'pyenv versions'
+  shell: pyenv versions
   register: PYENV_INSTALLED
   changed_when: false
   ignore_errors: yes
 
 - name: Install python from pyenv
-  shell: bash -l -c 'pyenv install {{ item }}'
+  shell: pyenv install '{{ item }}'
   when: 'item not in PYENV_INSTALLED.stdout'
   with_items: '{{ PYTHON_VERSIONS }}'
+
+- name: Set Global version
+  shell: pyenv global system '{{ PY2_VERSION }}' '{{ PY3_VERSION }}'
 
 - name: Place python ver manage script
   template:
     src: files/manage_python_ver.sh
     dest: "$HOME/.bash.d/manage_python_ver.sh"
-    mode: 755
+    mode: 0755
+
+- name: Enable python_manager
+  shell: exec $SHELL -l

@@ -1,4 +1,5 @@
 - name: Install Dependencies
+  become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present

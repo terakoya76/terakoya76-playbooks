@@ -1,6 +1,6 @@
 # Get the aliases and functions
-if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
+if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
 fi
 
 # Load bash flagment
@@ -12,8 +12,8 @@ if [ -d "${HOME}/.bash.d" ] ; then
 fi
 
 # Load local env file
-if [ -f ~/.env ]; then
-	. ~/.env
+if [ -f "$HOME/.env" ]; then
+	. "$HOME/.env"
 fi
 
 PATH=$PATH:$HOME/.local/bin:$HOME/bin
