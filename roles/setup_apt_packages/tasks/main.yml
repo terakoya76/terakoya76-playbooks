@@ -1,0 +1,5 @@
+- name: Install Utils
+  become: yes
+  apt:
+    name: '{{ APT_PACKAGES }}'
+    state: present

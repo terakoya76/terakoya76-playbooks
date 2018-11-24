@@ -2,6 +2,7 @@
     - 'default'
   roles:
     - setup_dotfiles
+    - setup_apt_packages
     - setup_anyenv
     - setup_c
     - setup_golang
