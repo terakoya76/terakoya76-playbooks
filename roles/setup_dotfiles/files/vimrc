@@ -125,6 +125,11 @@ let g:ale_sign_warning = '--'
 let g:airline#extensions#ale#open_lnum_symbol = '('
 let g:airline#extensions#ale#close_lnum_symbol = ')'
 let g:ale_echo_msg_format = '[%linter%]%code: %%s'
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_set_highlights = 0
+let g:ale_linters = { 'ruby': ['rubocop'], 'javascript': ['eslint', 'prettier', 'flow'] }
+let g:ale_fixers = { 'ruby': ['rubocop'], 'javascript': ['prettier'] }
 highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
@@ -138,9 +143,8 @@ let g:haskellmode_completion_ghc = 0
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['flow-language-server', '--stdio'],
     \ 'python': ['/usr/local/bin/pyls'],
     \ }
 

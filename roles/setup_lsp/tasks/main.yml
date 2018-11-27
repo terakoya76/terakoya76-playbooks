@@ -13,6 +13,6 @@
     executable: /bin/bash
 
 - name: Install JS/TS Lang Server
-  shell: npm i -g javascript-typescript-langserver
+  shell: npm i -g flow-language-server
   args:
     executable: /bin/bash
