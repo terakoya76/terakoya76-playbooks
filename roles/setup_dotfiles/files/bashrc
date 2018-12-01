@@ -46,16 +46,26 @@ alias k="bin/kubectl"
 
 # git
 function fetch-pull-request() {
+  # $1=remote_branch, $2=pr_number
   git fetch "$1" pull/"$2"/head:"$2"
 }
+function setup-remote-repository() {
+  # $1=path, $2=forked, $3=owner, $4=repo
+  mkdir -p "$1"
+  git clone "git@github.com:$2/$4.git" "$1/$4"
+  cd "$1/$4" || exit 1
+  git remote add upstream "git@github.com:$3/$4.git"
+  git remote set-url upstream --push no-pushing
+}
 alias ga="git add"
+alias gs="git status"
 alias gb="git branch"
 alias gc="git commit"
 alias gco="git checkout"
 alias gd="git diff"
 alias gl="git log"
 alias gpr="fetch-pull-request"
-alias gs="git status"
+alias gsu="setup-remote-repository"
 
 # rails
 alias be="bundle ex"
