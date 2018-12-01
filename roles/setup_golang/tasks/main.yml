@@ -19,3 +19,9 @@
 - name: Install golang libraries
   shell: go get -u '{{ item.url }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
+
+- name: Place go-bin.sh
+  template:
+    src: files/go-bin.sh
+    dest: "$HOME/.bash.d/go-bin.sh"
+    mode: 0755

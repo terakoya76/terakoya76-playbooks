@@ -16,7 +16,7 @@
 - name: Set Global version
   shell: nodenv global '{{ GLOBAL_VERSION }}'
 
-- name: Place yarn.sh for vim
+- name: Place yarn.sh
   template:
     src: files/yarn.sh
     dest: "$HOME/.bash.d/yarn.sh"

@@ -36,3 +36,9 @@
   args:
     executable: /bin/bash
   with_items: '{{ STACK_PACKAGES }}'
+
+- name: Place ghc-mod.sh
+  template:
+    src: files/ghc-mod.sh
+    dest: "$HOME/.bash.d/ghc-mod.sh"
+    mode: 0755
