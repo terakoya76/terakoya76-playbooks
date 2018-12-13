@@ -134,6 +134,7 @@ highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nnoremap <silent> :af :<C-u>ALEFix<CR>
 
 " Disable vim-polyglot for vim-go compatiability
 let g:polyglot_disabled = ['go']
