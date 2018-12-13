@@ -74,19 +74,19 @@ alias gpr="fetch-pull-request"
 alias gsu="setup-remote-repository"
 
 function fgco() {
-  git branch ^ /dev/null | fzf-tmux --reverse | xargs git checkout
+  git branch | fzf-tmux --reverse | xargs git checkout
 }
 function fgbd() {
-  git branch ^ /dev/null | fzf-tmux --multi --reverse | xargs git branch -D
+  git branch | fzf-tmux --multi --reverse | xargs git branch -D
 }
 
 function fga() {
-  git status -s ^ /dev/null | grep -e '^ M ' | sed -e 's/^ M //' | fzf-tmux --multi --reverse | xargs git add
+  git status -s | grep -e '^ M ' | sed -e 's/^ M //' | fzf-tmux --multi --reverse | xargs git add
   git status
 }
 
 function fgr() {
-  git status -s ^ /dev/null | grep -e '^M ' | sed -e 's/^M //' | fzf-tmux --multi --reverse | xargs git reset
+  git status -s | grep -e '^M ' | sed -e 's/^M //' | fzf-tmux --multi --reverse | xargs git reset
   git status
 }
 
