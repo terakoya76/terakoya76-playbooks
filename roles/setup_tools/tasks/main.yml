@@ -34,6 +34,12 @@
   args:
     executable: /bin/bash
 
+- name: Place fzf.sh
+  template:
+    src: files/fzf.sh
+    dest: "$HOME/.bash.d/fzf.sh"
+    mode: 0755
+
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli
   args:
