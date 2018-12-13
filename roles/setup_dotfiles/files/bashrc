@@ -92,10 +92,12 @@ function fgr() {
 
 # rails
 alias be="bundle ex"
-alias bes="bundle ex rails s -b 0.0.0.0 -p $1"
+function bes() {
+  bundle ex rails s -b 0.0.0.0 -p "$1"
+}
 
 # exa(ls)
-alias ls="exa -Tl"
+alias ls=exa
 
 # fdfind(fd)
 alias fd=fdfind
