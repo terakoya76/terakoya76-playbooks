@@ -12,34 +12,39 @@ HISTSIZE=50000
 # wrapper for lsec2
 lssh () {
   IP=$(lsec2 "$@" | peco | awk -F '\t' '{print $2}')
-  if [ "$?" -eq 0 ] && [ "$IP" != "" ]
-  then
-    ssh st-step
+  if [ "$?" -eq 0 ] && [ "$IP" != "" ] ; then
+    echo "$IP"
     ssh "$IP"
   fi
 }
 
 # wrapper for history
 export HISTCONTROL="ignoredups"
-function peco-select-history() {
-  READLINE_LINE=$(history | tail -r | sed -e 's/^\s*[0-9]\+\s\+//' | awk '!a[$0]++' | peco --query "$READLINE_LINE" | awk '{$1=""; print}')
+function fzf-history() {
+  READLINE_LINE=$(history | tail -r | sed -e 's/^\s*[0-9]\+\s\+//' | awk '!a[$0]++' | fzf --query="$1" | awk '{$1=""; print}')
   if [ -n "$READLINE_LINE" ] ; then
     echo "$READLINE_LINE" >&2
     eval "$READLINE_LINE"
     history -s "$READLINE_LINE"
   fi
 }
-alias psh="peco-select-history"
+alias fh="fzf-history"
 
-# wrapper for ps aux
-function peco-pkill() {
-  for pid in $(ps aux | peco | awk '{ print $2 }')
-  do
-    kill "$pid"
-    echo "Killed ${pid}"
-  done
+# fe [FUZZY PATTERN] - Open the selected file with the default editor
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+function fe() {
+  file=$(fzf --query="$1" --select-1 --exit-0)
+  if [ -f "$file" ] ; then
+    nvim "$file"
+  fi
 }
-alias pk="peco-pkill"
+
+# fzf kill
+function fzf-kill() {
+  ps -ef | sed 1d | fzf -m | awk '{print $2}' | xargs kill -15
+}
+alias fk="fzf-kill"
 
 # k8s
 alias k="bin/kubectl"
@@ -50,13 +55,14 @@ function fetch-pull-request() {
   git fetch "$1" pull/"$2"/head:"$2"
 }
 function setup-remote-repository() {
-  # $1=path, $2=forked, $3=owner, $4=repo
+  # $1=path, $2=forked-user, $3=owner-user, $4=repo
   mkdir -p "$1"
   git clone "git@github.com:$2/$4.git" "$1/$4"
   cd "$1/$4" || exit 1
   git remote add upstream "git@github.com:$3/$4.git"
   git remote set-url upstream --push no-pushing
 }
+
 alias ga="git add"
 alias gs="git status"
 alias gb="git branch"
@@ -66,6 +72,23 @@ alias gd="git diff"
 alias gl="git log"
 alias gpr="fetch-pull-request"
 alias gsu="setup-remote-repository"
+
+function fgco() {
+  git branch ^ /dev/null | fzf-tmux --reverse | xargs git checkout
+}
+function fgbd() {
+  git branch ^ /dev/null | fzf-tmux --multi --reverse | xargs git branch -D
+}
+
+function fga() {
+  git status -s ^ /dev/null | grep -e '^ M ' | sed -e 's/^ M //' | fzf-tmux --multi --reverse | xargs git add
+  git status
+}
+
+function fgr() {
+  git status -s ^ /dev/null | grep -e '^M ' | sed -e 's/^M //' | fzf-tmux --multi --reverse | xargs git reset
+  git status
+}
 
 # rails
 alias be="bundle ex"

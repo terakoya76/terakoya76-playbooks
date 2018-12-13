@@ -66,7 +66,7 @@ Plug 'tpope/vim-fugitive' " manipulate git from vim
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'szw/vim-tags'
