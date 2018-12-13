@@ -1,0 +1,68 @@
+- name: Install Alacritty
+  shell: |
+    brew tap mscharley/homebrew
+    brew install --HEAD alacritty
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install Alacritty Dependencies
+  become: yes
+  apt:
+    name: '{{ APT_PACKAGES }}'
+    state: present
+  when: "ansible_os_family == 'Debian'"
+
+- name: Fetch Alacritty repo
+  git:
+    repo: https://github.com/jwilm/alacritty
+    dest: "$HOME/alacritty"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Alacritty
+  shell: |
+    cargo install cargo-deb
+    cargo deb --install
+  args:
+    chdir: "$HOME/alacritty/"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install exa
+  shell: brew install exa
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Fetch exa repo
+  git:
+    repo: https://github.com/ogham/exa
+    dest: "$HOME/exa"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install exa
+  shell: cargo install exa
+  args:
+    chdir: "$HOME/exa/"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install xsv
+  shell: brew install xsv
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Fetch exa repo
+  git:
+    repo: https://github.com/BurntSushi/xsv
+    dest: "$HOME/xsv"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install xsv
+  shell: cargo build --release
+  args:
+    chdir: "$HOME/xsv/"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Remove Repository
+  shell: |
+    rm -fr alacritty
+    rm -fr exa
+    rm -fr xsv
+  args:
+    chdir: "$HOME"
+  when: "ansible_os_family == 'Debian'"
+

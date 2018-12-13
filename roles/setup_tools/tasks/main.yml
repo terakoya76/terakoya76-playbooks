@@ -43,12 +43,22 @@
   shell: brew install ripgrep
   when: "ansible_os_family == 'Darwin'"
 
-
 - name: Install ripgrep
   become: yes
   shell: |
     curl -LO https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep_0.10.0_amd64.deb
     dpkg -i ripgrep_0.10.0_amd64.deb
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install fd
+  shell: brew install fd
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install fd
+  become: yes
+  apt:
+    name: fd-find
+    state: present
   when: "ansible_os_family == 'Debian'"
 
 - name: Enable dotfiles
