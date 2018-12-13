@@ -28,6 +28,15 @@
     dest: "$HOME/.config/nvim/init.vim"
     mode: 0755
 
+- name: Create target directory for translate-shell
+  file: path="$HOME/.translate-shell" state=directory mode=0755
+
+- name: Place .init.trans
+  template:
+    src: files/init.trans
+    dest: "$HOME/.translate-shell/init.trans"
+    mode: 0755
+
 - name: Place .tmux.conf
   template:
     src: files/tmux.conf
