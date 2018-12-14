@@ -12,7 +12,7 @@ HISTSIZE=50000
 # wrapper for lsec2
 lssh () {
   IP=$(lsec2 "$@" | peco | awk -F '\t' '{print $2}')
-  if [ "$?" -eq 0 ] && [ "$IP" != "" ] ; then
+  if [ "$IP" != "" ] ; then
     echo "$IP"
     ssh "$IP"
   fi
@@ -90,8 +90,39 @@ function fgr() {
   git status
 }
 
+# docker
+alias di="docker image ls"
+alias dc="docker container ls"
+alias dl="docker ps -l -q"
+
+function dbu() {
+  docker build -t "$1" .
+}
+
+function dstop() {
+  docker stop "$(docker ps -a -q)"
+}
+
+function drm() {
+  docker rm "$(docker ps -a -q)"
+}
+
+function drmf() {
+  docker stop "$(docker ps -a -q)"
+  docker rm "$(docker ps -a -q)"
+}
+
+function dri() {
+  docker rmi "$(docker images -q)"
+}
+
+function fdip() {
+  docker container ls | fzf-tmux --multi --reverse | awk '{print $1}' | xargs docker inspect --format '{{ .NetworkSettings.IPAddress }}'
+}
+
 # rails
 alias be="bundle ex"
+
 function bes() {
   bundle ex rails s -b 0.0.0.0 -p "$1"
 }
