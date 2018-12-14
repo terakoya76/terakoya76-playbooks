@@ -15,6 +15,5 @@
     - setup_avr
     - setup_lsp
     - setup_tools
-    - setup_grpcurl
     - setup_cargo_tools
     - setup_rictyfont

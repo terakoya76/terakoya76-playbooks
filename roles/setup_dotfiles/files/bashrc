@@ -107,5 +107,9 @@ docker pull danlynn/bat
 export BAT_THEME="TwoDark"
 alias cat='docker run -it --rm -e BAT_THEME -e BAT_STYLE -e BAT_TABS -v "$(pwd):/myapp" danlynn/bat'
 
+# grpcurl
+docker pull terakoya76/grpcurl
+alias grpcurl='docker run -it --rm terakoya76/grpcurl'
+
 # direnv
 eval "$(direnv hook bash)"
