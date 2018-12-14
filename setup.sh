@@ -10,10 +10,12 @@ fi
 # setup ansible
 case "$1" in
   mac)
-    if ! which brew > /dev/null 2>&1 ;then
+    if ! brew -v > /dev/null 2>&1 ; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
-    brew install ansible ;;
+    if ! which ansible > /dev/null 2>&1 ; then
+      brew install ansible
+    fi;;
   ubuntu)
     sudo apt-get update
     sudo apt-get install software-properties-common
