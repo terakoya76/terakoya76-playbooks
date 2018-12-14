@@ -13,6 +13,36 @@
 - name: Create target directory for bash fragments
   file: path="$HOME/.bash.d" state=directory mode=0755
 
+- name: Place docker.sh
+  template:
+    src: files/bash.d/docker.sh
+    dest: "$HOME/.bash.d/docker.sh"
+    mode: 0755
+
+- name: Place git.sh
+  template:
+    src: files/bash.d/git.sh
+    dest: "$HOME/.bash.d/git.sh"
+    mode: 0755
+
+- name: Place history.sh
+  template:
+    src: files/bash.d/history.sh
+    dest: "$HOME/.bash.d/history.sh"
+    mode: 0755
+
+- name: Place kubernetes.sh
+  template:
+    src: files/bash.d/kubernetes.sh
+    dest: "$HOME/.bash.d/kubernetes.sh"
+    mode: 0755
+
+- name: Place tools.sh
+  template:
+    src: files/bash.d/tools.sh
+    dest: "$HOME/.bash.d/tools.sh"
+    mode: 0755
+
 - name: Place .vimrc for vim
   template:
     src: files/vimrc
