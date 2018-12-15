@@ -25,44 +25,41 @@
     chdir: "$HOME/alacritty/"
   when: "ansible_os_family == 'Debian'"
 
-- name: Install exa
-  shell: brew install exa
-  when: "ansible_os_family == 'Darwin'"
+- name: Fetch bat repo
+  git:
+    repo: https://github.com/sharkdp/bat
+    dest: "$HOME/bat"
+
+- name: Install bat
+  shell: cargo install bat
+  args:
+    chdir: "$HOME/bat/"
 
 - name: Fetch exa repo
   git:
     repo: https://github.com/ogham/exa
     dest: "$HOME/exa"
-  when: "ansible_os_family == 'Debian'"
 
 - name: Install exa
   shell: cargo install exa
   args:
     chdir: "$HOME/exa/"
-  when: "ansible_os_family == 'Debian'"
-
-- name: Install xsv
-  shell: brew install xsv
-  when: "ansible_os_family == 'Darwin'"
 
 - name: Fetch exa repo
   git:
     repo: https://github.com/BurntSushi/xsv
     dest: "$HOME/xsv"
-  when: "ansible_os_family == 'Debian'"
 
 - name: Install xsv
   shell: cargo build --release
   args:
     chdir: "$HOME/xsv/"
-  when: "ansible_os_family == 'Debian'"
 
 - name: Remove Repository
   shell: |
     rm -fr alacritty
+    rm -fr bat
     rm -fr exa
     rm -fr xsv
   args:
     chdir: "$HOME"
-  when: "ansible_os_family == 'Debian'"
-

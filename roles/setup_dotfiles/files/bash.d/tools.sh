@@ -5,13 +5,16 @@ alias ls=exa
 alias fd=fdfind
 
 # cat(bat)
-docker pull danlynn/bat
 export BAT_THEME="TwoDark"
-alias cat='docker run -it --rm -e BAT_THEME -e BAT_STYLE -e BAT_TABS -v "$(pwd):/myapp" danlynn/bat'
+alias cat=bat
 
 # grpcurl
 docker pull terakoya76/grpcurl
 alias grpcurl='docker run -it --rm terakoya76/grpcurl'
+
+# mitmproxy
+docker pull mitmproxy/mitmproxy
+alias mitmproxy='docker run --rm -it [-v ~/.mitmproxy:/home/mitmproxy/.mitmproxy] -p 8080:8080 mitmproxy/mitmproxy'
 
 # wrapper for lsec2
 lssh () {
