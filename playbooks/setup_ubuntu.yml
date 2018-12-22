@@ -3,6 +3,7 @@
   roles:
     - setup_dotfiles
     - setup_apt_packages
+    - setup_docker
     - setup_anyenv
     - setup_c
     - setup_golang

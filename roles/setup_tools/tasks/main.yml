@@ -5,13 +5,6 @@
     brew install global --with-pygments
   when: "ansible_os_family == 'Darwin'"
 
-- name: Install Dependencies
-  become: yes
-  apt:
-    name: software-properties-common
-    state: present
-  when: "ansible_os_family == 'Debian'"
-
 - name: Add Apt-Repository
   apt_repository:
     repo: ppa:hnakamur/universal-ctags

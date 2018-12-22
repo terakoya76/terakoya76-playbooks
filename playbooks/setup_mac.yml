@@ -4,6 +4,7 @@
     - setup_dotfiles
     - setup_app_store_apps
     - setup_homebrew_packages
+    - setup_docker
     - setup_anyenv
     - setup_c
     - setup_golang

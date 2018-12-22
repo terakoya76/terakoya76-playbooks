@@ -1,0 +1,26 @@
+- name: Install Docker
+  shell: |
+    brew cask install docker
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install dependencies
+  become: yes
+  apt:
+    name: '{{ APT_PACKAGES }}'
+    state: present
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install GPG publickey
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  when: "ansible_os_family == 'Debian'"
+
+- name: Add Apt-Repository
+  shell: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install Docker
+  become: yes
+  apt:
+    name: docker-ce
+    state: present
+  when: "ansible_os_family == 'Debian'"
