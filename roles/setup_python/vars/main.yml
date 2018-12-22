@@ -15,6 +15,9 @@ APT_PACKAGES:
   - tk-dev
   - libffi-dev
   - liblzma-dev
+  - libbz2-dev
+  - sqlite3
+  - openssl
 
 PYTHON_VERSIONS:
   - 2.7.15
