@@ -15,7 +15,7 @@
     mode: 0755
 
 - name: Enable anyenv
-  shell: exec $SHELL -l
+  shell: $SHELL -l
 
 - name: Check env installed
   shell: anyenv envs
@@ -28,7 +28,7 @@
   when: 'item not in anyenv_envs.stdout'
 
 - name: Enable anyenv
-  shell: exec $SHELL -l
+  shell: $SHELL -l
 
 - name: Update exists tools
   shell: anyenv update
