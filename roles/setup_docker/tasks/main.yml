@@ -8,19 +8,19 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install GPG publickey
   shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Add Apt-Repository
   shell: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install Docker
   become: yes
   apt:
     name: docker-ce
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")

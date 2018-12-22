@@ -8,14 +8,14 @@
 - name: Add Apt-Repository
   apt_repository:
     repo: ppa:hnakamur/universal-ctags
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install ctags/gtags
   become: yes
   apt:
     name: universal-ctags
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install vim-plug
   shell: |
@@ -47,7 +47,7 @@
   shell: |
     curl -LO https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep_0.10.0_amd64.deb
     dpkg -i ripgrep_0.10.0_amd64.deb
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install fd
   shell: brew install fd
@@ -58,7 +58,7 @@
   apt:
     name: fd-find
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Enable dotfiles
-  shell: exec $SHELL -l
+  shell: $SHELL -l

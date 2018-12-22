@@ -7,4 +7,4 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")

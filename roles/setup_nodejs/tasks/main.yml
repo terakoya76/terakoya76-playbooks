@@ -1,5 +1,5 @@
 - name: Ensure nodenv installed
-  shell: bash -l -c 'which nodenv'
+  shell: which nodenv
   changed_when: false
 
 - name: Check installed nodejs version
@@ -23,4 +23,4 @@
     mode: 0755
 
 - name: Enable yarn
-  shell: exec $SHELL -l
+  shell: $SHELL -l

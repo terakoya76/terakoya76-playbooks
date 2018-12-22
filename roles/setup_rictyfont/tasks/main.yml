@@ -11,15 +11,15 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Create target directory for Rictyfont
   file: path="$HOME/.fonts" state=directory mode=0755
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Create tmp directory
   file: path=/tmp/ricty-XXXXX state=directory mode=0755
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install Migu 1M
   shell: |
@@ -29,7 +29,7 @@
   args:
     executable: /bin/bash
     chdir: /tmp/ricty-XXXXX
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install Ricty
   shell: |
@@ -43,8 +43,8 @@
   args:
     executable: /bin/bash
     chdir: /tmp/ricty-XXXXX
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Cleanup tmp files
   shell: rm -fr /tmp/ricty-XXXXX/
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")

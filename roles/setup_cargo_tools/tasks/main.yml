@@ -9,13 +9,13 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Fetch Alacritty repo
   git:
     repo: https://github.com/jwilm/alacritty
     dest: "$HOME/alacritty"
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install Alacritty
   shell: |
@@ -23,7 +23,7 @@
     cargo deb --install
   args:
     chdir: "$HOME/alacritty/"
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Fetch bat repo
   git:

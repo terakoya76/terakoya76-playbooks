@@ -8,4 +8,4 @@
     mode: 0755
 
 - name: Enable cargo
-  shell: exec $SHELL -l
+  shell: $SHELL -l
