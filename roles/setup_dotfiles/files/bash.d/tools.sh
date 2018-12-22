@@ -29,4 +29,9 @@ lssh () {
 bes() {
   bundle ex rails s -b 0.0.0.0 -p "$1"
 }
+
+fbet() {
+  bundle ex rake -T | fzf-tmux -m --reverse | xargs bundle ex
+}
+
 alias be="bundle ex"
