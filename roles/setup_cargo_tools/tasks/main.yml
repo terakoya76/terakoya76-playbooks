@@ -34,6 +34,9 @@
 - name: Install exa
   shell: cargo install exa
 
+- name: Install ripgrep
+  shell: cargo install ripgrep
+
 - name: Fetch xsv repo
   git:
     repo: https://github.com/BurntSushi/xsv
