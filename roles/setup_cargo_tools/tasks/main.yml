@@ -25,27 +25,16 @@
     chdir: "$HOME/alacritty/"
   when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
-- name: Fetch bat repo
-  git:
-    repo: https://github.com/sharkdp/bat
-    dest: "$HOME/bat"
-
 - name: Install bat
   shell: cargo install bat
-  args:
-    chdir: "$HOME/bat/"
 
-- name: Fetch exa repo
-  git:
-    repo: https://github.com/ogham/exa
-    dest: "$HOME/exa"
+- name: Install fd-find
+  shell: cargo install fd-find
 
 - name: Install exa
   shell: cargo install exa
-  args:
-    chdir: "$HOME/exa/"
 
-- name: Fetch exa repo
+- name: Fetch xsv repo
   git:
     repo: https://github.com/BurntSushi/xsv
     dest: "$HOME/xsv"
@@ -58,8 +47,6 @@
 - name: Remove Repository
   shell: |
     rm -fr alacritty
-    rm -fr bat
-    rm -fr exa
     rm -fr xsv
   args:
     chdir: "$HOME"

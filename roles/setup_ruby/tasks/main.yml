@@ -6,7 +6,7 @@
 - name: Set prefix
   set_fact:
     rubybuild_prefix: ''
-  when: "ansible_os_family == 'Debian'"
+  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
 
 - name: Install Dependencies
   become: yes
