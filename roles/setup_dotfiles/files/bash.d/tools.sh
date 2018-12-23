@@ -1,3 +1,6 @@
+# tmux adapt utf8
+alias tmux="tmux -u"
+
 # exa(ls)
 alias ls=exa
 
