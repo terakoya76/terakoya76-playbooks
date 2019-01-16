@@ -69,12 +69,17 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
 
+Plug 'haya14busa/vim-poweryank'
+
 Plug 'szw/vim-tags'
 Plug 'lighttiger2505/gtags.vim'
 "Plug 'jsfaint/gen_tags.vim'
 
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'natebosch/vim-lsc'
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'sheerun/vim-polyglot'
@@ -212,6 +217,11 @@ if executable('typescript-language-server')
         \ })
 endif
 
+let g:lsp_async_completion = 1
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_remove_duplicates = 1
+
 " denite
 nnoremap [denite] <Nop>
 nmap <C-c> [denite]
@@ -285,3 +295,6 @@ autocmd vimenter * NERDTree
 " vim-easy-align
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" vim-poweryank
+map <Leader>y <Plug>(operator-poweryank-osc52)

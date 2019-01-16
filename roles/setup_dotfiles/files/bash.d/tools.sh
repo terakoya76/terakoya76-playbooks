@@ -24,7 +24,7 @@ lssh () {
   IP=$(lsec2 "$@" | fzf-tmux -m --reverse | awk -F '\t' '{print $2}')
   if [ "$IP" != "" ] ; then
     echo "$IP"
-    ssh "$IP"
+    ssh -i $PUBKEY "hajime-terasawa@$IP"
   fi
 }
 
