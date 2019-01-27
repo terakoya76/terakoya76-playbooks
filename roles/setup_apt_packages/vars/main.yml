@@ -1,5 +1,6 @@
 APT_PACKAGES:
   - software-properties-common
+  - jq
   - vim
   - neovim
   - python3-dev
