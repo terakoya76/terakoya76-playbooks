@@ -36,21 +36,5 @@
     dest: "$HOME/.bash.d/fzf.sh"
     mode: 0755
 
-- name: Install onelogin-aws-cli
-  shell: pip3 install onelogin-aws-cli
-  args:
-    executable: /bin/bash
-
-- name: Install eksctl
-  shell: curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
-  args:
-    executable: /bin/bash
-
-- name: Install aws-iam-authenticator
-  shell: go get -u github.com/kubernetes-sigs/aws-iam-authenticator/cmd/aws-iam-authenticator
-  args:
-    executable: /bin/bash
-
 - name: Enable dotfiles
   shell: $SHELL -l

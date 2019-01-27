@@ -1,0 +1,40 @@
+- name: Install kubectl
+  shell: brew install kubernetes-cli
+  when: "ansible_os_family == 'Darwin'"
+  args:
+    executable: /bin/bash
+
+- name: Install kubectl
+  become: yes
+  shell: |
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    mv ./kubectl /usr/local/bin/kubectl
+    chmod +x /usr/local/bin/kubectl
+  when: ("ansible_os_family == 'Debian'")
+  args:
+    executable: /bin/bash
+
+
+- name: Install helm
+  shell: https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+  args:
+    executable: /bin/bash
+
+- name: Install onelogin-aws-cli
+  shell: pip3 install onelogin-aws-cli
+  args:
+    executable: /bin/bash
+
+- name: Install eksctl
+  become: yes
+  shell: |
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+    mv /tmp/eksctl /usr/local/bin
+    chmod +x /usr/local/bin
+  args:
+    executable: /bin/bash
+
+- name: Install aws-iam-authenticator
+  shell: go get -u github.com/kubernetes-sigs/aws-iam-authenticator/cmd/aws-iam-authenticator
+  args:
+    executable: /bin/bash
