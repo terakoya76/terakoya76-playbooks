@@ -14,9 +14,25 @@
   args:
     executable: /bin/bash
 
-
 - name: Install helm
   shell: https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+  args:
+    executable: /bin/bash
+
+- name: Install stern
+  shell: brew install stern
+  when: "ansible_os_family == 'Darwin'"
+  args:
+    executable: /bin/bash
+
+- name: Install kube-ps1
+  shell: brew install kube-ps1
+  when: "ansible_os_family == 'Darwin'"
+  args:
+    executable: /bin/bash
+
+- name: Install awscli
+  shell: pip3 install awscli --upgrade --user
   args:
     executable: /bin/bash
 
@@ -36,5 +52,21 @@
 
 - name: Install aws-iam-authenticator
   shell: go get -u github.com/kubernetes-sigs/aws-iam-authenticator/cmd/aws-iam-authenticator
+  args:
+    executable: /bin/bash
+
+- name: Install terraform
+  shell: brew install terraform
+  when: "ansible_os_family == 'Darwin'"
+  args:
+    executable: /bin/bash
+
+- name: Install terraform
+  become: yes
+  shell: |
+    wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+    unzip terraform_0.11.11_linux_amd64.zip
+    mv ./terraform /usr/bin/
+  when: ("ansible_os_family == 'Debian'")
   args:
     executable: /bin/bash
