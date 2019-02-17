@@ -19,9 +19,31 @@
   args:
     executable: /bin/bash
 
+- name: Install Helmfile
+  become: yes
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    mv "helmfile_$SYSNAME" /usr/local/bin
+    chmod +x /usr/local/bin
+  args:
+    executable: /bin/bash
+
+- name: Install Helm Plugin
+  shell: |
+    helm plugin install https://github.com/rimusz/helm-tiller
+    helm plugin install https://github.com/databus23/helm-diff --version master
+    helm plugin install https://github.com/futuresimple/helm-secrets
+  args:
+    executable: /bin/bash
+
 - name: Install stern
-  shell: brew install stern
-  when: "ansible_os_family == 'Darwin'"
+  become: yes
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    mv "stern_$SYSNAME" /usr/local/bin
+    chmod +x /usr/local/bin
   args:
     executable: /bin/bash
 
@@ -68,5 +90,13 @@
     unzip terraform_0.11.11_linux_amd64.zip
     mv ./terraform /usr/bin/
   when: ("ansible_os_family == 'Debian'")
+  args:
+    executable: /bin/bash
+
+- name: Install sopsed
+  shell: |
+    curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
+    mv sopsed /usr/local/bin
+    chmod +x /usr/local/bin
   args:
     executable: /bin/bash
