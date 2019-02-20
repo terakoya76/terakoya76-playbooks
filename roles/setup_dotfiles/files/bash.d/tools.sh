@@ -11,14 +11,6 @@ alias fd=fdfind
 export BAT_THEME="TwoDark"
 alias cat=bat
 
-# grpcurl
-docker pull terakoya76/grpcurl
-alias grpcurl='docker run -it --rm terakoya76/grpcurl'
-
-# mitmproxy
-docker pull mitmproxy/mitmproxy
-alias mitmproxy='docker run -it --rm -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy -p 8080:8080 mitmproxy/mitmproxy'
-
 # wrapper for lsec2
 lssh () {
   IP=$(lsec2 "$@" | fzf-tmux -m --reverse | awk -F '\t' '{print $2}')
