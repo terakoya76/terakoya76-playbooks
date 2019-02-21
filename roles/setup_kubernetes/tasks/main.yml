@@ -58,6 +58,11 @@
   args:
     executable: /bin/bash
 
+- name: Install yq
+  shell: pip3 install yq
+  args:
+    executable: /bin/bash
+
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli
   args:
@@ -94,9 +99,21 @@
     executable: /bin/bash
 
 - name: Install sopsed
+  become: yes
   shell: |
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
     mv sopsed /usr/local/bin
+    chmod +x /usr/local/bin
+  args:
+    executable: /bin/bash
+
+- name: Install variant
+  become: yes
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    tar zxvf "variant_$VERSION_$SYSNAME.tar.gz"
+    mv "variant" /usr/local/bin
     chmod +x /usr/local/bin
   args:
     executable: /bin/bash
