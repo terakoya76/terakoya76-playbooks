@@ -1,10 +1,9 @@
 GOLANG_VERSIONS:
   - 1.9.7
   - 1.10.3
-  - 1.11.0
-  - 1.11.3
+  - 1.11.4
 
-GLOBAL_VERSION: 1.11.3
+GLOBAL_VERSION: 1.11.4
 
 GOLANG_LIBERARIES:
   - { url: golang.org/x/tools/cmd/goimports }
@@ -13,7 +12,7 @@ GOLANG_LIBERARIES:
   - { url: github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc }
   - { url: github.com/golang/protobuf/protoc-gen-go }
   - { url: go.mozilla.org/sops/cmd/sops }
-  - { url: honnef.co/go/tools/cmd/megacheck }
+  - { url: honnef.co/go/tools/cmd/... }
   - { url: github.com/goldeneggg/lsec2 }
   - { url: github.com/derekparker/delve/cmd/dlv }
   - { url: github.com/timakin/md2mid }
