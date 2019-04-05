@@ -1,7 +1,6 @@
 cask_args appdir: '/Applications'
 brew 'curl'
 brew 'cmake'
-brew 'direnv'
 brew 'git'
 brew 'hadolint'
 brew 'imagemagick'

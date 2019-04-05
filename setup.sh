@@ -27,7 +27,9 @@ esac
 # setup direnv
 case "$1" in
   mac)
-    brew install direnv ;;
+    if ! which direnv > /dev/null 2>&1 ; then
+      brew install direnv
+    fi;;
   ubuntu)
     wget -O direnv https://github.com/direnv/direnv/releases/download/v2.6.0/direnv.linux-amd64
     chmod +x direnv
