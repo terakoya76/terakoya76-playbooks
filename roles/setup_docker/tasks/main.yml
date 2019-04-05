@@ -30,3 +30,8 @@
   become: yes
   shell: rm /etc/apt/sources.list.d/additional-repositories.list
   when: ("ansible_os_family == 'Debian'")
+
+- name: Install Docker Lang Server
+  npm:
+    name: dockerfile-language-server-nodejs
+    global: true

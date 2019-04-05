@@ -30,6 +30,14 @@
   args:
     executable: /bin/bash
 
+- name: Install kafka
+  shell: |
+    wget http://ftp.tsukuba.wide.ad.jp/software/apache/kafka/2.2.0/kafka_2.11-2.2.0.tgz
+    tar zxvf "kafka_2.11-2.2.0.tgz"
+    rm kafka_2.11-2.2.0.tgz
+  args:
+    executable: /bin/bash
+
 - name: Place fzf.sh
   template:
     src: files/fzf.sh

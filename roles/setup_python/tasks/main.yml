@@ -20,6 +20,10 @@
   when: 'item not in PYENV_INSTALLED.stdout'
   with_items: '{{ PYTHON_VERSIONS }}'
 
+- name: Install lsp
+  pip:
+    name: python-language-server
+
 - name: Set Global version
   shell: pyenv global system '{{ PY2_VERSION }}' '{{ PY3_VERSION }}'
 

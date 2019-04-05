@@ -5,12 +5,11 @@ gpr() {
 }
 
 # git setup remote repository
-# $1 = path, $2 = forked-user, $3 = owner-user, $4 = repo
+# $1 = forked-user, $2 = owner-user, $3 = repo
 gsu() {
-  mkdir -p "$1"
-  git clone "git@github.com:$2/$4.git" "$1/$4"
-  cd "$1/$4" || exit 1
-  git remote add upstream "git@github.com:$3/$4.git"
+  git clone "git@github.com:$1/$3.git" "$3"
+  cd "$3" || exit 1
+  git remote add upstream "git@github.com:$2/$3.git"
   git remote set-url upstream --push no-pushing
 }
 

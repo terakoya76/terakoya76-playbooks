@@ -3,7 +3,6 @@
   roles:
     - setup_dotfiles
     - setup_apt_packages
-    - setup_docker
     - setup_anyenv
     - setup_c
     - setup_golang
@@ -12,7 +11,7 @@
     - setup_python
     - setup_ruby
     - setup_rust
-    - setup_lsp
+    - setup_docker
     - setup_kubernetes
     - setup_tools
     - setup_cargo_tools

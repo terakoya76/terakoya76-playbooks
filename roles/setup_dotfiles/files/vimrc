@@ -83,8 +83,7 @@ Plug 'natebosch/vim-lsc'
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'sheerun/vim-polyglot'
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'parsonsmatt/intero-neovim'
 call plug#end()
 
 "solarized personal conf

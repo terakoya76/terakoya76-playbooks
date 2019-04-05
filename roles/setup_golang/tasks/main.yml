@@ -13,15 +13,20 @@
   when: 'item not in GOENV_INSTALLED.stdout'
   with_items: '{{ GOLANG_VERSIONS }}'
 
-- name: Set Global version
-  shell: goenv global '{{ GLOBAL_VERSION }}'
-
 - name: Install golang libraries
   shell: go get -u '{{ item.url }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
+
+- name: Install golang lsp
+  shell: go get -u github.com/sourcegraph/go-langserver
+  args:
+    executable: /bin/bash
 
 - name: Place go-bin.sh
   template:
     src: files/go-bin.sh
     dest: "$HOME/.bash.d/go-bin.sh"
     mode: 0755
+
+- name: Set Global version
+  shell: goenv global '{{ GLOBAL_VERSION }}'
