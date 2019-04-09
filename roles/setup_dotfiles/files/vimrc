@@ -1,3 +1,83 @@
+" setup vim-plug
+if !filereadable(expand('~/.vim/autoload/plug.vim'))
+  if !executable("curl")
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  let g:not_finish_vimplug = "yes"
+  autocmd VimEnter * PlugInstall
+endif
+
+if has('vim_starting')
+  set rtp+=~/.vim/plugged/vim-plug
+  if !isdirectory(expand('~/.vim/plugged/vim-plug'))
+    echo 'install vim-plug...'
+    call system('mkdir -p ~/.vim/plugged/vim-plug')
+    call system('git clone https://github.com/junegunn/vim-plug.git ~/.vim/plugged/vim-plug/autoload')
+  end
+endif
+
+" plugins
+call plug#begin('~/.vim/plugged')
+"" color schema
+Plug 'altercation/vim-colors-solarized'
+"" delete white space
+Plug 'bronson/vim-trailing-whitespace'
+"" auto bracket
+Plug 'jiangmiao/auto-pairs'
+"" option bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"" integration w/ fzf
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"" gcc -> comment
+Plug 'tpope/vim-commentary'
+"" space + go -> exec script
+Plug 'thinca/vim-quickrun'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+"" ga -> align
+Plug 'junegunn/vim-easy-align'
+"" space + ne -> sidebar
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+"" manipulate git from vim
+Plug 'tpope/vim-fugitive'
+"" asynchronous execution
+Plug 'Shougo/vimproc.vim'
+"" asynchronous unite
+Plug 'Shougo/denite.nvim'
+"" <C-n> -> provide multiple cursors
+Plug 'terryma/vim-multiple-cursors'
+"" space + sh -> vimshell
+Plug 'Shougo/vimshell.vim'
+"" space + y -> copy over ssh
+Plug 'haya14busa/vim-poweryank'
+"" ctag support
+Plug 'szw/vim-tags'
+Plug 'lighttiger2505/gtags.vim'
+Plug 'jsfaint/gen_tags.vim'
+"" space + t -> view ctags
+Plug 'majutsushi/tagbar'
+"" auto complete
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'natebosch/vim-lsc'
+Plug 'w0rp/ale'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'sheerun/vim-polyglot'
+Plug 'ervandew/supertab'
+Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'parsonsmatt/intero-neovim'
+call plug#end()
+filetype plugin indent on
+let mapleader="\<Space>"
+
+" base
 syntax on
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,sjis
@@ -9,13 +89,44 @@ set cursorline
 set number
 set incsearch
 set wildmenu wildmode=list:full
-
+set mouse=a
+set clipboard+=unnamedplus
 highlight Normal ctermbg=black ctermfg=grey
 highlight StatusLine term=none cterm=none ctermfg=black ctermbg=grey
 highlight CursorLine term=none cterm=none ctermfg=none ctermbg=darkgray
 highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd InsertLeave * set nopaste
 
-" File Types
+" for US keyboard
+nnoremap ; :
+nnoremap : ;
+
+" shortcut leader=Space
+"" save
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qqq :q!<CR>
+nnoremap <Leader>eee :e<CR>
+nnoremap <Leader>wq :wq<CR>
+nnoremap <Leader>nn :noh<CR>
+
+"" pbcopy for OSX copy/paste
+vmap <C-x> :!pbcopy<CR>
+vmap <C-c> :w !pbcopy<CR><CR>
+
+"" move 15 words
+nmap <silent> <Tab> 15<Right>
+nmap <silent> <S-Tab> 15<Left>
+nmap <silent> ll 15<Right>
+nmap <silent> hh 15<Left>
+nmap <silent> jj 15<Down>
+nmap <silent> kk 15<Up>
+
+"" split
+nnoremap <Leader>s :<C-u>split<CR>
+nnoremap <Leader>v :<C-u>vsplit<CR>
+
+" funciton
+"" filetype
 augroup vimrc_filetype
   autocmd!
   autocmd BufRead,BufNewFile *.md set filetype=markdown
@@ -30,76 +141,47 @@ augroup vimrc_filetype
   autocmd FileType json setlocal shiftwidth=2 tabstop=2
 augroup END
 
-" for US keyboard
-nnoremap ; :
-nnoremap : ;
+"" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
 
-" enable mouse operation
-set mouse=a
+" plugin configuration
+"" nerdtree
+let g:NERDTreeChDirMode=2
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+let g:NERDTreeShowBookmarks=1
+let g:nerdtree_tabs_focus_on_files=1
+let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+let g:NERDTreeWinSize = 30
+let NERDTreeShowHidden=1
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
+nnoremap <Leader>dir :NERDTreeTabsToggle<CR>
+autocmd vimenter * NERDTree
+autocmd BufWritePre * :FixWhitespace
 
-" enable yank to clipboard
-set clipboard+=unnamedplus
+"" quickrun
+nnoremap <Leader>go :QuickRun<CR>
+let g:quickrun_config={'*': {'split': ''}}
 
-" Turn off paste mode when leaving insert
-autocmd InsertLeave * set nopaste
+"" vim-easy-align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
-" plugins
-if has('vim_starting')
-  set rtp+=~/.vim/plugged/vim-plug
-  if !isdirectory(expand('~/.vim/plugged/vim-plug'))
-    echo 'install vim-plug...'
-    call system('mkdir -p ~/.vim/plugged/vim-plug')
-    call system('git clone https://github.com/junegunn/vim-plug.git ~/.vim/plugged/vim-plug/autoload')
-  end
-endif
+"" vimshell
+"" nnoremap <Leader>sh :VimShellPop<CR>
+nnoremap <Leader>sh :vertical terminal<CR>
+let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+let g:vimshell_prompt =  '$ '
 
-call plug#begin('~/.vim/plugged')
-Plug 'altercation/vim-colors-solarized'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'jiangmiao/auto-pairs'
-Plug 'vim-airline/vim-airline'
-
-Plug 'Shougo/vimproc.vim'
-Plug 'Shougo/denite.nvim'
-Plug 'majutsushi/tagbar'
-Plug 'tpope/vim-fugitive' " manipulate git from vim
-Plug 'terryma/vim-multiple-cursors'
-Plug 'scrooloose/nerdtree'
-Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
-
-Plug 'haya14busa/vim-poweryank'
-
-Plug 'szw/vim-tags'
-Plug 'lighttiger2505/gtags.vim'
-"Plug 'jsfaint/gen_tags.vim'
-
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'natebosch/vim-lsc'
-Plug 'w0rp/ale'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'sheerun/vim-polyglot'
-Plug 'parsonsmatt/intero-neovim'
-call plug#end()
-
-"solarized personal conf
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
-
-"deoplete
-let g:deoplete#enable_at_startup = 1
-
-" airline
-let g:airline#extensions#ale#enabled = 1
+"" vim-airline
 set laststatus=2
-" Show branch name
+let g:airline_theme = 'powerlineish'
 let g:airline#extensions#branch#enabled = 1
-" Show buffer's filename
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#wordcount#enabled = 0
@@ -109,8 +191,53 @@ let g:airline_section_x = '%{&filetype}'
 let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
 let g:airline#extensions#default#section_truncate_width = {}
 let g:airline#extensions#whitespace#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#virtualenv#enabled = 1
 
-" ale
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+if !exists('g:airline_powerline_fonts')
+  let g:airline#extensions#tabline#left_sep = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  let g:airline_left_sep          = '▶'
+  let g:airline_left_alt_sep      = '»'
+  let g:airline_right_sep         = '◀'
+  let g:airline_right_alt_sep     = '«'
+  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
+  let g:airline#extensions#readonly#symbol   = '⊘'
+  let g:airline#extensions#linecolumn#prefix = '¶'
+  let g:airline#extensions#paste#symbol      = 'ρ'
+  let g:airline_symbols.linenr    = '␊'
+  let g:airline_symbols.branch    = '⎇'
+  let g:airline_symbols.paste     = 'ρ'
+  let g:airline_symbols.paste     = 'Þ'
+  let g:airline_symbols.paste     = '∥'
+  let g:airline_symbols.whitespace = 'Ξ'
+else
+  let g:airline#extensions#tabline#left_sep = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = ''
+endif
+
+"" vim-poweryank
+map <Leader>y <Plug>(operator-poweryank-osc52)
+
+"" solarized personal conf
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
+
+"" deoplete
+let g:deoplete#enable_at_startup = 1
+
+"" ale
 let g:ale_lint_on_text_changed = 0
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
@@ -131,14 +258,11 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 nnoremap <silent> :af :<C-u>ALEFix<CR>
 
-" Disable vim-polyglot for vim-go compatiability
+"" vim-polyglot
+""" Disable vim-polyglot for vim-go compatiability
 let g:polyglot_disabled = ['go']
 
-" Disable haskell-vim omnifunc
-let g:haskellmode_completion_ghc = 0
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
-" setting LSP
+"" setting LSP
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
@@ -221,45 +345,42 @@ let g:asyncomplete_smart_completion = 1
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_remove_duplicates = 1
 
-" denite
+"" denite
 nnoremap [denite] <Nop>
-nmap <C-c> [denite]
+nmap <Leader> [denite]
 
-"現在開いているファイルのディレクトリ下のファイル一覧。
+""" 現在開いているファイルのディレクトリ下のファイル一覧。
 nnoremap <silent> [denite]f :<C-u>DeniteBufferDir
       \ -direction=topleft -cursor-wrap=true file file:new<CR>
-"バッファ一覧
+""" バッファ一覧
 nnoremap <silent> [denite]b :<C-u>Denite -direction=topleft -cursor-wrap=true buffer<CR>
-"レジスタ一覧
+""" レジスタ一覧
 nnoremap <silent> [denite]r :<C-u>Denite -direction=topleft -cursor-wrap=true -buffer-name=register register<CR>
-"最近使用したファイル一覧
+""" 最近使用したファイル一覧
 nnoremap <silent> [denite]m :<C-u>Denite -direction=topleft -cursor-wrap=true file_mru<CR>
-"ブックマーク一覧
+""" ブックマーク一覧
 nnoremap <silent> [denite]c :<C-u>Denite -direction=topleft -cursor-wrap=true bookmark<CR>
-"ブックマークに追加
+""" ブックマークに追加
 nnoremap <silent> [denite]a :<C-u>DeniteBookmarkAdd<CR>
-"grep
+""" grep
 nnoremap <silent> [denite]l :<C-u>Denite -direction=topleft -cursor-wrap=true grep<CR>
 
-".git以下のディレクトリ検索
+""".git以下のディレクトリ検索
 nnoremap <silent> [denite]k :<C-u>Denite -direction=topleft -cursor-wrap=true
       \ -path=`substitute(finddir('.git', './;'), '.git', '', 'g')`
       \ file_rec/git<CR>
 
 call denite#custom#source('file'    , 'matchers', ['matcher_cpsm', 'matcher_fuzzy'])
-
 call denite#custom#source('buffer'  , 'matchers', ['matcher_regexp'])
 call denite#custom#source('file_mru', 'matchers', ['matcher_regexp'])
-
 call denite#custom#alias('source', 'file_rec/git', 'file_rec')
 call denite#custom#var('file_rec/git', 'command',
   \ ['git', 'ls-files', '-co', '--exclude-standard'])
-
 call denite#custom#map('insert', '<C-N>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map('insert', '<C-P>', '<denite:move_to_previous_line>', 'noremap')
 call denite#custom#map('insert', '<C-W>', '<denite:move_up_path>', 'noremap')
 
-"deniteのgrepをripgrepで置換
+""" deniteのgrepをripgrepで置換
 if executable('rg')
   call denite#custom#var('file_rec', 'command',
         \ ['rg', '--files', '--glob', '!.git'])
@@ -268,32 +389,23 @@ endif
 
 "ctag
 set tags=./.git/tags;
-
 let g:vim_tags_auto_generate = 1
 let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -R --exclude=node_modules . 2>/dev/null"
 let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2>/dev/null"
+let g:gen_tags#ctags_use_cache_dir = 0
 
-" gtags
+"" gtags
 "let g:Gtags_Auto_Map = 0
 "let g:Gtags_OpenQuickfixWindow = 1
 "nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
 "nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
-
 "let g:gen_tags#ctags_auto_gen = 1
 "let g:gen_tags#gtags_auto_gen = 1
-let g:gen_tags#ctags_use_cache_dir = 0
 
-"tagbar
+"" tagbar
 set statusline=%F%m%r%h%w\%=%{tagbar#currenttag('[%s]','')}\[Pos=%v,%l]\[Len=%L]
 let g:tagbar_width = 30
-nnoremap <silent> <C-c>t :TagbarToggle<CR>
+nnoremap <Leader>t :TagbarToggle<CR>
 
-" NERDTree
-autocmd vimenter * NERDTree
-
-" vim-easy-align
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-" vim-poweryank
+"" vim-poweryank
 map <Leader>y <Plug>(operator-poweryank-osc52)
