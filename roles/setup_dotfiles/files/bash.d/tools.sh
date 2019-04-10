@@ -30,3 +30,5 @@ fbet() {
 }
 
 alias be="bundle ex"
+alias bi="bundle install"
+alias bem="bundle ex rake db:migrate"
