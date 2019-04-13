@@ -10,7 +10,7 @@ dstop() {
 
 # docker rm all containers
 drm() {
-  docker rm "$(docker ps -a -q)"
+  docker rm $(docker ps -f status=exited -f status=created -f status=dead -f status=paused -q)
 }
 
 # docker rm all containers -f
@@ -21,7 +21,7 @@ drmf() {
 
 # docker rm all images
 dri() {
-  docker rmi "$(docker images -q)"
+  docker rmi $(docker images -f dangling=true -q)
 }
 
 {% raw %}
