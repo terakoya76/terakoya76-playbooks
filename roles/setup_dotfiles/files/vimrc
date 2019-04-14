@@ -45,20 +45,20 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 "" manipulate git from vim
 Plug 'tpope/vim-fugitive'
+"" display git diff
+Plug 'airblade/vim-gitgutter'
 "" asynchronous execution
 Plug 'Shougo/vimproc.vim'
 "" asynchronous unite
 Plug 'Shougo/denite.nvim'
 "" <C-n> -> provide multiple cursors
 Plug 'terryma/vim-multiple-cursors'
+"" space + ct -> generate tags
+Plug 'szw/vim-tags'
 "" space + sh -> vimshell
 Plug 'Shougo/vimshell.vim'
 "" space + y -> copy over ssh
 Plug 'haya14busa/vim-poweryank'
-"" ctag support
-Plug 'szw/vim-tags'
-Plug 'lighttiger2505/gtags.vim'
-Plug 'jsfaint/gen_tags.vim'
 "" space + t -> view ctags
 Plug 'majutsushi/tagbar'
 "" auto complete
@@ -70,7 +70,6 @@ Plug 'natebosch/vim-lsc'
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'sheerun/vim-polyglot'
-Plug 'ervandew/supertab'
 Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'parsonsmatt/intero-neovim'
 call plug#end()
@@ -113,14 +112,6 @@ nnoremap <Leader>nn :noh<CR>
 vmap <C-x> :!pbcopy<CR>
 vmap <C-c> :w !pbcopy<CR><CR>
 
-"" move 15 words
-nmap <silent> <Tab> 15<Right>
-nmap <silent> <S-Tab> 15<Left>
-nmap <silent> ll 15<Right>
-nmap <silent> hh 15<Left>
-nmap <silent> jj 15<Down>
-nmap <silent> kk 15<Up>
-
 "" split
 nnoremap <Leader>s :<C-u>split<CR>
 nnoremap <Leader>v :<C-u>vsplit<CR>
@@ -159,7 +150,6 @@ let g:NERDTreeWinSize = 30
 let NERDTreeShowHidden=1
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <Leader>dir :NERDTreeTabsToggle<CR>
-autocmd vimenter * NERDTree
 autocmd BufWritePre * :FixWhitespace
 
 "" quickrun
@@ -224,6 +214,13 @@ else
   let g:airline_symbols.branch = ''
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
+endif
+
+"" vim-gitgutter
+if exists('&signcolumn')  " Vim 7.4.2201
+  set signcolumn=yes
+else
+  let g:gitgutter_sign_column_always = 1
 endif
 
 "" vim-poweryank
@@ -401,20 +398,10 @@ if executable('rg')
   call denite#custom#var('grep', 'command', ['rg'])
 endif
 
-"ctag
-set tags=./.git/tags;
-let g:vim_tags_auto_generate = 1
-let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -R --exclude=node_modules . 2>/dev/null"
-let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2>/dev/null"
-let g:gen_tags#ctags_use_cache_dir = 0
-
-"" gtags
-"let g:Gtags_Auto_Map = 0
-"let g:Gtags_OpenQuickfixWindow = 1
-"nmap <silent> K :<C-u>exe("Gtags ".expand('<cword>'))<CR>
-"nmap <silent> R :<C-u>exe("Gtags -r ".expand('<cword>'))<CR>
-"let g:gen_tags#ctags_auto_gen = 1
-"let g:gen_tags#gtags_auto_gen = 1
+"" ctags
+set tags=~/.tags
+let g:vim_tags_project_tags_command = "ctags -R -f ~/.tags `pwd` 2>/dev/null &"
+nnoremap <Leader>gt :TagsGenerate<CR>
 
 "" tagbar
 set statusline=%F%m%r%h%w\%=%{tagbar#currenttag('[%s]','')}\[Pos=%v,%l]\[Len=%L]
