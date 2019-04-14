@@ -406,6 +406,3 @@ let g:gen_tags#ctags_use_cache_dir = 0
 set statusline=%F%m%r%h%w\%=%{tagbar#currenttag('[%s]','')}\[Pos=%v,%l]\[Len=%L]
 let g:tagbar_width = 30
 nnoremap <Leader>t :TagbarToggle<CR>
-
-"" vim-poweryank
-map <Leader>y <Plug>(operator-poweryank-osc52)

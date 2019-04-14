@@ -1,8 +1,8 @@
 - name: Install kubectl
-  shell: brew install kubernetes-cli
+  homebrew:
+    name: kubernetes-cli
+    state: present
   when: "ansible_os_family == 'Darwin'"
-  args:
-    executable: /bin/bash
 
 - name: Install kubectl
   become: yes
@@ -15,7 +15,8 @@
     executable: /bin/bash
 
 - name: Install helm
-  shell: https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+  shell: |
+    https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
   args:
     executable: /bin/bash
 
@@ -48,25 +49,23 @@
     executable: /bin/bash
 
 - name: Install kube-ps1
-  shell: brew install kube-ps1
+  homebrew:
+    name: kube-ps1
+    state: present
   when: "ansible_os_family == 'Darwin'"
-  args:
-    executable: /bin/bash
 
 - name: Install awscli
-  shell: pip3 install awscli --upgrade --user
-  args:
-    executable: /bin/bash
+  pip:
+    name: awscli
+    extra_args: --upgrade --user
 
 - name: Install yq
-  shell: pip3 install yq
-  args:
-    executable: /bin/bash
+  pip:
+    name: yq
 
 - name: Install onelogin-aws-cli
-  shell: pip3 install onelogin-aws-cli
-  args:
-    executable: /bin/bash
+  pip:
+    name: onelogin-aws-cli
 
 - name: Install eksctl
   become: yes
@@ -83,10 +82,10 @@
     executable: /bin/bash
 
 - name: Install terraform
-  shell: brew install terraform
+  homebrew:
+    name: terraform
+    state: present
   when: "ansible_os_family == 'Darwin'"
-  args:
-    executable: /bin/bash
 
 - name: Install terraform
   become: yes

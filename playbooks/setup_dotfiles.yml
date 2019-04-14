@@ -1,5 +1,4 @@
 - hosts:
     - 'default'
   roles:
-    - setup_lsp
     - setup_dotfiles

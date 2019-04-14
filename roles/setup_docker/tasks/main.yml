@@ -1,6 +1,7 @@
 - name: Install Docker
-  shell: |
-    brew cask install docker
+  homebrew_cask:
+    name: docker
+    state: present
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install dependencies
@@ -11,12 +12,14 @@
   when: ("ansible_os_family == 'Debian'")
 
 - name: Install GPG publickey
-  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  shell: |
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   when: ("ansible_os_family == 'Debian'")
 
 - name: Add Apt-Repository
   become: yes
-  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  shell: |
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   when: ("ansible_os_family == 'Debian'")
 
 - name: Install Docker
@@ -28,7 +31,8 @@
 
 - name: Remove Additional Repository
   become: yes
-  shell: rm /etc/apt/sources.list.d/additional-repositories.list
+  shell: |
+    rm /etc/apt/sources.list.d/additional-repositories.list
   when: ("ansible_os_family == 'Debian'")
 
 - name: Install Docker Lang Server
