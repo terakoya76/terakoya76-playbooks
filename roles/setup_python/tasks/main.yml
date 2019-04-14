@@ -24,6 +24,10 @@
   pip:
     name: python-language-server
 
+- name: Install Linter/Fixer
+  pip:
+    name: flake8 flake8-import-order autopep8 black isort
+
 - name: Set Global version
   shell: pyenv global system '{{ PY2_VERSION }}' '{{ PY3_VERSION }}'
 
