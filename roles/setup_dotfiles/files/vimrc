@@ -399,8 +399,10 @@ if executable('rg')
 endif
 
 "" ctags
-set tags=~/.tags
-let g:vim_tags_project_tags_command = "ctags -R -f ~/.tags `pwd` 2>/dev/null &"
+set tags=tags
+let g:vim_tags_project_tags_command = "ctags -R --exclude=.git"
+nnoremap <C-]> g<C-]>
+inoremap <C-]> <ESC>g<C-]><Paste>
 nnoremap <Leader>gt :TagsGenerate<CR>
 
 "" tagbar

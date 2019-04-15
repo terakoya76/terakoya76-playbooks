@@ -67,6 +67,12 @@
     dest: "$HOME/.translate-shell/init.trans"
     mode: 0755
 
+- name: Place .ctags
+  template:
+    src: files/ctags
+    dest: "$HOME/.ctags"
+    mode: 0755
+
 - name: Place .tmux.conf
   template:
     src: files/tmux.conf
