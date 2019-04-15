@@ -94,5 +94,11 @@
     dest: "$HOME/.gitignore_global"
     mode: 0755
 
+- name: Place .globalrc
+  template:
+    src: files/globalrc
+    dest: "$HOME/.globalrc"
+    mode: 0755
+
 - name: Enable dotfiles
   shell: git config --global core.excludesfile ~/.gitignore_global
