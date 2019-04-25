@@ -2,7 +2,6 @@
   homebrew:
     name: llvm
     state: present
-    install_options: with-clang,with-lldb
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install llvm/clang/lldb
@@ -10,4 +9,4 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"

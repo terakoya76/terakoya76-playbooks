@@ -16,4 +16,3 @@
     - setup_kubernetes
     - setup_tools
     - setup_cargo_tools
-    - setup_rictyfont

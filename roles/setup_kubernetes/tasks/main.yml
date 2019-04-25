@@ -10,18 +10,31 @@
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     mv ./kubectl /usr/local/bin/kubectl
     chmod +x /usr/local/bin/kubectl
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
   args:
     executable: /bin/bash
 
+- name: Place kubeconfig.sh
+  template:
+    src: files/kubeconfig.sh
+    dest: "$HOME/.bash.d/kubeconfig.sh"
+    mode: 0755
+
+- name: Enable kubectl
+  shell: exec $SHELL -l
+
 - name: Install helm
-  shell: |
-    https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+  homebrew:
+    name: kubernetes-helm
+    state: present
+  when: "ansible_os_family == 'Darwin'"
+
+- name: helm init
+  shell: helm init --history-max 200
   args:
     executable: /bin/bash
 
 - name: Install Helmfile
-  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
@@ -39,7 +52,6 @@
     executable: /bin/bash
 
 - name: Install stern
-  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
@@ -55,20 +67,15 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install awscli
-  pip:
-    name: awscli
-    extra_args: --upgrade --user
+  shell: pip3 install awscli --upgrade --user
 
 - name: Install yq
-  pip:
-    name: yq
+  shell: pip3 install yq
 
 - name: Install onelogin-aws-cli
-  pip:
-    name: onelogin-aws-cli
+  shell: pip3 install onelogin-aws-cli
 
 - name: Install eksctl
-  become: yes
   shell: |
     curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
     mv /tmp/eksctl /usr/local/bin
@@ -93,12 +100,11 @@
     wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
     unzip terraform_0.11.11_linux_amd64.zip
     mv ./terraform /usr/bin/
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
   args:
     executable: /bin/bash
 
 - name: Install sopsed
-  become: yes
   shell: |
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
     mv sopsed /usr/local/bin
@@ -107,7 +113,6 @@
     executable: /bin/bash
 
 - name: Install variant
-  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -

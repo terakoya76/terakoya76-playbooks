@@ -5,14 +5,14 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install OpenJDK
-  homebrew_tap:
-    name: caskroom/versions
+  homebrew_cask:
+    name: java11
     state: present
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install OpenJDK
-  homebrew:
-    name: java8
+  homebrew_cask:
+    name: adoptopenjdk8
     state: present
   when: "ansible_os_family == 'Darwin'"
 
@@ -24,7 +24,7 @@
   with_items:
     - openjdk-8-jdk
     - openjdk-11-jdk
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: add jvm to under jenv management
   shell: |
@@ -40,7 +40,7 @@
     jenv add /usr/lib/jvm/java-11-openjdk-amd64
   args:
     executable: /bin/bash
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install gradle
   homebrew:

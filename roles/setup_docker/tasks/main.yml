@@ -9,31 +9,31 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install GPG publickey
   shell: |
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Add Apt-Repository
   become: yes
   shell: |
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install Docker
   become: yes
   apt:
     name: docker-ce
     state: present
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Remove Additional Repository
   become: yes
   shell: |
     rm /etc/apt/sources.list.d/additional-repositories.list
-  when: ("ansible_os_family == 'Debian'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install Docker Lang Server
   npm:

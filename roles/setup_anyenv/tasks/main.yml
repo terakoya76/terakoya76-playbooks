@@ -14,8 +14,14 @@
     dest: "$HOME/.bash.d/anyenv.sh"
     mode: 0755
 
+- name: Place goenv.sh
+  template:
+    src: files/goenv.sh
+    dest: "$HOME/.bash.d/goenv.sh"
+    mode: 0755
+
 - name: Enable anyenv
-  shell: $SHELL -l
+  shell: exec $SHELL -l
 
 - name: Check env installed
   shell: anyenv envs
@@ -27,14 +33,8 @@
   with_items: '{{ ANYENV_ENVS }}'
   when: 'item not in anyenv_envs.stdout'
 
-- name: Place goenv.sh
-  template:
-    src: files/goenv.sh
-    dest: "$HOME/.bash.d/goenv.sh"
-    mode: 0755
-
-- name: Enable anyenv
-  shell: $SHELL -l
-
 - name: Update exists tools
   shell: anyenv update
+
+- name: Enable anyenv
+  shell: exec $SHELL -l

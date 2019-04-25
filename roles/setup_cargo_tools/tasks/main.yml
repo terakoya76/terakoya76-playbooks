@@ -1,7 +1,7 @@
 - name: Install Alacritty
-  shell: |
-    brew tap mscharley/homebrew
-    brew install --HEAD alacritty
+  homebrew_cask: |
+    name: alacritty
+    state: present
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install Alacritty Dependencies
@@ -9,13 +9,13 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Fetch Alacritty repo
   git:
     repo: https://github.com/jwilm/alacritty
     dest: "$HOME/alacritty"
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install Alacritty
   shell: |
@@ -23,7 +23,7 @@
     cargo deb --install
   args:
     chdir: "$HOME/alacritty/"
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install bat
   shell: cargo install bat

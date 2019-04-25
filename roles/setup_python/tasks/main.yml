@@ -3,7 +3,7 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Ensure pyenv installed
   shell: which pyenv
@@ -20,16 +20,17 @@
   when: 'item not in PYENV_INSTALLED.stdout'
   with_items: '{{ PYTHON_VERSIONS }}'
 
-- name: Install lsp
-  pip:
-    name: python-language-server
-
-- name: Install Linter/Fixer
-  pip:
-    name: flake8 flake8-import-order autopep8 black isort
-
 - name: Set Global version
   shell: pyenv global system '{{ PY2_VERSION }}' '{{ PY3_VERSION }}'
+
+- name: update pip
+  shell: pip3 install --upgrade pip
+
+- name: Install lsp
+  shell: pip3 install python-language-server
+
+- name: Install Linter/Fixer
+  shell: pip3 install flake8 flake8-import-order autopep8 black isort
 
 - name: Place python ver manage script
   template:

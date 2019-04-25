@@ -13,6 +13,9 @@
   when: 'item not in NODENV_INSTALLED.stdout'
   with_items: '{{ NODEJS_VERSIONS }}'
 
+- name: Set Global version
+  shell: nodenv global '{{ GLOBAL_VERSION }}'
+
 - name: Install JS lsp
   npm:
     name: flow-language-server
@@ -33,9 +36,6 @@
     name: vscode-css-languageserver-bin
     global: true
 
-- name: Set Global version
-  shell: nodenv global '{{ GLOBAL_VERSION }}'
-
 - name: Place yarn.sh
   template:
     src: files/yarn.sh
@@ -43,4 +43,4 @@
     mode: 0755
 
 - name: Enable yarn
-  shell: $SHELL -l
+  shell: exec $SHELL -l

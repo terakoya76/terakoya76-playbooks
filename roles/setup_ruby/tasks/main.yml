@@ -6,14 +6,14 @@
 - name: Set prefix
   set_fact:
     rubybuild_prefix: ''
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install Dependencies
   become: yes
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
-  when: ("ansible_os_family == 'Debian'") or ("ansible_os_family == 'Linuxmint'")
+  when: "ansible_os_family == 'Debian'"
 
 - name: Ensure rbenv installed
   shell: which rbenv
@@ -29,6 +29,9 @@
   shell: '{{ rubybuild_prefix }}rbenv install {{ item }}'
   when: 'item not in RBENV_INSTALLED.stdout'
   with_items: '{{ RUBY_VERSIONS }}'
+
+- name: Set Global version
+  shell: rbenv global {{ GLOBAL_VERSION }}
 
 - name: Install bundler
   gem:
@@ -54,7 +57,3 @@
   register: gem_update
   with_items: '{{ RUBY_VERSIONS }}'
   changed_when: gem_update.stdout.find('Latest version already installed') == -1
-
-- name: Set Global version
-  shell: rbenv global {{ GLOBAL_VERSION }}
-
