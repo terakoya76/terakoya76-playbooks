@@ -1,19 +1,11 @@
 - name: Install OpenJDK
   homebrew_cask:
-    name: java
+    name: '{{ item }}'
     state: present
-  when: "ansible_os_family == 'Darwin'"
-
-- name: Install OpenJDK
-  homebrew_cask:
-    name: java11
-    state: present
-  when: "ansible_os_family == 'Darwin'"
-
-- name: Install OpenJDK
-  homebrew_cask:
-    name: adoptopenjdk8
-    state: present
+  with_items:
+    - java
+    - java11
+    - adoptopenjdk8
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install OpenJDK
@@ -26,21 +18,11 @@
     - openjdk-11-jdk
   when: "ansible_os_family == 'Debian'"
 
-- name: add jvm to under jenv management
-  shell: |
-    jenv add $(/usr/libexec/java_home)
-    jenv add /Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/
-  args:
-    executable: /bin/bash
-  when: "ansible_os_family == 'Darwin'"
-
-- name: add jvm to under jenv management
-  shell: |
-    jenv add /usr/lib/jvm/java-8-openjdamd64
-    jenv add /usr/lib/jvm/java-11-openjdk-amd64
-  args:
-    executable: /bin/bash
-  when: "ansible_os_family == 'Debian'"
+- name: Place set_java_version.sh
+  template:
+    src: files/set_java_version.sh
+    dest: "$HOME/.bash.d/set_java_version.sh"
+    mode: 0755
 
 - name: Install gradle
   homebrew:

@@ -1,6 +1,5 @@
 ANYENV_ENVS:
   - goenv
-  - jenv
   - nodenv
   - pyenv
   - rbenv

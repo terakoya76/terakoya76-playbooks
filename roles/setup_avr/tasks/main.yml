@@ -5,9 +5,11 @@
   with_items:
     - osx-cross/avr
     - PX4/homebrew-px4
+  when: "ansible_os_family == 'Darwin'"
 
 - name: Brew Update
   shell: brew update
+  when: "ansible_os_family == 'Darwin'"
 
 - name: Brew Install
   homebrew:
@@ -18,3 +20,4 @@
     - dfu-programmer
     - gcc-arm-none-eabi
     - avrdude
+  when: "ansible_os_family == 'Darwin'"
