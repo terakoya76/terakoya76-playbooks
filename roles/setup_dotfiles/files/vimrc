@@ -23,7 +23,7 @@ endif
 " plugins
 call plug#begin('~/.vim/plugged')
 "" color schema
-Plug 'altercation/vim-colors-solarized'
+Plug 'cocopon/iceberg.vim'
 "" delete white space
 Plug 'bronson/vim-trailing-whitespace'
 "" auto bracket
@@ -226,10 +226,8 @@ endif
 "" vim-poweryank
 map <Leader>y <Plug>(operator-poweryank-osc52)
 
-"" solarized personal conf
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
+"" colorscheme
+colorscheme iceberg
 
 "" deoplete
 let g:deoplete#enable_at_startup = 1
