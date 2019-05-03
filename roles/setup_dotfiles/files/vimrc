@@ -64,11 +64,9 @@ Plug 'majutsushi/tagbar'
 "" auto complete
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'natebosch/vim-lsc'
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'sheerun/vim-polyglot'
 Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'parsonsmatt/intero-neovim'
