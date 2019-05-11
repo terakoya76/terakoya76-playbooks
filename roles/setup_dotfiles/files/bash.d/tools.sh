@@ -8,7 +8,7 @@ alias ls=exa
 alias fd=fdfind
 
 # cat(bat)
-export BAT_THEME="TwoDark"
+export BAT_THEME="iceberg"
 alias cat=bat
 
 # wrapper for lsec2
@@ -16,20 +16,22 @@ lssh () {
   IP=$(lsec2 "$@" | fzf-tmux -m --reverse | awk -F '\t' '{print $2}')
   if [ "$IP" != "" ] ; then
     echo "$IP"
-    ssh -i $PUBKEY "hajime-terasawa@$IP"
+    ssh -i "$PUBKEY" "hajime-terasawa@$IP"
   fi
 }
 
-# rails
-bes() {
-  bundle ex rails s -b 0.0.0.0 -p "$1"
+# add a blank line after each output
+add_line () {
+  if [ -z "${PS1_NEWLINE_LOGIN}" ]; then
+    PS1_NEWLINE_LOGIN=true
+  else
+    printf '\n'
+  fi
 }
+PROMPT_COMMAND='add_line'
 
-fbet() {
-  bundle ex rake -T | fzf-tmux -m --reverse | xargs bundle ex
-}
-
-alias be="bundle ex"
-alias bec="bundle ex rails c"
-alias bi="bundle install"
-alias bem="bundle ex rake db:migrate"
+# NOTE: need Menlo-for-Powerline
+#   https://github.com/abertsch/Menlo-for-Powerline
+# change prompt
+source ~/.git-prompt.sh
+export PS1='\[\e[34m\][\t]\[\e[0m\]\[\e[35m\][jobs:\j]\[\e[0m\]\[\e[36m\][\w]\[\e[0m\]\n\[\e[30;47m\] \W \[\e[0m\] \[\e[30;47m\]$(__git_ps1 "\[\e[30m\][ %s]")\[\e[0m\] \$ '

@@ -24,6 +24,12 @@
 - name: Fetch Solarized Color Schema
   shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
 
+# NOTE: check iceberg terminal theme when you're using MacOS
+#   https://cocopon.github.io/iceberg.vim/
+
+- name: Install powerline-shell
+  shell: pip3 install powerline-shell
+
 - name: Install kafka
   shell: |
     wget http://ftp.tsukuba.wide.ad.jp/software/apache/kafka/2.2.0/kafka_2.11-2.2.0.tgz
