@@ -1,19 +1,19 @@
 - hosts:
     - 'default'
   roles:
-    - setup_dotfiles
-    - setup_homebrew_packages
-    - setup_anyenv
-    - setup_c
-    - setup_golang
-    - setup_haskell
-    - setup_java
-    - setup_nodejs
-    - setup_python
-    - setup_ruby
-    - setup_rust
-    - setup_avr
-    - setup_docker
-    - setup_kubernetes
-    - setup_tools
-    - setup_cargo_tools
+    - dotfiles
+    - homebrew_packages
+    - anyenv
+    - c
+    - golang
+    - haskell
+    - java
+    - nodejs
+    - python
+    - ruby
+    - rust
+    - avr
+    - docker
+    - kubernetes
+    - tools
+    - cargo_tools

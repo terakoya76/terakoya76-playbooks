@@ -1,4 +1,4 @@
 - hosts:
     - 'default'
   roles:
-    - setup_dotfiles
+    - dotfiles
