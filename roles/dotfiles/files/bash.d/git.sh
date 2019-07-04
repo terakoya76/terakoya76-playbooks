@@ -1,3 +1,5 @@
+export GITHUB_USERNAME=terakoya76
+
 # git fetch pull request
 # $1 = remote_branch, $2 = pr_number
 gpr() {
@@ -5,11 +7,11 @@ gpr() {
 }
 
 # git setup remote repository
-# $1 = forked-user, $2 = owner-user, $3 = repo
+# $1=owner-user, $2=repo
 gsu() {
-  git clone "git@github.com:$1/$3.git" "$3"
-  cd "$3" || exit 1
-  git remote add upstream "git@github.com:$2/$3.git"
+  git clone "git@github.com:$GITHUB_USERNAME/$2.git" "$2"
+  cd "$2" || exit 1
+  git remote add upstream "git@github.com:$1/$2.git"
   git remote set-url upstream --push no-pushing
 }
 
