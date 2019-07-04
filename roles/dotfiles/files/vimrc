@@ -248,22 +248,23 @@ let g:ale_linters = {
   \ 'javascript': ['eslint', 'flow'],
   \ 'typescript': ['eslint', 'tsserver'],
   \ 'python': ['flake8'],
-  \ 'go': ['golint'],
+  \ 'go': ['golint', 'staticcheck'],
   \ 'c': ['clang'],
   \ 'cpp': ['clang'],
   \ }
 let g:ale_fixers = {
   \ 'ruby': ['rubocop'],
-  \ 'javascript': ['prettier-eslint'],
-  \ 'typescript': ['prettier-eslint'],
+  \ 'javascript': ['eslint'],
+  \ 'typescript': ['eslint'],
   \ 'python': ['autopep8', 'black', 'isort'],
   \ 'go': ['gofmt'],
+  \ 'rust': ['rustfmt'],
   \ }
 highlight link ALEErrorSign Tag
 highlight link ALEWarningSign StorageClass
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-autocmd BufWritePost *.js,*.jsx,*.ts,*.css,*.scss,*.py,*.rb,*.go ALEFix
+autocmd BufWritePost *.js,*.jsx,*.ts,*.css,*.scss,*.py,*.rb,*.go,*rs ALEFix
 
 "" vim-polyglot
 """ Disable vim-polyglot for vim-go compatiability
