@@ -18,6 +18,12 @@
 - name: Create target directory for bash fragments
   file: path="$HOME/.bash.d" state=directory mode=0755
 
+- name: Place aws.sh
+  template:
+    src: files/bash.d/aws.sh
+    dest: "$HOME/.bash.d/aws.sh"
+    mode: 0755
+
 - name: Place docker.sh
   template:
     src: files/bash.d/docker.sh
