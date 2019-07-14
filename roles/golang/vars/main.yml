@@ -2,10 +2,10 @@ GOLANG_VERSIONS:
   - 1.9.7
   - 1.10.8
   - 1.11.4
-  - 1.11.6
-  - 1.12.1
+  - 1.11.12
+  - 1.12.5
 
-GLOBAL_VERSION: 1.11.4
+GLOBAL_VERSION: 1.12.5
 
 GOLANG_LIBERARIES:
   - { url: golang.org/x/tools/cmd/goimports }
@@ -17,3 +17,4 @@ GOLANG_LIBERARIES:
   - { url: go.mozilla.org/sops/cmd/sops }
   - { url: honnef.co/go/tools/cmd/... }
   - { url: github.com/derekparker/delve/cmd/dlv }
+  - { url: github.com/spf13/cobra/cobra }
