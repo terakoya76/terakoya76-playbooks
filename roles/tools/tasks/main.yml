@@ -44,5 +44,9 @@
     dest: "$HOME/.bash.d/fzf.sh"
     mode: 0755
 
+- name: Install circleci cli
+  shell: |
+    curl -fLSs https://circle.ci/cli | bash
+
 - name: Enable dotfiles
   shell: $SHELL -l
