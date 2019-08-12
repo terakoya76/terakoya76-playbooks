@@ -68,7 +68,7 @@ Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'sheerun/vim-polyglot'
-Plug 'dbgx/lldb.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh \| UpdateRemotePlugins' }
 Plug 'parsonsmatt/intero-neovim'
 call plug#end()
 filetype plugin indent on
