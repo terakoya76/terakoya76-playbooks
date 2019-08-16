@@ -4,6 +4,7 @@ export GITHUB_USERNAME=terakoya76
 # $1 = remote_branch, $2 = pr_number
 gpr() {
   git fetch "$1" pull/"$2"/head:"$2"
+  git checkout "$2"
 }
 
 # git setup remote repository
