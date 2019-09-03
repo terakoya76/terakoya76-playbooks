@@ -30,6 +30,12 @@
     dest: "$HOME/.bash.d/docker.sh"
     mode: 0755
 
+- name: Place dockerized.sh
+  template:
+    src: files/bash.d/dockerized.sh
+    dest: "$HOME/.bash.d/dockerized.sh"
+    mode: 0755
+
 - name: Place git.sh
   template:
     src: files/bash.d/git.sh
