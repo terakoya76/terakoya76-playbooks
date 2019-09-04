@@ -1,6 +1,14 @@
-# grpcurl
-docker pull terakoya76/grpcurl
-alias grpcurl='docker run -it --rm terakoya76/grpcurl'
+#
+# official
+#
+
+# jq
+docker pull stedolan/jq
+alias jq='docker run -it --rm stedolan/jq'
+
+# yq
+docker pull mikefarah/yq
+alias yq='docker run -it --rm mikefarah/yq yq'
 
 # mitmproxy
 docker pull mitmproxy/mitmproxy
@@ -25,3 +33,31 @@ docker pull $TERRAFORM11
 docker pull $TERRAFORM12
 alias terraform11="docker run -it --rm $TERRAFORM11"
 alias terraform12="docker run -it --rm $TERRAFORM12"
+
+#
+# personal
+#
+
+# kubectl
+docker pull terakoya76/kubectl
+alias kubectl='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/kubectl'
+
+# stern
+docker pull terakoya76/stern
+alias stern='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/stern'
+
+# eksctl
+docker pull terakoya76/eksctl
+alias eksctl='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/eksctl'
+
+# terraformer
+docker pull terakoya76/terraformer
+alias terraformer='docker run -it --rm terakoya76/terraformer'
+
+# grpcurl
+docker pull terakoya76/grpcurl
+alias grpcurl='docker run -it --rm terakoya76/grpcurl'
+
+# iam-policy-json-to-terraform
+docker pull terakoya76/iam-policy-json-to-terraform
+alias iam-policy-json-to-terraform='docker run -i --rm terakoya76/iam-policy-json-to-terraform'

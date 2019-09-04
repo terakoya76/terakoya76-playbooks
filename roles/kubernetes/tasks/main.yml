@@ -1,19 +1,3 @@
-- name: Install kubectl
-  homebrew:
-    name: kubernetes-cli
-    state: present
-  when: "ansible_os_family == 'Darwin'"
-
-- name: Install kubectl
-  become: yes
-  shell: |
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-    mv ./kubectl /usr/local/bin/kubectl
-    chmod +x /usr/local/bin/kubectl
-  when: "ansible_os_family == 'Debian'"
-  args:
-    executable: /bin/bash
-
 - name: Place kubeconfig.sh
   template:
     src: files/kubeconfig.sh
@@ -34,20 +18,20 @@
   args:
     executable: /bin/bash
 
+- name: Install Helm Plugin
+  shell: |
+    helm plugin install https://github.com/rimusz/helm-tiller
+    helm plugin install https://github.com/databus23/helm-diff --version master
+    helm plugin install https://github.com/futuresimple/helm-secrets
+  args:
+    executable: /bin/bash
+
 - name: Install Helmfile
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     mv "helmfile_$SYSNAME" /usr/local/bin
     chmod +x /usr/local/bin
-  args:
-    executable: /bin/bash
-
-- name: Install Helm Plugin
-  shell: |
-    helm plugin install https://github.com/rimusz/helm-tiller
-    helm plugin install https://github.com/databus23/helm-diff --version master
-    helm plugin install https://github.com/futuresimple/helm-secrets
   args:
     executable: /bin/bash
 
@@ -75,32 +59,8 @@
 - name: Install onelogin-aws-cli
   shell: pip3 install onelogin-aws-cli
 
-- name: Install eksctl
-  shell: |
-    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-    mv /tmp/eksctl /usr/local/bin
-    chmod +x /usr/local/bin
-  args:
-    executable: /bin/bash
-
 - name: Install aws-iam-authenticator
   shell: go get -u github.com/kubernetes-sigs/aws-iam-authenticator/cmd/aws-iam-authenticator
-  args:
-    executable: /bin/bash
-
-- name: Install terraform
-  homebrew:
-    name: terraform
-    state: present
-  when: "ansible_os_family == 'Darwin'"
-
-- name: Install terraform
-  become: yes
-  shell: |
-    wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
-    unzip terraform_0.11.11_linux_amd64.zip
-    mv ./terraform /usr/bin/
-  when: "ansible_os_family == 'Debian'"
   args:
     executable: /bin/bash
 
