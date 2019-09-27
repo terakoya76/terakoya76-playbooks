@@ -13,6 +13,5 @@ export AWS_PROFILE=saml
 sta () {
   unset AWS_ACCESS_KEY_ID
   unset AWS_SECRET_ACCESS_KEY
-  saml2aws login --skip-prompt --session-duration 10800
+  saml2aws login --skip-prompt --force --session-duration 10800
 }
-

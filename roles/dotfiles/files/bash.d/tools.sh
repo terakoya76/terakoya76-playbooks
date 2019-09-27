@@ -50,4 +50,5 @@ PROMPT_COMMAND='add_line'
 #   https://github.com/abertsch/Menlo-for-Powerline
 # change prompt
 source ~/.git-prompt.sh
-export PS1='\[\e[34m\][\t]\[\e[0m\]\[\e[35m\][jobs:\j]\[\e[0m\]\[\e[36m\][\w]\[\e[0m\]\n\[\e[30;47m\] \W \[\e[0m\] \[\e[30;47m\]$(__git_ps1 "\[\e[30m\][ %s]")\[\e[0m\] \$ '
+source /usr/local/opt/kube-ps1/share/kube-ps1.sh
+export PS1='\[\e[34m\][\t]\[\e[0m\]\[\e[35m\][jobs:\j]\[\e[0m\]\[\e[36m\][\w]\[\e[0m\]\[\e[30;47m\]\[\e[0m\] \[\e[30;47m\]$(__git_ps1 "\[\e[30m\][ %s]")\[\e[0m\]\n$(kube_ps1) \$ '

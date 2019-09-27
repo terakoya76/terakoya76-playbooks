@@ -79,3 +79,9 @@
     chmod +x /usr/local/bin
   args:
     executable: /bin/bash
+
+- name: Install kube-ps1
+  homebrew:
+    name: kube-ps1
+    state: present
+  when: "ansible_os_family == 'Darwin'"
