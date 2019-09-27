@@ -38,6 +38,14 @@
   args:
     executable: /bin/bash
 
+- name: Install evans
+  shell: |
+    brew tap ktr0731/evans
+    brew install evans
+  args:
+    executable: /bin/bash
+  when: "ansible_os_family == 'Darwin'"
+
 - name: Place fzf.sh
   template:
     src: files/fzf.sh

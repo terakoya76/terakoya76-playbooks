@@ -30,20 +30,8 @@ alias terraform12="docker run -it --rm $TERRAFORM12"
 # personal
 #
 
-# kubectl
-alias kubectl='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/kubectl'
-
-# stern
-alias stern='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/stern'
-
-# eksctl
-alias eksctl='docker run -it --rm -e KUBECONFIG=$KUBECONFIG -v $KUBECONFIG:$KUBECONFIG terakoya76/eksctl'
-
 # terraformer
 alias terraformer='docker run -it --rm terakoya76/terraformer'
-
-# grpcurl
-alias grpcurl='docker run -it --rm terakoya76/grpcurl'
 
 # iam-policy-json-to-terraform
 alias iam-policy-json-to-terraform='docker run -i --rm terakoya76/iam-policy-json-to-terraform'

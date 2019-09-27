@@ -8,7 +8,7 @@ alias ls=exa
 alias fd=fdfind
 
 # cat(bat)
-export BAT_THEME="iceberg"
+export BAT_THEME="Github"
 alias cat=bat
 
 # wrapper for lsec2
@@ -17,6 +17,22 @@ lssh () {
   if [ "$IP" != "" ] ; then
     echo "$IP"
     ssh -i "$PUBKEY" "hajime-terasawa@$IP"
+  fi
+}
+
+# fzf kill
+function fzf-kill() {
+  ps -ef | sed 1d | fzf -m | awk '{print $2}' | xargs kill -15
+}
+alias fk="fzf-kill"
+
+# fe [FUZZY PATTERN] - Open the selected file with the default editor
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+function fe() {
+  file=$(fzf --query="$1" --select-1 --exit-0)
+  if [ -f "$file" ] ; then
+    nvim "$file"
   fi
 }
 

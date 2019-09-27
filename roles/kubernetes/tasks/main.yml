@@ -44,23 +44,21 @@
   args:
     executable: /bin/bash
 
-- name: Install kube-ps1
-  homebrew:
-    name: kube-ps1
-    state: present
-  when: "ansible_os_family == 'Darwin'"
-
 - name: Install awscli
   shell: pip3 install awscli --upgrade --user
 
-- name: Install yq
-  shell: pip3 install yq
+- name: Install saml2aws
+  shell: |
+    brew tap versent/homebrew-taps
+    brew install saml2aws
+  args:
+    executable: /bin/bash
+  when: "ansible_os_family == 'Darwin'"
 
-- name: Install onelogin-aws-cli
-  shell: pip3 install onelogin-aws-cli
-
-- name: Install aws-iam-authenticator
-  shell: go get -u github.com/kubernetes-sigs/aws-iam-authenticator/cmd/aws-iam-authenticator
+- name: Install eksctl
+  shell: |
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz
+    mv eksctl /usr/local/bin
   args:
     executable: /bin/bash
 

@@ -15,6 +15,11 @@
     curl -fLo ~/.git-prompt.sh \
     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 
+- name: Fetch kube-tmux
+  shell: |
+    rm -fr ~/.tmux
+    git clone git@github.com:jonmosco/kube-tmux.git ~/.tmux
+
 - name: Create target directory for bash fragments
   file: path="$HOME/.bash.d" state=directory mode=0755
 

@@ -30,20 +30,8 @@ docker pull $TERRAFORM12
 # personal
 #
 
-# kubectl
-docker pull terakoya76/kubectl
-
-# stern
-docker pull terakoya76/stern
-
-# eksctl
-docker pull terakoya76/eksctl
-
 # terraformer
 docker pull terakoya76/terraformer
-
-# grpcurl
-docker pull terakoya76/grpcurl
 
 # iam-policy-json-to-terraform
 docker pull terakoya76/iam-policy-json-to-terraform

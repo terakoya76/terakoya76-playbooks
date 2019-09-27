@@ -1,9 +1,6 @@
 # bash completion
 source <(kubectl completion bash)
 
-# load kube-ps1 hook
-source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
-
 # fzf k8s describe
 # $1 = resource, $2 = namespace
 fkd() {
