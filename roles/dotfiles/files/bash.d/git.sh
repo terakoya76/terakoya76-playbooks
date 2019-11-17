@@ -50,6 +50,14 @@ fshow() {
 FZF-EOF"
 }
 
+fghq() {
+  cd $(ghq root)/$(ghq list | fzf)
+}
+
+fb() {
+  hub browse $(ghq list | fzf | cut -d "/" -f 2,3)
+}
+
 alias ga="git add"
 alias gs="git status"
 alias gb="git branch"

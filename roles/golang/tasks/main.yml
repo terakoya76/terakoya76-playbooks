@@ -17,7 +17,7 @@
   shell: goenv global '{{ GLOBAL_VERSION }}'
 
 - name: Install golang libraries
-  shell: go get -u '{{ item.url }}'
+  shell: go get -u '{{ item }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
 
 - name: Install golang lsp

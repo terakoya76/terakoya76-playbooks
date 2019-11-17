@@ -13,6 +13,12 @@
     chmod +x /usr/local/bin/ctags
   when: "ansible_os_family == 'Debian'"
 
+- name: Install xpanes
+  become: yes
+  shell: |
+    wget https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
+    install -m 0755 xpanes /usr/local/bin/xpanes
+
 - name: Install vim-plug
   shell: |
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
