@@ -141,5 +141,11 @@
     dest: "$HOME/.globalrc"
     mode: 0755
 
+- name: Place .tigrc
+  template:
+    src: files/tigrc
+    dest: "$HOME/.tigrc"
+    mode: 0755
+
 - name: Enable dotfiles
   shell: git config --global core.excludesfile ~/.gitignore_global
