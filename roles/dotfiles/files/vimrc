@@ -26,6 +26,9 @@ call plug#begin('~/.vim/plugged')
 Plug 'cocopon/iceberg.vim'
 "" delete white space
 Plug 'bronson/vim-trailing-whitespace'
+"" markdown format
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 "" auto bracket
 Plug 'jiangmiao/auto-pairs'
 "" option bar
