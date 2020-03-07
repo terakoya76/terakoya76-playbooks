@@ -2,10 +2,11 @@ GOLANG_VERSIONS:
   - 1.9.7
   - 1.10.8
   - 1.11.13
-  - 1.12.10
-  - 1.13.1
+  - 1.12.17
+  - 1.13.8
+  - 1.14.0
 
-GLOBAL_VERSION: 1.13.1
+GLOBAL_VERSION: 1.14.0
 
 GOLANG_LIBERARIES:
   - golang.org/x/tools/cmd/goimports
