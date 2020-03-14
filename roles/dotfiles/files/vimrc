@@ -67,6 +67,7 @@ Plug 'majutsushi/tagbar'
 "" auto complete
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'lighttiger2505/deoplete-vim-lsp'
@@ -308,13 +309,13 @@ if executable('flow-language-server')
         \ })
 endif
 
-if executable('golsp')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'golsp',
-        \ 'cmd': {server_info->['golsp', '-mode', 'stdio']},
-        \ 'whitelist': ['go'],
-        \ })
-endif
+"if executable('golsp')
+"    au User lsp_setup call lsp#register_server({
+"        \ 'name': 'golsp',
+"        \ 'cmd': {server_info->['golsp', '-mode', 'stdio']},
+"        \ 'whitelist': ['go'],
+"        \ })
+"endif
 
 if executable('java') && filereadable(expand('~/lsp/eclipse.jdt.ls/plugins/org.eclipse.equinox.launcher_1.5.300.v20190213-1655.jar'))
     au User lsp_setup call lsp#register_server({

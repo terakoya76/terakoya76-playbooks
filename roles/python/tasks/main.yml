@@ -5,38 +5,8 @@
     state: present
   when: "ansible_os_family == 'Debian'"
 
-- name: Ensure pyenv installed
-  shell: which pyenv
-  changed_when: false
-
-- name: Check installed python version
-  shell: pyenv versions
-  register: PYENV_INSTALLED
-  changed_when: false
-  ignore_errors: yes
-
-- name: Install python from pyenv
-  shell: pyenv install '{{ item }}'
-  when: 'item not in PYENV_INSTALLED.stdout'
-  with_items: '{{ PYTHON_VERSIONS }}'
-
-- name: Set Global version
-  shell: pyenv global system '{{ PY2_VERSION }}' '{{ PY3_VERSION }}'
-
-- name: update pip
-  shell: pip3 install --upgrade pip
-
 - name: Install lsp
   shell: pip3 install python-language-server
 
 - name: Install Linter/Fixer
   shell: pip3 install flake8 flake8-import-order autopep8 black isort
-
-- name: Place python ver manage script
-  template:
-    src: files/manage_python_ver.sh
-    dest: "$HOME/.bash.d/manage_python_ver.sh"
-    mode: 0755
-
-- name: Enable python_manager
-  shell: exec $SHELL -l
