@@ -29,6 +29,8 @@ Plug 'bronson/vim-trailing-whitespace'
 "" markdown format
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
+"" diff
+Plug 'chrisbra/vim-diff-enhanced'
 "" auto bracket
 Plug 'jiangmiao/auto-pairs'
 "" option bar
@@ -43,7 +45,7 @@ Plug 'thinca/vim-quickrun'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 "" ga -> align
 Plug 'junegunn/vim-easy-align'
-"" space + ne -> sidebar
+"" space + dir -> sidebar
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 "" manipulate git from vim
@@ -58,19 +60,22 @@ Plug 'Shougo/denite.nvim'
 Plug 'terryma/vim-multiple-cursors'
 "" space + ct -> generate tags
 Plug 'szw/vim-tags'
-"" space + sh -> vimshell
-Plug 'Shougo/vimshell.vim'
+"" space + df/dv/ds -> deol
+Plug 'Shougo/deol.nvim'
 "" space + y -> copy over ssh
 Plug 'haya14busa/vim-poweryank'
-"" space + t -> view ctags
+"" space + gt -> view ctags
 Plug 'majutsushi/tagbar'
+"" :set number relativenumber
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 "" auto complete
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
-Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'lighttiger2505/deoplete-vim-lsp'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'sheerun/vim-polyglot'
 Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh \| UpdateRemotePlugins' }
 Plug 'parsonsmatt/intero-neovim'
@@ -152,7 +157,6 @@ let g:NERDTreeWinSize = 30
 let NERDTreeShowHidden=1
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <Leader>dir :NERDTreeTabsToggle<CR>
-autocmd BufWritePre * :FixWhitespace
 
 "" quickrun
 nnoremap <Leader>go :QuickRun<CR>
@@ -162,11 +166,13 @@ let g:quickrun_config={'*': {'split': ''}}
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-"" vimshell
-"" nnoremap <Leader>sh :VimShellPop<CR>
-nnoremap <Leader>sh :vertical terminal<CR>
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-let g:vimshell_prompt =  '$ '
+" deol
+let g:deol#prompt_pattern = '% \|%$'
+let g:deol#shell_history_path = '~/.bash_history'
+nnoremap  df :Deol -split=floating
+nnoremap  dv :Deol -split=vertical
+nnoremap  ds :Deol -split=horizontal
+nmap  bg (deol_bg)
 tnoremap <ESC>   <C-\><C-n>
 
 "" vim-airline
@@ -181,11 +187,8 @@ let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'y', 'z']]
 let g:airline_section_c = '%t'
 let g:airline_section_x = '%{&filetype}'
-let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
 let g:airline#extensions#default#section_truncate_width = {}
 let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#virtualenv#enabled = 1
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
@@ -232,163 +235,32 @@ map <Leader>y <Plug>(operator-poweryank-osc52)
 "" colorscheme
 colorscheme iceberg
 
-"" deoplete
-let g:deoplete#enable_at_startup = 1
+"" lsp
+let g:deoplete#enable_at_startup       = 1
+let g:lsp_async_completion             = 1
+let g:asyncomplete_smart_completion    = 1
+let g:asyncomplete_auto_popup          = 1
+let g:asyncomplete_remove_duplicates   = 1
+let g:lsp_signs_enabled                = 1
+let g:lsp_diagnostics_echo_cursor      = 1
+let g:lsp_highlight_references_enabled = 1
+highlight lspReference ctermfg=black guifg=black ctermbg=grey guibg=grey
+autocmd BufWritePost *.c,*.cc,*.css,*.hs,*.java,*.js,*.jsx,*.go,*.pl,*.py,*.rb,*.rs,*.scss,*.sh,*.sql,*.tf,*.ts :LspDocumentFormat
+autocmd BufWritePre * :FixWhitespace
 
-"" ale
-let g:ale_lint_on_text_changed = 0
-let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 1
-let g:ale_javascript_prettier_use_local_config = 1
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '--'
-let g:airline#extensions#ale#open_lnum_symbol = '('
-let g:airline#extensions#ale#close_lnum_symbol = ')'
-let g:ale_echo_msg_format = '[%linter%]%code: %%s'
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_set_highlights = 0
-let g:ale_linters = {
-  \ 'ruby': ['rubocop'],
-  \ 'javascript': ['eslint', 'flow'],
-  \ 'typescript': ['eslint', 'tsserver'],
-  \ 'python': ['flake8'],
-  \ 'go': ['golint', 'staticcheck'],
-  \ 'c': ['clang'],
-  \ 'cpp': ['clang'],
-  \ }
-let g:ale_fixers = {
-  \ 'ruby': ['rubocop'],
-  \ 'javascript': ['eslint'],
-  \ 'typescript': ['eslint'],
-  \ 'python': ['autopep8', 'black', 'isort'],
-  \ 'go': ['gofmt'],
-  \ 'rust': ['rustfmt'],
-  \ }
-highlight link ALEErrorSign Tag
-highlight link ALEWarningSign StorageClass
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-autocmd BufWritePost *.js,*.jsx,*.ts,*.css,*.scss,*.py,*.rb,*.go,*rs ALEFix
-
-"" vim-polyglot
-""" Disable vim-polyglot for vim-go compatiability
-let g:polyglot_disabled = ['go']
-
-"" setting LSP
-if executable('clangd')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-        \ })
+"" neosnippet
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: "\<TAB>"
+if has('conceal')
+  set conceallevel=2 concealcursor=i
 endif
-
-if executable('css-languageserver')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'css-languageserver',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
-        \ 'whitelist': ['css', 'less', 'sass'],
-        \ })
-endif
-
-if executable('docker-langserver')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'docker-langserver',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
-        \ 'whitelist': ['dockerfile'],
-        \ })
-  endif
-
-if executable('flow-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'flow-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'flow-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.flowconfig'))},
-        \ 'whitelist': ['javascript', 'javascript.jsx'],
-        \ })
-endif
-
-"if executable('golsp')
-"    au User lsp_setup call lsp#register_server({
-"        \ 'name': 'golsp',
-"        \ 'cmd': {server_info->['golsp', '-mode', 'stdio']},
-"        \ 'whitelist': ['go'],
-"        \ })
-"endif
-
-if executable('java') && filereadable(expand('~/lsp/eclipse.jdt.ls/plugins/org.eclipse.equinox.launcher_1.5.300.v20190213-1655.jar'))
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'eclipse.jdt.ls',
-        \ 'cmd': {server_info->[
-        \     'java',
-        \     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-        \     '-Dosgi.bundles.defaultStartLevel=4',
-        \     '-Declipse.product=org.eclipse.jdt.ls.core.product',
-        \     '-Dlog.level=ALL',
-        \     '-noverify',
-        \     '-Dfile.encoding=UTF-8',
-        \     '-Xmx1G',
-        \     '-jar',
-        \     expand('~/lsp/eclipse.jdt.ls/plugins/org.eclipse.equinox.launcher_1.5.300.v20190213-1655.jar'),
-        \     '-configuration',
-        \     expand('~/lsp/eclipse.jdt.ls/config_mac'),
-        \     '-data',
-        \     getcwd()
-        \ ]},
-        \ 'whitelist': ['java'],
-        \ })
-endif
-
-if executable('pyls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
-
-if executable('rls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'nightly', 'rls']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Cargo.toml'))},
-        \ 'whitelist': ['rust'],
-        \ })
-endif
-
-if executable('solargraph')
-    " gem install solargraph
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'initialization_options': {"diagnostics": "true"},
-        \ 'whitelist': ['ruby'],
-        \ })
-endif
-
-if executable('typescript-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'typescript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-        \ 'whitelist': ['typescript'],
-        \ })
-endif
-
-if executable('typescript-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'javascript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
-        \ 'whitelist': ['javascript', 'javascript.jsx'],
-        \ })
-endif
-
-let g:lsp_async_completion = 1
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_auto_popup = 1
-let g:asyncomplete_remove_duplicates = 1
 
 "" denite
 nnoremap [denite] <Nop>

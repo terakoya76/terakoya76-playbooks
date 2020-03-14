@@ -86,7 +86,7 @@
     state: present
   when: "ansible_os_family == 'Darwin'"
 
-- name: Install kube-ps1
+- name: Install kubectx
   homebrew:
     name: kubectx
     state: present

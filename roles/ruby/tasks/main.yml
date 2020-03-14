@@ -41,15 +41,6 @@
     user_install: no
   with_items: '{{ RUBY_VERSIONS }}'
 
-- name: Install lsp
-  gem:
-    name: solargraph
-    version: 0.18.0
-    executable: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
-    state: present
-    user_install: no
-  with_items: '{{ RUBY_VERSIONS }}'
-
 - name: update rubygem
   shell: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
   args:

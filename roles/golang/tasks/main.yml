@@ -20,11 +20,6 @@
   shell: go get -u '{{ item }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
 
-- name: Install golang lsp
-  shell: go get -u github.com/sourcegraph/go-langserver
-  args:
-    executable: /bin/bash
-
 - name: Place go-bin.sh
   template:
     src: files/go-bin.sh

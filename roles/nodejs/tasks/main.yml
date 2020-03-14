@@ -16,26 +16,6 @@
 - name: Set Global version
   shell: nodenv global '{{ GLOBAL_VERSION }}'
 
-- name: Install JS lsp
-  npm:
-    name: flow-language-server
-    global: true
-
-- name: Install TS
-  npm:
-    name: typescript
-    global: true
-
-- name: Install TS lsp
-  npm:
-    name: typescript-language-server
-    global: true
-
-- name: Install CSS lsp
-  npm:
-    name: vscode-css-languageserver-bin
-    global: true
-
 - name: Place yarn.sh
   template:
     src: files/yarn.sh
