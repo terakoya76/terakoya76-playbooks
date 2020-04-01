@@ -3,6 +3,9 @@
     repo: https://github.com/riywo/anyenv
     dest: "$HOME/.anyenv"
 
+- name: Init anyenv
+  shell: anyenv install --init
+
 - name: Install anyenv-update
   git:
     repo: https://github.com/znz/anyenv-update
