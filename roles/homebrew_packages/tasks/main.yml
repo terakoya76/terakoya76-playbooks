@@ -8,6 +8,8 @@
     - homebrew/cask-versions
     - homebrew/core
     - homebrew/services
+    - osx-cross/avr
+    - PX4/homebrew-px4
 
 - name: Brew Untap
   homebrew_tap:
@@ -19,11 +21,69 @@
 - name: Brew Update
   shell: brew update
 
-- name: Copy Brewfile
-  template:
-    src: files/Brewfile
-    dest: ~/.Brewfile
+- name: Brew Install
+  homebrew:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - bash-completions
+    - curl
+    - cmake
+    - git
+    - hadolint
+    - imagemagick
+    - jq
+    - libmagic
+    - memcached
+    - mysql
+    - neovim
+    - openssl
+    - pandoc
+    - protobuf
+    - python
+    - readline
+    - shellcheck
+    - tfenv
+    - tig
+    - tmux
+    - translate-shell
+    - vim
+    - wget
+    - yq
+  ignore_errors: yes
 
-- name: Brew bundle w/ Brewfile
-  shell: brew bundle --global
+- name: Brew Install for AVR
+  homebrew:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - avr-gcc@7
+    - dfu-programmer
+    - gcc-arm-none-eabi
+    - avrdude
+  ignore_errors: yes
+
+- name: Install Homebrew cask packages
+  homebrew_cask:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - boostnote
+    - discord
+    - firefox
+    - gitify
+    - google-japanese-ime
+    - google-chrome
+    - java
+    - kindle
+    - kitematic
+    - licecap
+    - postman
+    - rstudio
+    - sequel-pro
+    - spectacle
+    - visual-studio-code
+    - vlc
+    - xquartz
+    - wireshark
   ignore_errors: yes

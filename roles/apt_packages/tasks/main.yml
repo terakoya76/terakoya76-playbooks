@@ -3,3 +3,4 @@
   apt:
     name: '{{ APT_PACKAGES }}'
     state: present
+  ignore_errors: yes

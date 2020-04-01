@@ -4,14 +4,28 @@
     dest: "$HOME/.bash.d/kubeconfig.sh"
     mode: 0755
 
+- name: Install kubectl
+  shell: |
+    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$(uname -s | tr '[A-Z]' '[a-z]')/amd64/kubectl"
+    chmod +x ./kubectl
+    mv ./kubectl /usr/local/bin
+  args:
+    executable: /bin/bash
+
 - name: Enable kubectl
   shell: exec $SHELL -l
 
 - name: Install helm
-  homebrew:
-    name: kubernetes-helm
-    state: present
-  when: "ansible_os_family == 'Darwin'"
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')-amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select((.name | contains($SYSNAME)) and (.name | contains("sha256") | not)) | .name' | sed s/.asc//)"
+    wget https://get.helm.sh/"$RELEASE"
+    tar -zxvf "$RELEASE"
+    chmod +x "$SYSNAME/helm"
+    mv "$SYSNAME/helm" /usr/local/bin
+    rm -r "$SYSNAME"
+  args:
+    executable: /bin/bash
 
 - name: helm init
   shell: helm init --history-max 200
@@ -30,8 +44,8 @@
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    chmod +x "helmfile_$SYSNAME"
     mv "helmfile_$SYSNAME" /usr/local/bin
-    chmod +x /usr/local/bin
   args:
     executable: /bin/bash
 
@@ -65,8 +79,8 @@
 - name: Install sopsed
   shell: |
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
+    chmod +x sopsed
     mv sopsed /usr/local/bin
-    chmod +x /usr/local/bin
   args:
     executable: /bin/bash
 
@@ -75,8 +89,8 @@
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     tar zxvf "variant_$VERSION_$SYSNAME.tar.gz"
-    mv "variant" /usr/local/bin
-    chmod +x /usr/local/bin
+    chmod +x variant
+    mv variant /usr/local/bin
   args:
     executable: /bin/bash
 
@@ -87,7 +101,17 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install kubectx
-  homebrew:
-    name: kubectx
-    state: present
-  when: "ansible_os_family == 'Darwin'"
+  shell: |
+    RELEASE="$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | jq -r .name)"
+    curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | jq -r .tarball_url | wget -i -
+    tar zxvf "$RELEASE"
+    chmod +x ahmetb-kubectx-*/kubectx
+    chmod +x ahmetb-kubectx-*/kubens
+    mv ahmetb-kubectx-*/kubectx /usr/local/bin
+    mv ahmetb-kubectx-*/kubens /usr/local/bin
+    rm -r ahmetb-kubectx-*
+    mkdir -p ~/.kubectx/completion
+    rm -rf "$HOME/.kubectx"
+    git clone https://github.com/ahmetb/kubectx.git "$HOME/.kubectx"
+  args:
+    executable: /bin/bash

@@ -2,12 +2,6 @@
 # official
 #
 
-# jq
-alias jq='docker run --rm stedolan/jq'
-
-# yq
-alias yq='docker run --rm mikefarah/yq yq'
-
 # mitmproxy
 alias mitmproxy='docker run -it --rm -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy -p 8080:8080 mitmproxy/mitmproxy'
 

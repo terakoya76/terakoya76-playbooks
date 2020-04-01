@@ -12,5 +12,6 @@ APT_PACKAGES:
   - shellcheck
   - tmux
   - translate-shell
+  - yq
 # 'hadolint'
 # 'protobuf'
