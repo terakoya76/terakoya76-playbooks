@@ -5,6 +5,7 @@
 
 - name: Init anyenv
   shell: anyenv install --init
+  ignore_errors: yes
 
 - name: Install anyenv-update
   git:
@@ -40,4 +41,5 @@
   shell: anyenv update
 
 - name: Enable anyenv
-  shell: exec $SHELL -l
+  shell: source "$HOME/.bash_profile"
+  ignore_errors: yes

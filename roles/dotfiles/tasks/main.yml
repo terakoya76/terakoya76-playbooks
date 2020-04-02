@@ -148,3 +148,7 @@
 
 - name: Enable dotfiles
   shell: git config --global core.excludesfile ~/.gitignore_global
+
+- name: Enable dotfiles
+  shell: source "$HOME/.bash_profile"
+  ignore_errors: yes

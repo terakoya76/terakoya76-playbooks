@@ -23,44 +23,14 @@
 
 - name: Brew Install
   homebrew:
-    name: '{{ item }}'
+    name: '{{ BREW_PACKAGES | join(",") }}'
     state: present
-  with_items:
-    - bash-completions
-    - curl
-    - cmake
-    - git
-    - hadolint
-    - imagemagick
-    - jq
-    - libmagic
-    - memcached
-    - mysql
-    - neovim
-    - openssl
-    - pandoc
-    - protobuf
-    - python
-    - readline
-    - shellcheck
-    - tfenv
-    - tig
-    - tmux
-    - translate-shell
-    - vim
-    - wget
-    - yq
   ignore_errors: yes
 
 - name: Brew Install for AVR
   homebrew:
-    name: '{{ item }}'
+    name: '{{ AVR_PACKAGES | join(",") }}'
     state: present
-  with_items:
-    - avr-gcc@7
-    - dfu-programmer
-    - gcc-arm-none-eabi
-    - avrdude
   ignore_errors: yes
 
 - name: Install Homebrew cask packages

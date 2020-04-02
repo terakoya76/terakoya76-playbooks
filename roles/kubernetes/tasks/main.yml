@@ -27,11 +27,6 @@
   args:
     executable: /bin/bash
 
-- name: helm init
-  shell: helm init --history-max 200
-  args:
-    executable: /bin/bash
-
 - name: Install Helm Plugin
   shell: |
     helm plugin install https://github.com/rimusz/helm-tiller
@@ -58,8 +53,32 @@
   args:
     executable: /bin/bash
 
+- name: Install lsec2
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
+    curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    tar zxvf "$RELEASE"
+    chmod +x lsec2
+    mv lsec2 /usr/local/bin
+
 - name: Install awscli
-  shell: pip3 install awscli --upgrade --user
+  shell: |
+    curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+    installer -pkg AWSCLIV2.pkg -target /
+  args:
+    executable: /bin/bash
+  when: "ansible_os_family == 'Darwin'"
+
+- name: Install awscli
+  become: yes
+  shell: |
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    ./aws/install
+  args:
+    executable: /bin/bash
+  when: "ansible_os_family == 'Debian'"
 
 - name: Install saml2aws
   shell: |
@@ -76,6 +95,14 @@
   args:
     executable: /bin/bash
 
+- name: Install sops
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
+    RELEASE="$(curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
+    curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    chmod +x "$RELEASE"
+    mv "$RELEASE" /usr/local/bin/sops
+
 - name: Install sopsed
   shell: |
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
@@ -87,8 +114,9 @@
 - name: Install variant
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
     curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
-    tar zxvf "variant_$VERSION_$SYSNAME.tar.gz"
+    tar zxvf "$RELEASE"
     chmod +x variant
     mv variant /usr/local/bin
   args:

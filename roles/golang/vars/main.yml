@@ -1,6 +1,4 @@
 GOLANG_VERSIONS:
-  - 1.9.7
-  - 1.10.8
   - 1.11.13
   - 1.12.17
   - 1.13.8
@@ -9,13 +7,11 @@ GOLANG_VERSIONS:
 GLOBAL_VERSION: 1.14.0
 
 GOLANG_LIBERARIES:
+  - golang.org/x/lint/golint
   - golang.org/x/tools/cmd/goimports
-  - github.com/golang/lint/golint
   - github.com/golang/dep/cmd/dep
-  - github.com/goldeneggg/lsec2/cmd/lsec2
   - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
   - github.com/golang/protobuf/protoc-gen-go
-  - go.mozilla.org/sops/cmd/sops
   - honnef.co/go/tools/cmd/...
   - github.com/derekparker/delve/cmd/dlv
   - github.com/spf13/cobra/cobra

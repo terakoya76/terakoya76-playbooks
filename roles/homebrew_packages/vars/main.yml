@@ -1,0 +1,31 @@
+BREW_PACKAGES:
+  - bash-completion
+  - curl
+  - cmake
+  - git
+  - hadolint
+  - imagemagick
+  - jq
+  - libmagic
+  - memcached
+  - mysql
+  - neovim
+  - openssl
+  - pandoc
+  - protobuf
+  - python
+  - readline
+  - shellcheck
+  - tfenv
+  - tig
+  - tmux
+  - translate-shell
+  - vim
+  - wget
+  - yq
+
+AVR_PACKAGES:
+  - avr-gcc@7
+  - dfu-programmer
+  - gcc-arm-none-eabi
+  - avrdude

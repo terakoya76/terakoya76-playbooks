@@ -19,6 +19,7 @@
 - name: Install golang libraries
   shell: go get -u '{{ item }}'
   with_items: '{{ GOLANG_LIBERARIES }}'
+  ignore_errors: yes
 
 - name: Place go-bin.sh
   template:

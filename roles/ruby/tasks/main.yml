@@ -43,8 +43,8 @@
 
 - name: update rubygem
   shell: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
-  args:
-    executable: /bin/bash
   register: gem_update
   with_items: '{{ RUBY_VERSIONS }}'
+  args:
+    executable: /bin/bash
   changed_when: gem_update.stdout.find('Latest version already installed') == -1

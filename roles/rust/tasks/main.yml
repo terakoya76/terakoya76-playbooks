@@ -2,7 +2,8 @@
   shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 - name: Enable rustup
-  shell: exec $SHELL -l
+  shell: source "$HOME/.bash_profile"
+  ignore_errors: yes
 
 - name: Install rust Lang Server
   shell: |
@@ -18,4 +19,5 @@
     mode: 0755
 
 - name: Enable cargo
-  shell: exec $SHELL -l
+  shell: source "$HOME/.bash_profile"
+  ignore_errors: yes

@@ -10,8 +10,9 @@ gpr() {
 # git setup remote repository
 # $1=owner-user, $2=repo
 gsu() {
-  git clone "git@github.com:$GITHUB_USERNAME/$2.git" "$2"
-  cd "$2" || exit 1
+  local dest="$HOME/ghq/github.com/$GITHUB_USERNAME/$2"
+  git clone "git@github.com:$GITHUB_USERNAME/$2.git" "$dest"
+  cd "$dest" || exit 1
   git remote add upstream "git@github.com:$1/$2.git"
   git remote set-url upstream --push no-pushing
 }
