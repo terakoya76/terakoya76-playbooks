@@ -15,6 +15,7 @@ BREW_PACKAGES:
   - protobuf
   - python
   - readline
+  - reattach-to-user-namespace
   - shellcheck
   - tfenv
   - tig
