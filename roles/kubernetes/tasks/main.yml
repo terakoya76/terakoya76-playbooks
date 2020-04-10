@@ -40,7 +40,7 @@
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     chmod +x "helmfile_$SYSNAME"
-    mv "helmfile_$SYSNAME" /usr/local/bin
+    mv "helmfile_$SYSNAME" /usr/local/bin/helmfile
   args:
     executable: /bin/bash
 
@@ -49,7 +49,7 @@
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     mv "stern_$SYSNAME" /usr/local/bin
-    chmod +x /usr/local/bin
+    chmod +x /usr/local/bin/stern
   args:
     executable: /bin/bash
 

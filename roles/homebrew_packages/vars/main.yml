@@ -3,6 +3,7 @@ BREW_PACKAGES:
   - curl
   - cmake
   - git
+  - gnu-getopt
   - hadolint
   - imagemagick
   - jq
