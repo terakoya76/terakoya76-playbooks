@@ -27,7 +27,6 @@ xssh() {
   fi
 }
 
-# fzf kill
 fzf-kill() {
   ps -ef | sed 1d | fzf -m | awk '{print $2}' | xargs kill -15
 }
@@ -59,6 +58,15 @@ eks-write-config() {
   fi
 }
 alias fe="eks-write-config"
+
+capture() {
+  ps -ef | sed 1d | fzf -m | awk '{print $2}' | xargs -I{} sudo dtrace -p {} -qn '
+    syscall::write*:entry
+    /pid == $target && arg0 == 1/ {
+        printf("%s", copyinstr(arg1, arg2));
+    }
+  '
+}
 
 # add a blank line after each output
 add_line () {
