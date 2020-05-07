@@ -252,7 +252,7 @@ let g:lsp_signs_enabled                = 1
 let g:lsp_diagnostics_echo_cursor      = 1
 let g:lsp_highlight_references_enabled = 1
 highlight lspReference ctermfg=black guifg=black ctermbg=grey guibg=grey
-autocmd BufWritePost *.c,*.cc,*.css,*.hs,*.java,*.js,*.jsx,*.go,*.pl,*.py,*.rb,*.rs,*.scss,*.sh,*.sql,*.tf,*.ts :LspDocumentFormat
+autocmd BufWritePost *.c,*.cc,*.css,*.hs,*.java,*.js,*.jsx,*.go,*.pl,*.py,*.rb,*.rs,*.scss,*.sh,*.tf,*.ts :LspDocumentFormat
 autocmd BufWritePre * :FixWhitespace
 
 "" neosnippet
