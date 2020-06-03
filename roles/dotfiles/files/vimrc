@@ -29,8 +29,6 @@ Plug 'bronson/vim-trailing-whitespace'
 "" markdown format
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-"" diff
-Plug 'chrisbra/vim-diff-enhanced'
 "" auto bracket
 Plug 'jiangmiao/auto-pairs'
 "" option bar
@@ -40,9 +38,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "" gcc -> comment
 Plug 'tpope/vim-commentary'
-"" space + go -> exec script
-Plug 'thinca/vim-quickrun'
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 "" ga -> align
 Plug 'junegunn/vim-easy-align'
 "" space + dir -> sidebar
@@ -50,25 +45,25 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 "" manipulate git from vim
 Plug 'tpope/vim-fugitive'
-"" display git diff
 Plug 'airblade/vim-gitgutter'
+"" space + diff -> diff enhancer
+Plug 'chrisbra/vim-diff-enhanced'
 "" asynchronous execution
-Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 "" asynchronous unite
 Plug 'Shougo/denite.nvim'
 "" <C-n> -> provide multiple cursors
 Plug 'terryma/vim-multiple-cursors'
-"" space + ct -> generate tags
-Plug 'szw/vim-tags'
 "" space + df/dv/ds -> deol
 Plug 'Shougo/deol.nvim'
 "" space + y -> copy over ssh
 Plug 'haya14busa/vim-poweryank'
-"" space + gt -> view ctags
-Plug 'majutsushi/tagbar'
 "" :set number relativenumber
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-"" auto complete
+"" space + gh
+Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser-github.vim'
+" auto complete
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
@@ -165,10 +160,6 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_autowrite = 1
 
-"" quickrun
-nnoremap <Leader>go :QuickRun<CR>
-let g:quickrun_config={'*': {'split': ''}}
-
 "" vim-easy-align
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -176,11 +167,13 @@ nmap ga <Plug>(EasyAlign)
 " deol
 let g:deol#prompt_pattern = '% \|%$'
 let g:deol#shell_history_path = '~/.bash_history'
-nnoremap  df :Deol -split=floating
-nnoremap  dv :Deol -split=vertical
-nnoremap  ds :Deol -split=horizontal
-nmap  bg (deol_bg)
+nnoremap <Leader>df :Deol -split=floating<CR>
+nnoremap <Leader>dv :Deol -split=vertical<CR>
+nnoremap <Leader>ds :Deol -split=horizontal<CR>
 tnoremap <ESC>   <C-\><C-n>
+
+"" open-browser-github.vim
+nnoremap <Leader>gh :OpenGithubFile
 
 "" vim-airline
 set laststatus=2
@@ -235,6 +228,9 @@ if exists('&signcolumn')  " Vim 7.4.2201
 else
   let g:gitgutter_sign_column_always = 1
 endif
+
+"" vim-diff-enhanced"
+nnoremap <Leader>diff :EnhancedDiff minimal<CR>
 
 "" vim-poweryank
 map <Leader>y <Plug>(operator-poweryank-osc52)
