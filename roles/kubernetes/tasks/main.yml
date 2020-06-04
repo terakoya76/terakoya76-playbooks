@@ -128,18 +128,13 @@
     state: present
   when: "ansible_os_family == 'Darwin'"
 
-- name: Install kubectx
+- name: Install krew
   shell: |
-    RELEASE="$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | jq -r .name)"
-    curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | jq -r .tarball_url | wget -i -
-    tar zxvf "$RELEASE"
-    chmod +x ahmetb-kubectx-*/kubectx
-    chmod +x ahmetb-kubectx-*/kubens
-    mv ahmetb-kubectx-*/kubectx /usr/local/bin
-    mv ahmetb-kubectx-*/kubens /usr/local/bin
-    rm -r ahmetb-kubectx-*
-    mkdir -p ~/.kubectx/completion
-    rm -rf "$HOME/.kubectx"
-    git clone https://github.com/ahmetb/kubectx.git "$HOME/.kubectx"
+    set -x; cd "$(mktemp -d)"
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}"
+    tar zxvf krew.tar.gz
+    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+    "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+    "$KREW" update
   args:
     executable: /bin/bash
