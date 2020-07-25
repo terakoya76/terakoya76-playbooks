@@ -1,0 +1,223 @@
+{
+  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.autoformat": true,
+  "solargraph.completion": true,
+  "solargraph.hover": true,
+  "solargraph.rename": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "c",
+    "cc",
+    "cpp",
+    "c++",
+    "dockerfile",
+    "go",
+    "haskell",
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "javascriptreact",
+    "objc",
+    "objcpp",
+    "python",
+    "ruby",
+    "rust",
+    "sql",
+    "terraform"
+  ],
+  "languageserver": {
+    // npm install -g bash-language-server
+    "bash": {
+      "command": "bash-language-server",
+      "args": [
+        "start"
+      ],
+      "filetypes": [
+        "sh"
+      ],
+      "ignoredRootPaths": [
+        "~"
+      ]
+    },
+    "clangd": {
+      "command": "clangd",
+      "rootPatterns": [
+        "compile_flags.txt",
+        "compile_commands.json"
+      ],
+      "filetypes": [
+        "c",
+        "cc",
+        "cpp",
+        "c++",
+        "objc",
+        "objcpp"
+      ]
+    },
+    // npm install -g dockerfile-language-server-nodejs
+    "dockerfile": {
+      "command": "docker-langserver",
+      "filetypes": [
+        "dockerfile"
+      ],
+      "args": [
+        "--stdio"
+      ]
+    },
+    // go get -u github.com/mattn/efm-langserver
+    "efm": {
+      "command": "efm-langserver",
+      "args": [],
+      "filetypes": [
+        "vim",
+        "eruby",
+        "markdown"
+      ]
+    },
+    // go get -u golang.org/x/tools/gopls
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": [
+        "go.mod"
+      ],
+      "disableWorkspaceFolders": true,
+      "filetypes": [
+        "go"
+      ]
+    },
+    // go get -u github.com/nametake/golangci-lint-langserver
+    "golangci-lint-languageserver": {
+      "command": "golangci-lint-langserver",
+      "filetypes": [
+        "go"
+      ],
+      "initializationOptions": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--out-format",
+          "json"
+        ]
+      }
+    },
+    "haskell": {
+      "command": "hie-wrapper",
+      "args": [
+        "--lsp"
+      ],
+      "rootPatterns": [
+        "stack.yaml",
+        "cabal.config",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ],
+      "initializationOptions": {
+        "languageServerHaskell": {
+          "hlintOn": true
+        }
+      }
+    },
+    // pip install python-language-server
+    "python": {
+      "command": "python",
+      "args": [
+        "-mpyls",
+        "-vv",
+        "--log-file",
+        "/tmp/lsp_python.log"
+      ],
+      "trace.server": "verbose",
+      "filetypes": [
+        "python"
+      ],
+      "settings": {
+        "pyls": {
+          "enable": true,
+          "trace": {
+            "server": "verbose"
+          },
+          "commandPath": "",
+          "configurationSources": [
+            "pycodestyle"
+          ],
+          "plugins": {
+            "jedi_completion": {
+              "enabled": true
+            },
+            "jedi_hover": {
+              "enabled": true
+            },
+            "jedi_references": {
+              "enabled": true
+            },
+            "jedi_signature_help": {
+              "enabled": true
+            },
+            "jedi_symbols": {
+              "enabled": true,
+              "all_scopes": true
+            },
+            "mccabe": {
+              "enabled": true,
+              "threshold": 15
+            },
+            "preload": {
+              "enabled": true
+            },
+            "pycodestyle": {
+              "enabled": true
+            },
+            "pydocstyle": {
+              "enabled": false,
+              "match": "(?!test_).*\\.py",
+              "matchDir": "[^\\.].*"
+            },
+            "pyflakes": {
+              "enabled": true
+            },
+            "rope_completion": {
+              "enabled": true
+            },
+            "yapf": {
+              "enabled": true
+            }
+          }
+        }
+      }
+    },
+    "rust": {
+      "command": "rust-analyzer",
+      "filetypes": [
+        "rust"
+      ],
+      "rootPatterns": [
+        "Cargo.toml"
+      ]
+    },
+    "sql": {
+      "command": "sql-language-server",
+      "args": [
+        "up",
+        "--method",
+        "stdio"
+      ],
+      "filetypes": [
+        "sql"
+      ]
+    },
+    // go get -u github.com/juliosueiras/terraform-lsp
+    "terraform": {
+      "command": "terraform-lsp",
+      "filetypes": [
+        "terraform"
+      ],
+      "initializationOptions": {}
+    }
+  }
+}
