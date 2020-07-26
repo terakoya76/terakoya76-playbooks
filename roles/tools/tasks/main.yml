@@ -24,7 +24,10 @@
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 - name: Install nvim client
-  shell: pip3 install neovim
+  shell: |
+    pip3 install neovim
+    gem install neovim
+    npm install -g neovim
 
 # - name: Fetch Solarized Color Schema
 # shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
