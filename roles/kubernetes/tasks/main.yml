@@ -15,6 +15,34 @@
 - name: Enable kubectl
   shell: exec $SHELL -l
 
+- name: Install krew
+  shell: |
+    set -x; cd "$(mktemp -d)"
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}"
+    tar zxvf krew.tar.gz
+    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+    "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+    "$KREW" update
+  args:
+    executable: /bin/bash
+
+- name: Install kubectl plugins
+  shell: |
+    kubectl krew install ctx
+    kubectl krew install ns
+    kubectl krew install status
+    kubectl krew install tree
+    kubectl krew install view-secret
+    kubectl krew install whoami
+  args:
+    executable: /bin/bash
+
+- name: Place kubectl-debug config
+  template:
+    src: files/debug-config
+    dest: "$HOME/.kube/debug-config"
+    mode: 0755
+
 - name: Install helm
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')-amd64"
@@ -127,14 +155,3 @@
     name: kube-ps1
     state: present
   when: "ansible_os_family == 'Darwin'"
-
-- name: Install krew
-  shell: |
-    set -x; cd "$(mktemp -d)"
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}"
-    tar zxvf krew.tar.gz
-    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
-    "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
-    "$KREW" update
-  args:
-    executable: /bin/bash
