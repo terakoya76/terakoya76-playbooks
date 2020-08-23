@@ -30,6 +30,7 @@
   shell: |
     kubectl krew install ctx
     kubectl krew install ns
+    kubectl krew install iexec
     kubectl krew install status
     kubectl krew install tree
     kubectl krew install view-secret
