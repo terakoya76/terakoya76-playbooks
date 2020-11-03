@@ -1,5 +1,6 @@
 APT_PACKAGES:
   - software-properties-common
+  - bash-completion
   - jq
   - vim
   - neovim
