@@ -17,11 +17,8 @@ case "$1" in
       brew install ansible
     fi;;
   ubuntu)
-    sudo apt-get update
-    sudo apt-get install software-properties-common
-    sudo apt-add-repository ppa:ansible/ansible
-    sudo apt-get update
-    sudo apt-get install -y git ansible ;;
+    sudo apt update
+    sudo apt install -y software-properties-common git ansible ;;
 esac
 
 # setup direnv
