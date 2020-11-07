@@ -18,9 +18,9 @@
   when: "ansible_os_family == 'Debian'"
 
 - name: Install Alacritty
-  shell:
-    cargo install cargo-deb
-    cargo deb --install
+  shell: |
+    cargo build --release
+    mv target/release/alacritty /usr/local/bin
   args:
     chdir: "$HOME/alacritty/"
   when: "ansible_os_family == 'Debian'"
@@ -48,8 +48,6 @@
     chdir: "$HOME/xsv/"
 
 - name: Remove Repository
-  shell:
-    rm -fr alacritty
-    rm -fr xsv
+  shell: rm -fr {alacritty,xsv}
   args:
     chdir: "$HOME"

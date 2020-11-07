@@ -21,7 +21,3 @@
     src: files/yarn.sh
     dest: "$HOME/.bash.d/yarn.sh"
     mode: 0755
-
-- name: Enable yarn
-  shell: source "$HOME/.bash_profile"
-  ignore_errors: yes

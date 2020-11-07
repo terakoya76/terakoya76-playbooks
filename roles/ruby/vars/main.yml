@@ -3,14 +3,12 @@ APT_PACKAGES:
   - bison
   - build-essential
   - libssl-dev
-  - libssl1.0-dev
   - libyaml-dev
   - libreadline6-dev
   - zlib1g-dev
   - libncurses5-dev
   - libffi-dev
   - libgdbm5
-  - libgdbm-dev
 
 RUBY_VERSIONS:
   - 2.4.6

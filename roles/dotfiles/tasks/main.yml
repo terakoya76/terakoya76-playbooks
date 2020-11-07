@@ -11,14 +11,14 @@
     mode: 0755
 
 - name: Fetch git-prompt.sh
-  shell: |
-    curl -fLo ~/.git-prompt.sh \
-    https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+    dest: "$HOME/.git-prompt.sh"
 
 - name: Fetch z.sh
-  shell: |
-    rm -fr "$HOME/z"
-    git clone git://github.com/rupa/z "$HOME/z"
+  git:
+    repo: https://github.com/rupa/z
+    dest: "$HOME/z"
 
 - name: Create target directory for bash fragments
   file: path="$HOME/.bash.d" state=directory mode=0755

@@ -1,20 +1,20 @@
 - name: Ensure goenv installed
-  shell: which goenv
+  shell: /bin/bash -lc "which goenv"
   changed_when: false
 
 - name: Check installed golang version
-  shell: goenv versions
+  shell: /bin/bash -lc "goenv versions"
   register: GOENV_INSTALLED
   changed_when: false
   ignore_errors: yes
 
 - name: Install golang from goenv
-  shell: goenv install '{{ item }}'
+  shell: /bin/bash -lc "goenv install '{{ item }}'"
   when: 'item not in GOENV_INSTALLED.stdout'
   with_items: '{{ GOLANG_VERSIONS }}'
 
 - name: Set Global version
-  shell: goenv global '{{ GLOBAL_VERSION }}'
+  shell: /bin/bash -lc "goenv global '{{ GLOBAL_VERSION }}'"
 
 - name: Install golang libraries
   shell: go get -u '{{ item }}'

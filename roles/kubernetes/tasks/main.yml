@@ -5,17 +5,14 @@
     mode: 0755
 
 - name: Install kubectl
+  become: yes
   shell: |
     curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$(uname -s | tr '[A-Z]' '[a-z]')/amd64/kubectl"
     chmod +x ./kubectl
     mv ./kubectl /usr/local/bin
-  args:
-    executable: /bin/bash
-
-- name: Enable kubectl
-  shell: exec $SHELL -l
 
 - name: Install krew
+  become: yes
   shell: |
     set -x; cd "$(mktemp -d)"
     curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}"
@@ -23,10 +20,9 @@
     KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
     "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
     "$KREW" update
-  args:
-    executable: /bin/bash
 
 - name: Install kubectl plugins
+  become: yes
   shell: |
     kubectl krew install ctx
     kubectl krew install ns
@@ -35,8 +31,6 @@
     kubectl krew install tree
     kubectl krew install view-secret
     kubectl krew install whoami
-  args:
-    executable: /bin/bash
 
 - name: Place kubectl-debug config
   template:
@@ -45,6 +39,7 @@
     mode: 0755
 
 - name: Install helm
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')-amd64"
     RELEASE="$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select((.name | contains($SYSNAME)) and (.name | contains("sha256") | not)) | .name' | sed s/.asc//)"
@@ -53,36 +48,32 @@
     chmod +x "$SYSNAME/helm"
     mv "$SYSNAME/helm" /usr/local/bin
     rm -r "$SYSNAME"
-  args:
-    executable: /bin/bash
 
 - name: Install Helm Plugin
+  become: yes
   shell: |
     helm plugin install https://github.com/rimusz/helm-tiller
     helm plugin install https://github.com/databus23/helm-diff --version master
     helm plugin install https://github.com/futuresimple/helm-secrets
-  args:
-    executable: /bin/bash
 
 - name: Install Helmfile
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     chmod +x "helmfile_$SYSNAME"
     mv "helmfile_$SYSNAME" /usr/local/bin/helmfile
-  args:
-    executable: /bin/bash
 
 - name: Install stern
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     mv "stern_$SYSNAME" /usr/local/bin
     chmod +x /usr/local/bin/stern
-  args:
-    executable: /bin/bash
 
 - name: Install lsec2
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     RELEASE="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
@@ -95,36 +86,28 @@
   shell: |
     curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
     installer -pkg AWSCLIV2.pkg -target /
-  args:
-    executable: /bin/bash
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install awscli
-  become: yes
   shell: |
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
     ./aws/install
-  args:
-    executable: /bin/bash
   when: "ansible_os_family == 'Debian'"
 
 - name: Install saml2aws
   shell: |
     brew tap versent/homebrew-taps
     brew install saml2aws
-  args:
-    executable: /bin/bash
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install eksctl
   shell: |
     curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz
     mv eksctl /usr/local/bin
-  args:
-    executable: /bin/bash
 
 - name: Install sops
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
     RELEASE="$(curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
@@ -133,14 +116,14 @@
     mv "$RELEASE" /usr/local/bin/sops
 
 - name: Install sopsed
+  become: yes
   shell: |
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
     chmod +x sopsed
     mv sopsed /usr/local/bin
-  args:
-    executable: /bin/bash
 
 - name: Install variant
+  become: yes
   shell: |
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     RELEASE="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
@@ -148,8 +131,6 @@
     tar zxvf "$RELEASE"
     chmod +x variant
     mv variant /usr/local/bin
-  args:
-    executable: /bin/bash
 
 - name: Install kube-ps1
   homebrew:

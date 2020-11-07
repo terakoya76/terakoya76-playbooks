@@ -19,9 +19,9 @@
     install -m 0755 xpanes /usr/local/bin/xpanes
 
 - name: Install vim-plug
-  shell: |
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: "$HOME/.local/share/nvim/site/autoload/plug.vim"
 
 - name: Install nvim client
   shell: |
@@ -43,15 +43,11 @@
     wget http://ftp.tsukuba.wide.ad.jp/software/apache/kafka/2.2.0/kafka_2.11-2.2.0.tgz
     tar zxvf "kafka_2.11-2.2.0.tgz"
     rm kafka_2.11-2.2.0.tgz
-  args:
-    executable: /bin/bash
 
 - name: Install evans
   shell: |
     brew tap ktr0731/evans
     brew install evans
-  args:
-    executable: /bin/bash
   when: "ansible_os_family == 'Darwin'"
 
 - name: Place fzf.sh
@@ -61,9 +57,4 @@
     mode: 0755
 
 - name: Install circleci cli
-  shell: |
-    curl -fLSs https://circle.ci/cli | bash
-
-- name: Enable dotfiles
-  shell: source "$HOME/.bash_profile"
-  ignore_errors: yes
+  shell: curl -fLSs https://circle.ci/cli | bash
