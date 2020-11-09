@@ -13,6 +13,7 @@ APT_PACKAGES:
   - shellcheck
   - tmux
   - translate-shell
-  - yq
+  - bpfcc-tools
+  - linux-headers-$(uname -r)
 # 'hadolint'
 # 'protobuf'

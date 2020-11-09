@@ -1,9 +1,3 @@
-- name: Install Alacritty
-  homebrew_cask:
-    name: alacritty
-    state: present
-  when: "ansible_os_family == 'Darwin'"
-
 - name: Install Alacritty Dependencies
   become: yes
   apt:
@@ -11,19 +5,8 @@
     state: present
   when: "ansible_os_family == 'Debian'"
 
-- name: Fetch Alacritty repo
-  git:
-    repo: https://github.com/jwilm/alacritty
-    dest: "$HOME/alacritty"
-  when: "ansible_os_family == 'Debian'"
-
 - name: Install Alacritty
-  shell: |
-    cargo build --release
-    mv target/release/alacritty /usr/local/bin
-  args:
-    chdir: "$HOME/alacritty/"
-  when: "ansible_os_family == 'Debian'"
+  shell: cargo install alacritty
 
 - name: Install bat
   shell: cargo install bat
@@ -37,17 +20,5 @@
 - name: Install ripgrep
   shell: cargo install ripgrep
 
-- name: Fetch xsv repo
-  git:
-    repo: https://github.com/BurntSushi/xsv
-    dest: "$HOME/xsv"
-
 - name: Install xsv
-  shell: cargo build --release
-  args:
-    chdir: "$HOME/xsv/"
-
-- name: Remove Repository
-  shell: rm -fr {alacritty,xsv}
-  args:
-    chdir: "$HOME"
+  shell: cargo install xsv

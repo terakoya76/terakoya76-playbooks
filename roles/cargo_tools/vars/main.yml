@@ -2,4 +2,6 @@ APT_PACKAGES:
   - cmake
   - libfreetype6-dev
   - libfontconfig1-dev
+  - libxcb-xfixes0-dev
+  - pkg-config
   - xclip

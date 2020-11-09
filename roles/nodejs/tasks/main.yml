@@ -1,20 +1,20 @@
 - name: Ensure nodenv installed
-  shell: which nodenv
+  shell: /bin/bash -lc "which nodenv"
   changed_when: false
 
 - name: Check installed nodejs version
-  shell: nodenv versions
+  shell: /bin/bash -lc "nodenv versions"
   register: NODENV_INSTALLED
   changed_when: false
   ignore_errors: yes
 
 - name: Install nodejs from nodenv
-  shell: nodenv install '{{ item }}'
+  shell: /bin/bash -lc "nodenv install '{{ item }}'"
   when: 'item not in NODENV_INSTALLED.stdout'
   with_items: '{{ NODEJS_VERSIONS }}'
 
 - name: Set Global version
-  shell: nodenv global '{{ GLOBAL_VERSION }}'
+  shell: /bin/bash -lc "nodenv global '{{ GLOBAL_VERSION }}'"
 
 - name: Place yarn.sh
   template:

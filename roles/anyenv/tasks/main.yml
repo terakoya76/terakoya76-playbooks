@@ -4,7 +4,7 @@
     dest: "$HOME/.anyenv"
 
 - name: Init anyenv
-  shell: anyenv install --init
+  shell: /bin/bash -lc "anyenv install --init"
   ignore_errors: yes
 
 - name: Install anyenv-update
@@ -25,16 +25,16 @@
     mode: 0755
 
 - name: Check env installed
-  shell: anyenv envs
+  shell: /bin/bash -lc "anyenv envs"
   register: anyenv_envs
   changed_when: false
 
 - name: Install env tools
-  shell: anyenv install '{{ item }}'
+  shell: /bin/bash -lc "anyenv install '{{ item }}'"
   with_items: '{{ ANYENV_ENVS }}'
   when: 'item not in anyenv_envs.stdout'
   ignore_errors: yes
 
 - name: Update exists tools
-  shell: anyenv update
+  shell: /bin/bash -lc "anyenv update"
   ignore_errors: yes
