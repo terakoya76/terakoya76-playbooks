@@ -95,6 +95,14 @@
     ./aws/install
   when: "ansible_os_family == 'Debian'"
 
+- name: Install aws-iam-authenticator
+  become: yes
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
+    curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/$SYSNAME/amd64/aws-iam-authenticator
+    chmod +x ./aws-iam-authenticator
+    mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+
 - name: Install saml2aws
   shell: |
     brew tap versent/homebrew-taps
