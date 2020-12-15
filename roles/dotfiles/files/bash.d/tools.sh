@@ -68,6 +68,8 @@ capture() {
   '
 }
 
+alias tf="terraform"
+
 # add a blank line after each output
 add_line () {
   if [ -z "${PS1_NEWLINE_LOGIN}" ]; then
