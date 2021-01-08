@@ -31,6 +31,15 @@
     kubectl krew install tree
     kubectl krew install view-secret
     kubectl krew install whoami
+    kubectl krew install debug
+    kubectl krew install trace
+    kubectl krew install neat
+    kubectl krew install images
+    kubectl krew install rolesum
+    kubectl krew install get-all
+    kubectl krew install ca-cert
+    kubectl krew install resource-capacity
+    kubectl krew install df-pv
 
 - name: Place kubectl-debug config
   template:
