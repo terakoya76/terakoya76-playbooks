@@ -83,6 +83,12 @@
     dest: "$HOME/.vimrc"
     mode: 0755
 
+- name: Place aws.sh
+  template:
+    src: files/bash.d/tmux.sh
+    dest: "$HOME/.bash.d/tmux.sh"
+    mode: 0755
+
 - name: Create target directory for nvim
   file: path="$HOME/.config/nvim" state=directory mode=0755
 
@@ -112,6 +118,11 @@
     src: files/tmux.conf
     dest: "$HOME/.tmux.conf"
     mode: 0755
+
+- name: Fetch tpm
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "$HOME/.tmux/plugins/tpm"
 
 - name: Create target directory for alacritty
   file: path="$HOME/.config/alacritty" state=directory mode=0755
