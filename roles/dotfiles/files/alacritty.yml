@@ -192,6 +192,8 @@ shell:
   args:
     - --login
 
+alt_send_esc: false
+
 # Key bindings
 #
 # Each binding is defined as an object with some properties. Most of the
