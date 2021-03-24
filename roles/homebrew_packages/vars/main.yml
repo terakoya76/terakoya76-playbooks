@@ -4,6 +4,7 @@ BREW_PACKAGES:
   - cmake
   - git
   - gnu-getopt
+  - graphviz
   - hadolint
   - imagemagick
   - jq
