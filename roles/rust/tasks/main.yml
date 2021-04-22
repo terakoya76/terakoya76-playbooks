@@ -1,13 +1,13 @@
 - name: Install rustup
   shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-- name: Install rust Lang Server
-  shell: |
-    rustup update
-    rustup component add rls-preview rust-analysis rust-src
-
 - name: Place rustup path
   template:
     src: files/rustup.sh
     dest: "$HOME/.bash.d/rustup.sh"
     mode: 0755
+
+- name: Install rust Lang Server
+  shell: |
+    $HOME/.cargo/bin/rustup update
+    $HOME/.cargo/bin/rustup component add rls-preview rust-analysis rust-src

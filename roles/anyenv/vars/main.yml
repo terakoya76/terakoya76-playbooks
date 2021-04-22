@@ -1,4 +1,0 @@
-ANYENV_ENVS:
-  - goenv
-  - nodenv
-  - rbenv

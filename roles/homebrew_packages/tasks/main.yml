@@ -8,6 +8,7 @@
     - homebrew/cask-versions
     - homebrew/core
     - homebrew/services
+    - ktr0731/evans
     - osx-cross/avr
     - PX4/homebrew-px4
 
@@ -27,12 +28,6 @@
     state: present
   ignore_errors: yes
 
-- name: Brew Install for AVR
-  homebrew:
-    name: '{{ AVR_PACKAGES | join(",") }}'
-    state: present
-  ignore_errors: yes
-
 - name: Install Homebrew cask packages
   homebrew_cask:
     name: '{{ item }}'
@@ -40,18 +35,20 @@
   with_items:
     - boostnote
     - discord
+    - docker-edge
     - firefox
     - gitify
     - google-japanese-ime
     - google-chrome
-    - java
     - kindle
     - kitematic
     - licecap
     - postman
     - rstudio
     - sequel-pro
+    - slack
     - spectacle
+    - spotify
     - vagrant
     - virtualbox
     - visual-studio-code

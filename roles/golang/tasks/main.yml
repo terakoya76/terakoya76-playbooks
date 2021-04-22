@@ -1,28 +1,49 @@
-- name: Ensure goenv installed
-  shell: /bin/bash -lc "which goenv"
-  changed_when: false
-
-- name: Check installed golang version
-  shell: /bin/bash -lc "goenv versions"
-  register: GOENV_INSTALLED
-  changed_when: false
-  ignore_errors: yes
-
-- name: Install golang from goenv
-  shell: /bin/bash -lc "goenv install '{{ item }}'"
-  when: 'item not in GOENV_INSTALLED.stdout'
-  with_items: '{{ GOLANG_VERSIONS }}'
-
-- name: Set Global version
-  shell: /bin/bash -lc "goenv global '{{ GLOBAL_VERSION }}'"
-
-- name: Install golang libraries
-  shell: go get -u '{{ item }}'
-  with_items: '{{ GOLANG_LIBERARIES }}'
-  ignore_errors: yes
-
 - name: Place go-bin.sh
   template:
     src: files/go-bin.sh
     dest: "$HOME/.bash.d/go-bin.sh"
     mode: 0755
+
+- name: Check installed golang version
+  shell: $HOME/.anyenv/envs/goenv/bin/goenv versions
+  register: GOENV_INSTALLED
+  environment:
+    GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
+    GOENV_DISABLE_GOPATH: "1"
+  changed_when: false
+  ignore_errors: yes
+
+- name: Install golang from goenv
+  shell: $HOME/.anyenv/envs/goenv/bin/goenv install {{ item }}
+  with_items:
+    - 1.14.15
+    - 1.15.10
+    - 1.16.3
+  environment:
+    GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
+    GOENV_DISABLE_GOPATH: "1"
+  when: 'item not in GOENV_INSTALLED.stdout'
+
+- name: Set Global version
+  shell: $HOME/.anyenv/envs/goenv/bin/goenv global {{ GLOBAL_GO_VERSION }}
+  environment:
+    GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
+    GOENV_DISABLE_GOPATH: "1"
+
+- name: Install golang libraries
+  shell: GOPATH="$(echo $HOME)/go" go get -u {{ item }}
+  with_items:
+    - golang.org/x/lint/golint
+    - golang.org/x/tools/cmd/goimports
+    - github.com/golang/dep/cmd/dep
+    - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+    - github.com/golang/protobuf/protoc-gen-go
+    - honnef.co/go/tools/cmd/...
+    - github.com/derekparker/delve/cmd/dlv
+    - github.com/spf13/cobra/cobra
+    - github.com/motemen/ghq
+    - github.com/github/hub
+  environment:
+    GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
+    GOENV_DISABLE_GOPATH: "1"
+  ignore_errors: yes

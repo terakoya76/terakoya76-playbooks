@@ -1,0 +1,10 @@
+KUBECTL_PATH: /usr/local/bin/kubctl
+HELM_PATH: /usr/local/bin/helm
+HELMFILE_PATH: /usr/local/bin/helmfile
+STERN_PATH: /usr/local/bin/stern
+LSEC2_PATH: /usr/local/bin/lsec2
+AWS_IAM_AUTHENTICATOR_PATH: /usr/local/bin/aws-iam-authenticator
+EKSCTL_PATH: /usr/local/bin/eksctl
+SOPS_PATH: /usr/local/bin/sops
+SOPSED_PATH: /usr/local/bin/sopsed
+VARIANT_PATH: /usr/local/bin/variant

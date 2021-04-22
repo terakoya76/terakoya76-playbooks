@@ -2,6 +2,7 @@ BREW_PACKAGES:
   - bash-completion
   - curl
   - cmake
+  - evans
   - git
   - gnu-getopt
   - graphviz
@@ -9,6 +10,7 @@ BREW_PACKAGES:
   - imagemagick
   - jq
   - libmagic
+  - llvm
   - memcached
   - mysql
   - neovim
@@ -26,9 +28,8 @@ BREW_PACKAGES:
   - vim
   - wget
   - yq
-
-AVR_PACKAGES:
-  - avr-gcc@7
+  # AVR
+  - avr-gcc
   - dfu-programmer
   - gcc-arm-none-eabi
   - avrdude

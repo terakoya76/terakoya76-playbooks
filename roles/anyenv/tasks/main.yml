@@ -3,38 +3,44 @@
     repo: https://github.com/riywo/anyenv
     dest: "$HOME/.anyenv"
 
-- name: Init anyenv
-  shell: /bin/bash -lc "anyenv install --init"
-  ignore_errors: yes
-
 - name: Install anyenv-update
   git:
     repo: https://github.com/znz/anyenv-update
     dest: "$HOME/.anyenv/plugins/anyenv-update"
 
-- name: Place anyenv.sh
+- name: Place Files
   template:
-    src: files/anyenv.sh
-    dest: "$HOME/.bash.d/anyenv.sh"
+    src: files/{{ item }}
+    dest: "$HOME/.bash.d/{{ item }}"
     mode: 0755
+  with_items:
+    - anyenv.sh
 
-- name: Place goenv.sh
-  template:
-    src: files/goenv.sh
-    dest: "$HOME/.bash.d/goenv.sh"
-    mode: 0755
+- name: Init anyenv
+  shell: $HOME/.anyenv/bin/anyenv install --init
+  environment:
+    ANYENV_ROOT: "$HOME/.anyenv"
+  ignore_errors: yes
 
 - name: Check env installed
-  shell: /bin/bash -lc "anyenv envs"
+  shell: $HOME/.anyenv/bin/anyenv envs
   register: anyenv_envs
   changed_when: false
 
 - name: Install env tools
-  shell: /bin/bash -lc "anyenv install '{{ item }}'"
-  with_items: '{{ ANYENV_ENVS }}'
+  shell: $HOME/.anyenv/bin/anyenv install {{ item }}
+  with_items:
+    - goenv
+    - nodenv
+    - rbenv
+    - tfenv
+  environment:
+    ANYENV_ROOT: "$HOME/.anyenv"
   when: 'item not in anyenv_envs.stdout'
   ignore_errors: yes
 
 - name: Update exists tools
-  shell: /bin/bash -lc "anyenv update"
+  shell: $HOME/.anyenv/plugins/anyenv-update/bin/anyenv-update
+  environment:
+    ANYENV_ROOT: "$HOME/.anyenv"
   ignore_errors: yes

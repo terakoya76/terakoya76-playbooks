@@ -104,7 +104,7 @@ highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste
 
 " for ruby provider
-let g:ruby_host_prog = '$HOME/.anyenv/envs/rbenv/versions/2.5.8/bin/neovim-ruby-host'
+let g:ruby_host_prog = '$HOME/.anyenv/envs/rbenv/versions/3.0.1/bin/neovim-ruby-host'
 
 " for US keyboard
 nnoremap ; :

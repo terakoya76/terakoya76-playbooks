@@ -1,23 +1,31 @@
-- name: Ensure nodenv installed
-  shell: /bin/bash -lc "which nodenv"
-  changed_when: false
-
-- name: Check installed nodejs version
-  shell: /bin/bash -lc "nodenv versions"
-  register: NODENV_INSTALLED
-  changed_when: false
-  ignore_errors: yes
-
-- name: Install nodejs from nodenv
-  shell: /bin/bash -lc "nodenv install '{{ item }}'"
-  when: 'item not in NODENV_INSTALLED.stdout'
-  with_items: '{{ NODEJS_VERSIONS }}'
-
-- name: Set Global version
-  shell: /bin/bash -lc "nodenv global '{{ GLOBAL_VERSION }}'"
-
 - name: Place yarn.sh
   template:
     src: files/yarn.sh
     dest: "$HOME/.bash.d/yarn.sh"
     mode: 0755
+
+- name: Check installed nodejs version
+  shell: $HOME/.anyenv/envs/nodenv/bin/nodenv versions
+  register: NODENV_INSTALLED
+  environment:
+    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
+  changed_when: false
+  ignore_errors: yes
+
+- name: Install nodejs from nodenv
+  shell: |
+    $HOME/.anyenv/envs/nodenv/plugins/node-build/install.sh
+    $HOME/.anyenv/envs/nodenv/bin/nodenv install {{ item }}
+  with_items:
+    - 12.22.1
+    - 13.14.0
+    - 14.16.1
+    - 15.14.0
+  environment:
+    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
+  when: 'item not in NODENV_INSTALLED.stdout'
+
+- name: Set Global version
+  shell: $HOME/.anyenv/envs/nodenv/bin/nodenv global {{ GLOBAL_NODE_VERSION }}
+  environment:
+    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"

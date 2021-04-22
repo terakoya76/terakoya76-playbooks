@@ -1,12 +1,5 @@
-- name: Install Dependencies
-  become: yes
-  apt:
-    name: '{{ APT_PACKAGES }}'
-    state: present
-  when: "ansible_os_family == 'Debian'"
-
 - name: Install Stack
-  become: yes
+  # become: true
   shell: |
     if ! which stack > /dev/null 2>&1; then
       curl -sSL https://get.haskellstack.org/ | sh
@@ -27,8 +20,11 @@
   shell: stack setup
 
 - name: Install useful packages
-  shell: stack install '{{ item }}'
-  with_items: '{{ STACK_PACKAGES }}'
+  shell: stack install {{ item }}
+  with_items:
+    - ghc-mod
+    - hlint
+    - hdevtools
 
 - name: Place ghc-mod.sh
   template:

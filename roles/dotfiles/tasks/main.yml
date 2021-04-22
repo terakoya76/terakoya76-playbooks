@@ -1,14 +1,11 @@
-- name: Place default .bash_profile
+- name: Place Default Config
   template:
-    src: files/bash_profile
-    dest: "$HOME/.bash_profile"
+    src: files/{{ item }}
+    dest: "$HOME/.{{ item }}"
     mode: 0755
-
-- name: Place default .bashrc
-  template:
-    src: files/bashrc
-    dest: "$HOME/.bashrc"
-    mode: 0755
+  with_items:
+    - bash_profile
+    - bashrc
 
 - name: Fetch git-prompt.sh
   get_url:
@@ -23,70 +20,28 @@
 - name: Create target directory for bash fragments
   file: path="$HOME/.bash.d" state=directory mode=0755
 
-- name: Place aws.sh
+- name: Place Files
   template:
-    src: files/bash.d/aws.sh
-    dest: "$HOME/.bash.d/aws.sh"
+    src: "files/bash.d/{{ item }}"
+    dest: "$HOME/.bash.d/{{ item }}"
     mode: 0755
-
-- name: Place docker.sh
-  template:
-    src: files/bash.d/docker.sh
-    dest: "$HOME/.bash.d/docker.sh"
-    mode: 0755
-
-- name: Place dockerize.sh
-  template:
-    src: files/bash.d/dockerize.sh
-    dest: "$HOME/dockerize.sh"
-    mode: 0755
-
-- name: Place dockerized.sh
-  template:
-    src: files/bash.d/dockerized.sh
-    dest: "$HOME/.bash.d/dockerized.sh"
-    mode: 0755
-
-- name: Place git.sh
-  template:
-    src: files/bash.d/git.sh
-    dest: "$HOME/.bash.d/git.sh"
-    mode: 0755
-
-- name: Place history.sh
-  template:
-    src: files/bash.d/history.sh
-    dest: "$HOME/.bash.d/history.sh"
-    mode: 0755
-
-- name: Place kubernetes.sh
-  template:
-    src: files/bash.d/kubernetes.sh
-    dest: "$HOME/.bash.d/kubernetes.sh"
-    mode: 0755
-
-- name: Place rails.sh
-  template:
-    src: files/bash.d/rails.sh
-    dest: "$HOME/.bash.d/rails.sh"
-    mode: 0755
-
-- name: Place tools.sh
-  template:
-    src: files/bash.d/tools.sh
-    dest: "$HOME/.bash.d/tools.sh"
-    mode: 0755
+  with_items:
+    - aws.sh
+    - docker.sh
+    # - dockerize.sh
+    - dockerized.sh
+    - fzf.sh
+    - git.sh
+    - history.sh
+    - kubernetes.sh
+    - rails.sh
+    - tmux.sh
+    - tools.sh
 
 - name: Place .vimrc for vim
   template:
     src: files/vimrc
     dest: "$HOME/.vimrc"
-    mode: 0755
-
-- name: Place aws.sh
-  template:
-    src: files/bash.d/tmux.sh
-    dest: "$HOME/.bash.d/tmux.sh"
     mode: 0755
 
 - name: Create target directory for nvim
@@ -157,9 +112,5 @@
     dest: "$HOME/.tigrc"
     mode: 0755
 
-- name: Enable dotfiles
+- name: Configure gitconfig
   shell: git config --global core.excludesfile ~/.gitignore_global
-
-- name: Enable dotfiles
-  shell: source "$HOME/.bash_profile"
-  ignore_errors: yes

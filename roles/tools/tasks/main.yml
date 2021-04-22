@@ -5,7 +5,7 @@
   when: "ansible_os_family == 'Darwin'"
 
 - name: Install ctags/gtags
-  become: yes
+  become: true
   shell: |
     docker pull universalctags/ctags-docker:latest
     curl -O https://raw.githubusercontent.com/universal-ctags/ctags-docker/master/uctags
@@ -17,11 +17,6 @@
   shell: |
     wget https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
     install -m 0755 xpanes /usr/local/bin/xpanes
-
-- name: Install vim-plug
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    dest: "$HOME/.local/share/nvim/site/autoload/plug.vim"
 
 - name: Install nvim client
   shell: |
@@ -37,24 +32,6 @@
 
 - name: Install powerline-shell
   shell: pip3 install powerline-shell
-
-- name: Install kafka
-  shell: |
-    wget http://ftp.tsukuba.wide.ad.jp/software/apache/kafka/2.2.0/kafka_2.11-2.2.0.tgz
-    tar zxvf "kafka_2.11-2.2.0.tgz"
-    rm kafka_2.11-2.2.0.tgz
-
-- name: Install evans
-  shell: |
-    brew tap ktr0731/evans
-    brew install evans
-  when: "ansible_os_family == 'Darwin'"
-
-- name: Place fzf.sh
-  template:
-    src: files/fzf.sh
-    dest: "$HOME/.bash.d/fzf.sh"
-    mode: 0755
 
 - name: Install circleci cli
   shell: curl -fLSs https://circle.ci/cli | bash
