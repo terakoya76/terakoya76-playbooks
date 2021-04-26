@@ -34,16 +34,19 @@
     state: present
   with_items:
     - boostnote
+    - deepl
     - discord
     - docker-edge
     - firefox
     - gitify
+    - grammarly
     - google-japanese-ime
     - google-chrome
     - kindle
     - kitematic
     - licecap
     - postman
+    - raycast
     - rstudio
     - sequel-pro
     - slack

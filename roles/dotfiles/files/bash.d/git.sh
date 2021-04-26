@@ -62,7 +62,7 @@ fb() {
 alias ga="git add"
 alias gs="git status"
 alias gb="git branch"
-alias gc="npx git-cz"
+alias gc="npx git-cz --disable-emoji"
 alias gco="git checkout"
 alias gd="git diff"
 alias gl="git log"

@@ -25,6 +25,14 @@
     NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
   when: 'item not in NODENV_INSTALLED.stdout'
 
+- name: Install commitizen
+  npm:
+    name: {{ item }}
+    global: yes
+  with_items:
+    - commitizen
+    - git-cz
+
 - name: Set Global version
   shell: $HOME/.anyenv/envs/nodenv/bin/nodenv global {{ GLOBAL_NODE_VERSION }}
   environment:
