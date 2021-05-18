@@ -39,6 +39,7 @@
     - linux-headers-$(uname -r)
     - llvm
     - lldb
+    - multitime
     - neovim
     - pkg-config
     - pandoc
