@@ -40,12 +40,10 @@ git clone git@github.com:terakoya76/terakoya76-playbooks.git
 cd "$REPOSITORY_PATH"
 
 case "$1" in
-  mac-dot)
-    ansible-playbook development.yml -i inventory/mac-local.yml -t config-dotfile ;;
   mac)
-    ansible-playbook development.yml -i inventory/mac-local.yml ;;
-  ubuntu-dot)
-    ansible-playbook development.yml -i inventory/ubuntu-local.yml -t config-dotfile ;;
+    ansible-playbook playbooks/development.yml -i inventories/all.yml ;;
   ubuntu)
-    ansible-playbook development.yml -i inventory/ubuntu-local.yml ;;
+    ansible-playbook playbooks/development.yml -i inventories/all.yml ;;
+  dot)
+    ansible-playbook playbooks/development.yml -i inventories/all.yml -t config-dotfile ;;
 esac

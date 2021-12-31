@@ -1,9 +1,0 @@
-mac:
-  children:
-    default:
-
-default:
-  hosts: localhost
-  vars:
-    ansible_connection: local
-    group: mac
