@@ -6,4 +6,4 @@ default:
   hosts: localhost
   vars:
     ansible_connection: local
-
+    group: ubuntu

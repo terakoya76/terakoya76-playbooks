@@ -1,0 +1,176 @@
+---
+- name: Place kubeconfig.sh
+  template:
+    src: files/kubeconfig.sh
+    dest: "$HOME/.bash.d/kubeconfig.sh"
+    mode: 0755
+  tags:
+    - config-tool
+
+- name: Create target directory for kubectl
+  file: >
+    path="$HOME/.kube"
+    state=directory
+    mode=0755
+  tags:
+    - config-tool
+
+- name: Place kubectl-debug config
+  template:
+    src: files/debug-config
+    dest: "$HOME/.kube/debug-config"
+    mode: 0755
+  tags:
+    - config-tool
+
+- name: Install kubectl
+  become: true
+  shell: |
+    pushd "$(mktemp -d)"
+    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$(uname -s | tr '[A-Z]' '[a-z]')/amd64/kubectl"
+    chmod +x ./kubectl
+    mv ./kubectl {{ KUBECTL_PATH }}
+    popd
+  tags:
+    - config-tool
+
+- name: Install krew
+  become: true
+  shell: |
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
+    tar zxvf krew.tar.gz &&
+    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+    "$KREW" install krew
+    "$KREW" update
+  tags:
+    - config-tool
+
+- name: Install kubectl plugins
+  become: true
+  shell: |
+    $HOME/.krew/bin/kubectl-krew install {{ item }}
+  with_items:
+    - ctx
+    - ns
+    - iexec
+    - status
+    - tree
+    - view-secret
+    - whoami
+    - debug
+    - trace
+    - neat
+    - images
+    - rolesum
+    - get-all
+    - ca-cert
+    - resource-capacity
+    - df-pv
+  environment:
+    kREW_ROOT: "$HOME/.krew"
+    PATH: "${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  tags:
+    - config-tool
+
+- name: Install helm
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')-amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select((.name | contains($SYSNAME)) and (.name | contains("sha256") | not)) | .name' | sed s/.asc//)"
+    wget https://get.helm.sh/"$RELEASE"
+    tar -zxvf "$RELEASE"
+    chmod +x "$SYSNAME/helm"
+    mv "$SYSNAME/helm" {{ HELM_PATH }}
+    rm -r "$SYSNAME"
+  tags:
+    - config-tool
+
+- name: Install Helm Plugin
+  become: true
+  shell: |
+    {{ HELM_PATH }} plugin install https://github.com/futuresimple/helm-secrets
+    {{ HELM_PATH }} plugin install https://github.com/databus23/helm-diff --version master
+  ignore_errors: yes
+  tags:
+    - config-tool
+
+- name: Install Helmfile
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    chmod +x "helmfile_$SYSNAME"
+    mv "helmfile_$SYSNAME" {{ HELMFILE_PATH }}
+  tags:
+    - config-tool
+
+- name: Install stern
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    chmod +x "stern_$SYSNAME"
+    mv "stern_$SYSNAME" {{ STERN_PATH }}
+  tags:
+    - config-tool
+
+- name: Install lsec2
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
+    curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    tar zxvf "$RELEASE"
+    chmod +x lsec2
+    mv lsec2 {{ LSEC2_PATH }}
+  tags:
+    - config-tool
+
+- name: Install aws-iam-authenticator
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
+    curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/$SYSNAME/amd64/aws-iam-authenticator
+    chmod +x ./aws-iam-authenticator
+    mv ./aws-iam-authenticator {{ AWS_IAM_AUTHENTICATOR_PATH }}
+  tags:
+    - config-tool
+
+- name: Install eksctl
+  shell: |
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz
+    mv ./eksctl {{ EKSCTL_PATH }}
+  tags:
+    - config-tool
+
+- name: Install sops
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
+    RELEASE="$(curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
+    curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    chmod +x "$RELEASE"
+    mv "$RELEASE" {{ SOPS_PATH }}
+  tags:
+    - config-tool
+
+- name: Install sopsed
+  become: true
+  shell: |
+    curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
+    chmod +x sopsed
+    mv sopsed {{ SOPSED_PATH }}
+  tags:
+    - config-tool
+
+- name: Install variant
+  become: true
+  shell: |
+    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    RELEASE="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
+    curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
+    tar zxvf "$RELEASE"
+    chmod +x variant
+    mv variant {{ VARIANT_PATH }}
+  tags:
+    - config-tool

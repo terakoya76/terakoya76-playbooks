@@ -2,7 +2,7 @@
     - 'default'
   roles:
     - dotfiles
-    - apt_packages
+    - packages
     - anyenv
     - golang
     - haskell
@@ -12,4 +12,3 @@
     - rust
     - kubernetes
     - tools
-    - cargo_tools

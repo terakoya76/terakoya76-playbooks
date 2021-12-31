@@ -1,3 +1,4 @@
+---
 - name: Check installed ruby version
   shell: $HOME/.anyenv/envs/rbenv/bin/rbenv versions
   register: RBENV_INSTALLED
@@ -5,6 +6,9 @@
     RBENV_ROOT: "$HOME/.anyenv/envs/rbenv"
   changed_when: false
   ignore_errors: yes
+  tags:
+    - config-language
+    - config-ruby
 
 - name: Install ruby from rbenv
   shell: CFLAGS="-Wno-error=implicit-function-declaration" $HOME/.anyenv/envs/rbenv/bin/rbenv install {{ item }}
@@ -12,11 +16,17 @@
   environment:
     RBENV_ROOT: "$HOME/.anyenv/envs/rbenv"
   when: 'item not in RBENV_INSTALLED.stdout'
+  tags:
+    - config-language
+    - config-ruby
 
 - name: Set Global version
   shell: $HOME/.anyenv/envs/rbenv/bin/rbenv global {{ GLOBAL_RUBY_VERSION }}
   environment:
     RBENV_ROOT: "$HOME/.anyenv/envs/rbenv"
+  tags:
+    - config-language
+    - config-ruby
 
 - name: Install bundler
   gem:
@@ -25,9 +35,15 @@
     state: present
     user_install: no
   with_items: '{{ RUBY_VERSIONS }}'
+  tags:
+    - config-language
+    - config-ruby
 
 - name: update rubygem
   shell: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
   register: gem_update
   with_items: '{{ RUBY_VERSIONS }}'
   changed_when: gem_update.stdout.find('Latest version already installed') == -1
+  tags:
+    - config-language
+    - config-ruby

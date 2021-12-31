@@ -1,3 +1,4 @@
+---
 BREW_PACKAGES:
   - bash-completion
   - curl

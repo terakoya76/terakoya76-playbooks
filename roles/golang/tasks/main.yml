@@ -1,8 +1,12 @@
+---
 - name: Place go-bin.sh
   template:
     src: files/go-bin.sh
     dest: "$HOME/.bash.d/go-bin.sh"
     mode: 0755
+  tags:
+    - config-language
+    - config-go
 
 - name: Check installed golang version
   shell: $HOME/.anyenv/envs/goenv/bin/goenv versions
@@ -12,6 +16,9 @@
     GOENV_DISABLE_GOPATH: "1"
   changed_when: false
   ignore_errors: yes
+  tags:
+    - config-language
+    - config-go
 
 - name: Install golang from goenv
   shell: $HOME/.anyenv/envs/goenv/bin/goenv install {{ item }}
@@ -23,12 +30,18 @@
     GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
     GOENV_DISABLE_GOPATH: "1"
   when: 'item not in GOENV_INSTALLED.stdout'
+  tags:
+    - config-language
+    - config-go
 
 - name: Set Global version
   shell: $HOME/.anyenv/envs/goenv/bin/goenv global {{ GLOBAL_GO_VERSION }}
   environment:
     GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
     GOENV_DISABLE_GOPATH: "1"
+  tags:
+    - config-language
+    - config-go
 
 - name: Install golang libraries
   shell: GOPATH="$(echo $HOME)/go" go get -u {{ item }}
@@ -47,3 +60,6 @@
     GOENV_ROOT: "$HOME/.anyenv/envs/goenv"
     GOENV_DISABLE_GOPATH: "1"
   ignore_errors: yes
+  tags:
+    - config-language
+    - config-go

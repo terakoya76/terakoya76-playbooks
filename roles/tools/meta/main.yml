@@ -1,0 +1,7 @@
+---
+dependencies:
+  - packages
+  - nodejs
+  # - python
+  - ruby
+  - rust

@@ -1,0 +1,19 @@
+---
+- name: Install OpenJDK
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java
+    - java11
+  tags:
+    - config-language
+    - config-java
+
+- name: Install gradle
+  homebrew:
+    name: gradle
+    state: present
+  tags:
+    - config-language
+    - config-java

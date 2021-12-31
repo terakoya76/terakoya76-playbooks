@@ -1,23 +1,42 @@
+---
 - name: Install Stack
   # become: true
   shell: |
     if ! which stack > /dev/null 2>&1; then
       curl -sSL https://get.haskellstack.org/ | sh
     fi
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Upgrade Stack
   shell: stack upgrade
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Create target directory for stack.yaml
-  file: path="$HOME/.stack/global-project" state=directory mode=0755
+  file: >
+    path="$HOME/.stack/global-project"
+    state=directory
+    mode=0755
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Place stack.yaml for specified version of ghc install
   template:
     src: files/stack.yaml
     dest: "$HOME/.stack/global-project/stack.yaml"
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Reinstall ghc
   shell: stack setup
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Install useful packages
   shell: stack install {{ item }}
@@ -25,9 +44,15 @@
     - ghc-mod
     - hlint
     - hdevtools
+  tags:
+    - config-language
+    - config-haskell
 
 - name: Place ghc-mod.sh
   template:
     src: files/ghc-mod.sh
     dest: "$HOME/.bash.d/ghc-mod.sh"
     mode: 0755
+  tags:
+    - config-language
+    - config-haskell

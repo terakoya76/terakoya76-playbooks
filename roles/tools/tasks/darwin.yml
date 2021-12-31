@@ -1,0 +1,7 @@
+---
+- name: Install ctags/gtags
+  shell: |
+    brew tap universal-ctags/universal-ctags
+    brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+  tags:
+    - config-tool

@@ -1,12 +1,17 @@
+---
 - name: Install anyenv
   git:
     repo: https://github.com/riywo/anyenv
     dest: "$HOME/.anyenv"
+  tags:
+    - config-base
 
 - name: Install anyenv-update
   git:
     repo: https://github.com/znz/anyenv-update
     dest: "$HOME/.anyenv/plugins/anyenv-update"
+  tags:
+    - config-base
 
 - name: Place Files
   template:
@@ -15,17 +20,23 @@
     mode: 0755
   with_items:
     - anyenv.sh
+  tags:
+    - config-base
 
 - name: Init anyenv
   shell: $HOME/.anyenv/bin/anyenv install --init
   environment:
     ANYENV_ROOT: "$HOME/.anyenv"
   ignore_errors: yes
+  tags:
+    - config-base
 
 - name: Check env installed
   shell: $HOME/.anyenv/bin/anyenv envs
   register: anyenv_envs
   changed_when: false
+  tags:
+    - config-base
 
 - name: Install env tools
   shell: $HOME/.anyenv/bin/anyenv install {{ item }}
@@ -38,9 +49,13 @@
     ANYENV_ROOT: "$HOME/.anyenv"
   when: 'item not in anyenv_envs.stdout'
   ignore_errors: yes
+  tags:
+    - config-base
 
 - name: Update exists tools
   shell: $HOME/.anyenv/plugins/anyenv-update/bin/anyenv-update
   environment:
     ANYENV_ROOT: "$HOME/.anyenv"
   ignore_errors: yes
+  tags:
+    - config-base

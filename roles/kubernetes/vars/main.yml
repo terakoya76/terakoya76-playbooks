@@ -1,3 +1,4 @@
+---
 KUBECTL_PATH: /usr/local/bin/kubctl
 HELM_PATH: /usr/local/bin/helm
 HELMFILE_PATH: /usr/local/bin/helmfile

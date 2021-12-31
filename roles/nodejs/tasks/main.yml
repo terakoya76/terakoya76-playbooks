@@ -1,8 +1,12 @@
+---
 - name: Place yarn.sh
   template:
     src: files/yarn.sh
     dest: "$HOME/.bash.d/yarn.sh"
     mode: 0755
+  tags:
+    - config-language
+    - config-nodejs
 
 - name: Check installed nodejs version
   shell: $HOME/.anyenv/envs/nodenv/bin/nodenv versions
@@ -11,6 +15,9 @@
     NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
   changed_when: false
   ignore_errors: yes
+  tags:
+    - config-language
+    - config-nodejs
 
 - name: Install nodejs from nodenv
   shell: |
@@ -24,16 +31,25 @@
   environment:
     NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
   when: 'item not in NODENV_INSTALLED.stdout'
+  tags:
+    - config-language
+    - config-nodejs
 
 - name: Install commitizen
   npm:
-    name: {{ item }}
+    name: "{{ item }}"
     global: yes
   with_items:
     - commitizen
     - git-cz
+  tags:
+    - config-language
+    - config-nodejs
 
 - name: Set Global version
   shell: $HOME/.anyenv/envs/nodenv/bin/nodenv global {{ GLOBAL_NODE_VERSION }}
   environment:
     NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
+  tags:
+    - config-language
+    - config-nodejs

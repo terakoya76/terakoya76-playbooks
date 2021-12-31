@@ -1,0 +1,61 @@
+---
+- name: Install xpanes
+  shell: |
+    wget https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
+    install -m 0755 xpanes /usr/local/bin/xpanes
+  tags:
+    - config-tool
+
+- name: Install nvim client
+  shell: |
+    pip3 install neovim
+    gem install neovim
+    npm install -g neovim
+  tags:
+    - config-tool
+
+# - name: Fetch Solarized Color Schema
+# shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
+
+# NOTE: check iceberg terminal theme when you're using MacOS
+#   https://cocopon.github.io/iceberg.vim/
+
+- name: Install powerline-shell
+  shell: pip3 install powerline-shell
+  tags:
+    - config-tool
+
+- name: Install circleci cli
+  shell: curl -fLSs https://circle.ci/cli | bash
+  tags:
+    - config-tool
+
+- name: Install Alacritty
+  shell: cargo install alacritty
+  tags:
+    - config-tool
+
+- name: Install bat
+  shell: cargo install bat
+  tags:
+    - config-tool
+
+- name: Install fd-find
+  shell: cargo install fd-find
+  tags:
+    - config-tool
+
+- name: Install exa
+  shell: cargo install exa
+  tags:
+    - config-tool
+
+- name: Install ripgrep
+  shell: cargo install ripgrep
+  tags:
+    - config-tool
+
+- name: Install xsv
+  shell: cargo install xsv
+  tags:
+    - config-tool

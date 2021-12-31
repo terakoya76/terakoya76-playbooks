@@ -1,7 +1,8 @@
+---
 - name: Install Apt Packages
   become: true
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
     - apt-transport-https
@@ -54,14 +55,20 @@
     - xclip
     - zlib1g-dev
   ignore_errors: yes
+  tags:
+    - config-base
 
 - name: Add Apt-Repository for Docker
   shell: |
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  tags:
+    - config-base
 
 - name: Install Docker
   become: true
   apt:
     name: docker-ce
     state: present
+  tags:
+    - config-base

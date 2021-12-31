@@ -1,37 +1,10 @@
-- name: Install ctags/gtags
-  shell: |
-    brew tap universal-ctags/universal-ctags
-    brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-  when: "ansible_os_family == 'Darwin'"
+---
+- import_tasks: common.yml
 
-- name: Install ctags/gtags
-  become: true
-  shell: |
-    docker pull universalctags/ctags-docker:latest
-    curl -O https://raw.githubusercontent.com/universal-ctags/ctags-docker/master/uctags
-    mv ctags /usr/local/bin
-    chmod +x /usr/local/bin/ctags
-  when: "ansible_os_family == 'Debian'"
+- import_tasks: debian.yml
+  when:
+    - ansible_os_family == "Debian"
 
-- name: Install xpanes
-  shell: |
-    wget https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
-    install -m 0755 xpanes /usr/local/bin/xpanes
-
-- name: Install nvim client
-  shell: |
-    pip3 install neovim
-    gem install neovim
-    npm install -g neovim
-
-# - name: Fetch Solarized Color Schema
-# shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
-
-# NOTE: check iceberg terminal theme when you're using MacOS
-#   https://cocopon.github.io/iceberg.vim/
-
-- name: Install powerline-shell
-  shell: pip3 install powerline-shell
-
-- name: Install circleci cli
-  shell: curl -fLSs https://circle.ci/cli | bash
+- import_tasks: darwin.yml
+  when:
+    - ansible_os_family == "Darwin"

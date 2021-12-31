@@ -1,0 +1,22 @@
+---
+- name: Install awscli
+  become: true
+  shell: |
+    curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+    installer -pkg AWSCLIV2.pkg -target /
+  tags:
+    - config-tool
+
+- name: Install saml2aws
+  shell: |
+    brew tap versent/homebrew-taps
+    brew install saml2aws
+  tags:
+    - config-tool
+
+- name: Install kube-ps1
+  homebrew:
+    name: kube-ps1
+    state: present
+  tags:
+    - config-tool

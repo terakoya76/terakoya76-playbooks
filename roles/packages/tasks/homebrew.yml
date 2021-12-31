@@ -1,3 +1,4 @@
+---
 - name: Brew Tap -> bundle core dupes services versions
   homebrew_tap:
     name: '{{ item }}'
@@ -11,6 +12,8 @@
     - ktr0731/evans
     - osx-cross/avr
     - PX4/homebrew-px4
+  tags:
+    - config-base
 
 - name: Brew Untap
   homebrew_tap:
@@ -18,15 +21,21 @@
     state: absent
   with_items:
     - homebrew/boneyard
+  tags:
+    - config-base
 
 - name: Brew Update
   shell: brew update
+  tags:
+    - config-base
 
 - name: Brew Install
   homebrew:
     name: '{{ BREW_PACKAGES | join(",") }}'
     state: present
   ignore_errors: yes
+  tags:
+    - config-base
 
 - name: Install Homebrew cask packages
   homebrew_cask:
@@ -59,3 +68,5 @@
     - xquartz
     - wireshark
   ignore_errors: yes
+  tags:
+    - config-base
