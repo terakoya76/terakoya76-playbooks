@@ -21,3 +21,10 @@
   tags:
     - config-language
     - config-rust
+
+- name: Install Alacritty
+  shell: cargo install {{ item }}
+  with_items: "{{ RUST_BINARIES }}"
+  tags:
+    - config-language
+    - config-rust

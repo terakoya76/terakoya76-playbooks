@@ -1,1 +1,5 @@
 ---
+HASKELL_BINARIES:
+  - ghc-mod
+  - hlint
+  - hdevtools

@@ -1,7 +1,8 @@
 ---
 RUBY_VERSIONS:
-  - 2.6.7
-  - 2.7.3
-  - 3.0.1
+  - 2.6.9
+  - 2.7.5
+  - 3.0.3
+  - 3.1.0
 
-GLOBAL_RUBY_VERSION: 3.0.1
+GLOBAL_RUBY_VERSION: 3.1.0

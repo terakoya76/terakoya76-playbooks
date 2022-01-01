@@ -4,4 +4,3 @@ dependencies:
   - nodejs
   # - python
   - ruby
-  - rust

@@ -1,2 +1,17 @@
 ---
-GLOBAL_GO_VERSION: 1.16.3
+GO_VERSIONS:
+  - 1.15.15
+  - 1.16.12
+  - 1.17.5
+
+GLOBAL_GO_VERSION: 1.17.5
+
+GO_BINARIES:
+  - github.com/golangci/golangci-lint/cmd/golangci-lint
+  - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+  - github.com/golang/protobuf/protoc-gen-go
+  - honnef.co/go/tools/cmd/...
+  - github.com/derekparker/delve/cmd/dlv
+  - github.com/spf13/cobra/cobra
+  - github.com/x-motemen/ghq
+  - github.com/github/hub

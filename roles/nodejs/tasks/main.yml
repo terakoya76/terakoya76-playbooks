@@ -9,10 +9,8 @@
     - config-nodejs
 
 - name: Check installed nodejs version
-  shell: $HOME/.anyenv/envs/nodenv/bin/nodenv versions
+  shell: bash -lc "nodenv versions"
   register: NODENV_INSTALLED
-  environment:
-    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
   changed_when: false
   ignore_errors: yes
   tags:
@@ -22,14 +20,8 @@
 - name: Install nodejs from nodenv
   shell: |
     $HOME/.anyenv/envs/nodenv/plugins/node-build/install.sh
-    $HOME/.anyenv/envs/nodenv/bin/nodenv install {{ item }}
-  with_items:
-    - 12.22.1
-    - 13.14.0
-    - 14.16.1
-    - 15.14.0
-  environment:
-    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
+    bash -lc "nodenv install {{ item }}"
+  with_items: "{{ NODE_VERSIONS }}"
   when: 'item not in NODENV_INSTALLED.stdout'
   tags:
     - config-language
@@ -39,6 +31,7 @@
   npm:
     name: "{{ item }}"
     global: yes
+    state: present
   with_items:
     - commitizen
     - git-cz
@@ -47,9 +40,7 @@
     - config-nodejs
 
 - name: Set Global version
-  shell: $HOME/.anyenv/envs/nodenv/bin/nodenv global {{ GLOBAL_NODE_VERSION }}
-  environment:
-    NODENV_ROOT: "$HOME/.anyenv/envs/nodenv"
+  shell: bash -lc "nodenv global {{ GLOBAL_NODE_VERSION }}"
   tags:
     - config-language
     - config-nodejs

@@ -1,1 +1,8 @@
 ---
+RUST_BINARIES:
+  - alacritty
+  - bat
+  - fd-find
+  - exa
+  - ripgrep
+  - xsv

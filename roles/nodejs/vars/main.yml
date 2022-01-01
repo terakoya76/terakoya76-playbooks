@@ -1,2 +1,8 @@
 ---
+NODE_VERSIONS:
+  - 12.22.1
+  - 13.14.0
+  - 14.16.1
+  - 15.14.0
+
 GLOBAL_NODE_VERSION: 15.14.0

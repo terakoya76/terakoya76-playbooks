@@ -6,11 +6,26 @@
   tags:
     - config-tool
 
-- name: Install nvim client
-  shell: |
-    pip3 install neovim
-    gem install neovim
-    npm install -g neovim
+- name: Install nvim client via gem
+  gem:
+    name: neovim
+    state: present
+  tags:
+    - config-tool
+
+- name: Install nvim client via pip3
+  pip:
+    name: neovim
+    executable: pip3
+    state: present
+  tags:
+    - config-tool
+
+- name: Install nvim client via npm
+  npm:
+    name: neovim
+    global: yes
+    state: present
   tags:
     - config-tool
 
@@ -21,41 +36,14 @@
 #   https://cocopon.github.io/iceberg.vim/
 
 - name: Install powerline-shell
-  shell: pip3 install powerline-shell
+  pip:
+    name: powerline-shell
+    executable: pip3
+    state: present
   tags:
     - config-tool
 
 - name: Install circleci cli
   shell: curl -fLSs https://circle.ci/cli | bash
-  tags:
-    - config-tool
-
-- name: Install Alacritty
-  shell: cargo install alacritty
-  tags:
-    - config-tool
-
-- name: Install bat
-  shell: cargo install bat
-  tags:
-    - config-tool
-
-- name: Install fd-find
-  shell: cargo install fd-find
-  tags:
-    - config-tool
-
-- name: Install exa
-  shell: cargo install exa
-  tags:
-    - config-tool
-
-- name: Install ripgrep
-  shell: cargo install ripgrep
-  tags:
-    - config-tool
-
-- name: Install xsv
-  shell: cargo install xsv
   tags:
     - config-tool
