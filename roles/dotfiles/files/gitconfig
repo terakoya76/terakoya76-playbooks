@@ -1,0 +1,5 @@
+[user]
+	email = terako.studio@gmail.com
+	name = Hajime Terasawa
+[url "git@github.com:"]
+	insteadOf = https://github.com/

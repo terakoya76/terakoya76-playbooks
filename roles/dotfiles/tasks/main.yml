@@ -28,7 +28,10 @@
     - config-dotfile
 
 - name: Create target directory for bash fragments
-  file: path="$HOME/.bash.d" state=directory mode=0755
+  file: >
+    path="$HOME/.bash.d"
+    state=directory
+    mode=0755
   tags:
     - config-base
     - config-dotfile
@@ -38,18 +41,7 @@
     src: "files/bash.d/{{ item }}"
     dest: "$HOME/.bash.d/{{ item }}"
     mode: 0755
-  with_items:
-    - aws.sh
-    - docker.sh
-    # - dockerize.sh
-    - dockerized.sh
-    - fzf.sh
-    - git.sh
-    - history.sh
-    - kubernetes.sh
-    - rails.sh
-    - tmux.sh
-    - tools.sh
+  with_items: "{{ SHELL_FILES }}"
   tags:
     - config-base
     - config-dotfile
@@ -64,7 +56,10 @@
     - config-dotfile
 
 - name: Create target directory for nvim
-  file: path="$HOME/.config/nvim" state=directory mode=0755
+  file: >
+    path="$HOME/.config/nvim"
+    state=directory
+    mode=0755
   tags:
     - config-base
     - config-dotfile
@@ -79,7 +74,10 @@
     - config-dotfile
 
 - name: Create target directory for translate-shell
-  file: path="$HOME/.translate-shell" state=directory mode=0755
+  file: >
+    path="$HOME/.translate-shell"
+    state=directory
+    mode=0755
   tags:
     - config-base
     - config-dotfile
@@ -120,7 +118,10 @@
     - config-dotfile
 
 - name: Create target directory for alacritty
-  file: path="$HOME/.config/alacritty" state=directory mode=0755
+  file: >
+    path="$HOME/.config/alacritty"
+    state=directory
+    mode=0755
   tags:
     - config-base
     - config-dotfile
@@ -138,6 +139,15 @@
   template:
     src: files/my.cnf
     dest: "$HOME/.my.cnf"
+    mode: 0755
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place .gitconfig
+  template:
+    src: files/gitconfig
+    dest: "$HOME/.gitconfig"
     mode: 0755
   tags:
     - config-base
