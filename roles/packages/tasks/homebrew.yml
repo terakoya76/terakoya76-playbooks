@@ -1,33 +1,28 @@
 ---
 - name: Brew Tap -> bundle core dupes services versions
   homebrew_tap:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
-  with_items:
-    - homebrew/bundle
-    - homebrew/cask
-    - homebrew/cask-versions
-    - homebrew/core
-    - homebrew/services
-    - ktr0731/evans
-    - osx-cross/avr
-    - PX4/homebrew-px4
+  with_items: "{{ BREW_TAP_PACKAGES }}"
   tags:
     - config-base
+    - config-packages
 
 - name: Brew Untap
   homebrew_tap:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: absent
   with_items:
     - homebrew/boneyard
   tags:
     - config-base
+    - config-packages
 
 - name: Brew Update
   shell: brew update
   tags:
     - config-base
+    - config-packages
 
 - name: Brew Install
   homebrew:
@@ -36,37 +31,14 @@
   ignore_errors: yes
   tags:
     - config-base
+    - config-packages
 
 - name: Install Homebrew cask packages
   homebrew_cask:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
-  with_items:
-    - boostnote
-    - deepl
-    - discord
-    - docker-edge
-    - firefox
-    - gitify
-    - grammarly
-    - google-japanese-ime
-    - google-chrome
-    - kindle
-    - kitematic
-    - licecap
-    - postman
-    - raycast
-    - rstudio
-    - sequel-pro
-    - slack
-    - spectacle
-    - spotify
-    - vagrant
-    - virtualbox
-    - visual-studio-code
-    - vlc
-    - xquartz
-    - wireshark
+  with_items: "{{ BREW_CASK_PACKAGES }}"
   ignore_errors: yes
   tags:
     - config-base
+    - config-packages

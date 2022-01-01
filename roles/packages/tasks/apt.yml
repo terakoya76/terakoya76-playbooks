@@ -4,65 +4,27 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
-    - apt-transport-https
-    - autoconf
-    - bash-completion
-    - bison
-    - bpfcc-tools
-    - build-essential
-    - ca-certificates
-    - clang
-    - cmake
-    - curl
-    - gcc
-    - g++
-    - make
-    - xz-utils
-    - zlib1g-dev
-    - libgdbm5
-    - git
-    - gnupg
-    # - hadolint
-    - imagemagick
-    - jq
-    - libc6-dev
-    - libncurses5-dev
-    - libffi-dev
-    - libgmp-dev
-    - libfontconfig1-dev
-    - libfreetype6-dev
-    - libxcb-xfixes0-dev
-    - libmagic-dev
-    - libreadline6-dev
-    - libssl-dev
-    - libyaml-dev
-    - linux-headers-$(uname -r)
-    - llvm
-    - lldb
-    - multitime
-    - neovim
-    - pkg-config
-    - pandoc
-    # - protobuf
-    - python3-dev
-    - python3-pip
-    - shellcheck
-    - software-properties-common
-    - tmux
-    - translate-shell
-    - vim
-    - xclip
-    - zlib1g-dev
+  with_items: "{{ APT_PACKAGES }}"
   ignore_errors: yes
   tags:
     - config-base
+    - config-packages
+
+- name: Install Kernel Modules
+  become: true
+  shell: |
+    apt install -y linux-headers-$(uname -r)
+  ignore_errors: yes
+  tags:
+    - config-base
+    - config-packages
 
 - name: Add Apt-Repository for Docker
   shell: |
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   tags:
+    - config-packages
     - config-base
 
 - name: Install Docker
@@ -72,3 +34,4 @@
     state: present
   tags:
     - config-base
+    - config-packages
