@@ -46,6 +46,15 @@
     - config-base
     - config-dotfile
 
+- name: Place aws/config for awscli
+  template:
+    src: files/awsconfig
+    dest: "$HOME/.aws/config"
+    mode: 0755
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Place .vimrc for vim
   template:
     src: files/vimrc
