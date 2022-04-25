@@ -3,9 +3,9 @@ GO_VERSIONS:
   - 1.15.15
   - 1.16.12
   - 1.17.5
-  - 1.18.0
+  - 1.18.1
 
-GLOBAL_GO_VERSION: 1.18.0
+GLOBAL_GO_VERSION: 1.18.1
 
 GO_BINARIES:
   - github.com/golangci/golangci-lint/cmd/golangci-lint
