@@ -8,12 +8,13 @@ GO_VERSIONS:
 GLOBAL_GO_VERSION: 1.18.1
 
 GO_BINARIES:
-  - github.com/derekparker/delve/cmd/dlv
-  - github.com/github/hub
-  - github.com/golang/protobuf/protoc-gen-go
-  - github.com/golangci/golangci-lint/cmd/golangci-lint
-  - github.com/ktr0731/evans
-  - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
-  - github.com/spf13/cobra/cobra
-  - github.com/x-motemen/ghq
-  - honnef.co/go/tools/cmd/...
+  - github.com/cosmtrek/air@latest
+  - github.com/derekparker/delve/cmd/dlv@latest
+  - github.com/github/hub@latest
+  - github.com/golang/protobuf/protoc-gen-go@latest
+  - github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  - github.com/ktr0731/evans@latest
+  - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+  - github.com/spf13/cobra/cobra@latest
+  - github.com/x-motemen/ghq@latest
+  - honnef.co/go/tools/cmd/...@latest
