@@ -34,5 +34,5 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ ansible-playbook playbooks/setup_ubuntu.yml -i inventory/ubuntu-local.yml --start-at-task="ruby : Set prefix"
+$ ansible-playbook playbooks/development.yml -i inventory/all.yml --start-at-task="ruby : Set prefix"
 ```
