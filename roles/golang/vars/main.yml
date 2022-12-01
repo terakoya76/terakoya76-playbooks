@@ -1,11 +1,12 @@
 ---
 GO_VERSIONS:
   - 1.15.15
-  - 1.16.12
-  - 1.17.5
-  - 1.18.1
+  - 1.16.15
+  - 1.17.13
+  - 1.18.8
+  - 1.19.3
 
-GLOBAL_GO_VERSION: 1.18.1
+GLOBAL_GO_VERSION: 1.19.3
 
 GO_BINARIES:
   - github.com/cosmtrek/air@latest
@@ -14,6 +15,7 @@ GO_BINARIES:
   - github.com/golang/protobuf/protoc-gen-go@latest
   - github.com/golangci/golangci-lint/cmd/golangci-lint@latest
   - github.com/ktr0731/evans@latest
+  - github.com/plumber-cd/terraform-backend-git@latest
   - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
   - github.com/spf13/cobra/cobra@latest
   - github.com/x-motemen/ghq@latest
