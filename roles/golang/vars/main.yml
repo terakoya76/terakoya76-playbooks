@@ -10,13 +10,13 @@ GLOBAL_GO_VERSION: 1.19.3
 
 GO_BINARIES:
   - github.com/cosmtrek/air@latest
-  - github.com/derekparker/delve/cmd/dlv@latest
   - github.com/github/hub@latest
   - github.com/golang/protobuf/protoc-gen-go@latest
   - github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  - github.com/go-delve/delve/cmd/dlv@latest
   - github.com/ktr0731/evans@latest
   - github.com/plumber-cd/terraform-backend-git@latest
   - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
-  - github.com/spf13/cobra/cobra@latest
+  - github.com/spf13/cobra-cli@latest
   - github.com/x-motemen/ghq@latest
   - honnef.co/go/tools/cmd/...@latest
