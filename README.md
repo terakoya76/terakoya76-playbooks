@@ -15,24 +15,21 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 ### Apply Dotfiles
 
 ```shell
-# For MacOS
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) mac-dot
-
-# For Ubuntu
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) ubuntu-dot
+$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) dot
 ```
 
 ### Supported Tags
-* config-dotfile
 * config-base
-* config-tool
+  * config-dotfile
+  * config-packages
 * config-language
-* config-go
-* config-haskell
-* config-java
-* config-nodejs
-* config-ruby
-* config-rust
+  * config-go
+  * config-haskell
+  * config-java
+  * config-nodejs
+  * config-ruby
+  * config-rust
+* config-tool
 
 ### When failed
 use `--start-at-task` opt
