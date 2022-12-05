@@ -10,5 +10,6 @@
     - nodejs
     - ruby
     - rust
+    - aws
     - kubernetes
     - tools

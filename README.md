@@ -30,6 +30,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-ruby
   * config-rust
 * config-tool
+  * config-aws
 
 ### When failed
 use `--start-at-task` opt

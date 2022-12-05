@@ -65,6 +65,7 @@ Plug 'tyru/open-browser.vim'
 Plug 'tyru/open-browser-github.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'nvim-lua/lsp-status.nvim'
 
 " auto complete
 "Plug 'prabirshrestha/async.vim'

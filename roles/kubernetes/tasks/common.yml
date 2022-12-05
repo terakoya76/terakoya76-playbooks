@@ -114,35 +114,6 @@
   tags:
     - config-tool
 
-- name: Install lsec2
-  become: true
-  shell: |
-    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
-    RELEASE="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
-    curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
-    tar zxvf "$RELEASE"
-    chmod +x lsec2
-    mv lsec2 {{ LSEC2_PATH }}
-  tags:
-    - config-tool
-
-- name: Install aws-iam-authenticator
-  become: true
-  shell: |
-    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
-    curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/$SYSNAME/amd64/aws-iam-authenticator
-    chmod +x ./aws-iam-authenticator
-    mv ./aws-iam-authenticator {{ AWS_IAM_AUTHENTICATOR_PATH }}
-  tags:
-    - config-tool
-
-- name: Install eksctl
-  shell: |
-    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz
-    mv ./eksctl {{ EKSCTL_PATH }}
-  tags:
-    - config-tool
-
 - name: Install sops
   become: true
   shell: |
