@@ -31,6 +31,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-rust
 * config-tool
   * config-aws
+  * config-gcp
 
 ### When failed
 use `--start-at-task` opt
