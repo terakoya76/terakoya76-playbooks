@@ -1,15 +1,16 @@
 - hosts:
     - 'default'
   roles:
-    - dotfiles
-    - packages
-    - anyenv
-    - golang
-    - haskell
-    - java
-    - nodejs
-    - ruby
-    - rust
-    - aws
-    - kubernetes
-    - tools
+    - role: dotfiles
+    - role: packages
+    - role: anyenv
+    - role: golang
+    - role: haskell
+    - role: java
+    - role: nodejs
+    - role: ruby
+    - role: rust
+    - role: arduino
+    - role: aws
+    - role: kubernetes
+    - role: tools

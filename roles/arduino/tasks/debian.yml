@@ -1,0 +1,22 @@
+---
+- name: Get ansible_user home directory
+  shell: 'getent passwd "{{ansible_ssh_user}}" | cut -d: -f6'
+  register: ansible_home_result
+  tags:
+    - config-language
+    - config-arduino
+
+ - name: Set the fact for the other scripts to use
+   set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  tags:
+    - config-language
+    - config-arduino
+
+- name: Install Arduino
+  snap:
+    name: arduino
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-arduino
