@@ -22,7 +22,7 @@
     - config-language
     - config-rust
 
-- name: Install Alacritty
+- name: Install tool chain
   shell: cargo install {{ item }}
   with_items: "{{ RUST_BINARIES }}"
   tags:
