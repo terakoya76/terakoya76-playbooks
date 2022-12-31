@@ -2,9 +2,58 @@
 - name: Install Apt Packages
   become: true
   apt:
-    name: "{{ item }}"
+    name:
+      - apt-transport-https
+      - autoconf
+      - bash-completion
+      - bison
+      - bpfcc-tools
+      - build-essential
+      - ca-certificates
+      - clang
+      - cmake
+      - curl
+      - gcc
+      - g++
+      - make
+      - xz-utils
+      - zlib1g-dev
+      # - libgdbm5
+      - git
+      - gnupg
+      # - hadolint
+      - imagemagick
+      - jq
+      - libc6-dev
+      - libncurses5-dev
+      - libffi-dev
+      - libgmp-dev
+      - libfontconfig1-dev
+      - libfreetype6-dev
+      - libxcb-xfixes0-dev
+      - libmagic-dev
+      - libmysqlclient-dev
+      - libreadline6-dev
+      - libssl-dev
+      - libyaml-dev
+      - llvm
+      - lldb
+      - multitime
+      - mysql-client-core-8.0
+      - neovim
+      - pkg-config
+      - pandoc
+      - protobuf-compiler
+      - python3-dev
+      - python3-pip
+      - shellcheck
+      - software-properties-common
+      - tmux
+      - translate-shell
+      - vim
+      - xclip
+      - zlib1g-dev
     state: present
-  with_items: "{{ APT_PACKAGES }}"
   ignore_errors: yes
   tags:
     - config-base

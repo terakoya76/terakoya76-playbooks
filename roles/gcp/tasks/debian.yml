@@ -1,26 +1,24 @@
 ---
-- name: Install apt-transport-https
-  become: true
-  apt:
-    name: apt-transport-https
-    state: present
+- name: Get ansible_user home directory
+  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
   tags:
     - config-tool
     - config-gcp
 
-- name: Install ca-certificates
-  become: true
-  apt:
-    name: ca-certificates
-    state: present
+- name: Set the fact for the other scripts to use
+  set_fact: ansible_home='{{ansible_home_result.stdout}}'
   tags:
     - config-tool
     - config-gcp
 
-- name: Install gnupg
+- name: Install dependencies
   become: true
   apt:
-    name: gnupg
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
     state: present
   tags:
     - config-tool
@@ -39,17 +37,9 @@
 - name: Install google-cloud-cli
   become: true
   apt:
-    name: google-cloud-cli
-    state: present
-  when: not ansible_check_mode
-  tags:
-    - config-tool
-    - config-gcp
-
-- name: Install google-cloud-cli-terraform-validator
-  become: true
-  apt:
-    name: google-cloud-cli-terraform-validator
+    name:
+      - google-cloud-cli
+      - google-cloud-cli-terraform-validator
     state: present
   when: not ansible_check_mode
   tags:

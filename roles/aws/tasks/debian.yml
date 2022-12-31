@@ -2,16 +2,9 @@
 - name: Install awscli
   become: true
   apt:
-    name: awscli
-    state: present
-  tags:
-    - config-tool
-    - config-aws
-
-- name: Install jq
-  become: true
-  apt:
-    name: jq
+    name:
+      - awscli
+      - jq
     state: present
   tags:
     - config-tool

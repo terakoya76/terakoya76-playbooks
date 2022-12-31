@@ -1,6 +1,14 @@
 ---
+- import_tasks: debian.yml
+  when:
+    - ansible_os_family == "Debian"
+
+- import_tasks: darwin.yml
+  when:
+    - ansible_os_family == "Darwin"
+
 - name: Get ansible_user home directory
-  shell: 'getent passwd "{{ansible_ssh_user}}" | cut -d: -f6'
+  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
   tags:
     - config-tool
@@ -11,14 +19,6 @@
   tags:
     - config-tool
     - config-aws
-
-- import_tasks: debian.yml
-  when:
-    - ansible_os_family == "Debian"
-
-- import_tasks: darwin.yml
-  when:
-    - ansible_os_family == "Darwin"
 
 - name: Place aws/config for awscli
   template:

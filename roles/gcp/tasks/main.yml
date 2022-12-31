@@ -1,17 +1,4 @@
 ---
-- name: Get ansible_user home directory
-  shell: 'getent passwd "{{ansible_ssh_user}}" | cut -d: -f6'
-  register: ansible_home_result
-  tags:
-    - config-tool
-    - config-gcp
-
-- name: Set the fact for the other scripts to use
-  set_fact: ansible_home='{{ansible_home_result.stdout}}'
-  tags:
-    - config-tool
-    - config-gcp
-
 - import_tasks: debian.yml
   when:
     - ansible_os_family == "Debian"

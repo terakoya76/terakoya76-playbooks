@@ -29,6 +29,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-nodejs
   * config-ruby
   * config-rust
+  * config-arduino
 * config-tool
   * config-aws
   * config-gcp

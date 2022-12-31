@@ -24,7 +24,13 @@
 
 - name: Install tool chain
   shell: cargo install {{ item }}
-  with_items: "{{ RUST_BINARIES }}"
+  with_items:
+    - alacritty
+    - bat
+    - fd-find
+    - exa
+    - ripgrep
+    - xsv
   tags:
     - config-language
     - config-rust
