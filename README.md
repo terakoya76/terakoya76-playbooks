@@ -5,17 +5,8 @@ Setup develop environment w/ ansible
 ### Install/Update
 
 ```shell
-# For MacOS
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) mac
-
-# For Ubuntu
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) ubuntu
-```
-
-### Apply Dotfiles
-
-```shell
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) dot
+# $1 is ansible_user name
+$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) terakoya76
 ```
 
 ### Supported Tags
@@ -30,6 +21,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-ruby
   * config-rust
   * config-arduino
+  * config-arm64-m4
 * config-tool
   * config-aws
   * config-gcp

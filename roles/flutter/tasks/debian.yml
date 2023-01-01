@@ -1,0 +1,67 @@
+---
+- name: Get ansible_user home directory
+  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Set the fact for the other scripts to use
+  set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install flutter
+  snap:
+    name: flutter
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install android-studio
+  snap:
+    name: android-studio
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install dependencies for android-studio
+  become: true
+  apt:
+    name:
+      - libc6:i386
+      - libncurses5:i386
+      - libstdc++6:i386
+      - lib32z1
+      - libbz2-1.0:i386
+    state: present
+
+# https://developer.android.com/studio/run/emulator-acceleration#accel-vm
+# https://developer.android.com/studio/run/emulator-acceleration#vm-linux
+- name: Setup VM Accelaration
+  become: true
+  apt:
+    name:
+      - cpu-checker
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-clients
+      - bridge-utils
+    state: present
+
+- name: android sdk dir
+  become: true
+  file:
+    path: "{{ ansible_home }}/Android/Sdk"
+    state: directory
+
+- name: config flutter
+  shell: |
+    flutter config --android-sdk "{{ ansible_home }}/Android/Sdk/"
+    flutter config --android-studio-dir /snap/android-studio/current/android-studio/
+    export JAVA_HOME=/snap/android-studio/current/android-studio/jre/bin/java

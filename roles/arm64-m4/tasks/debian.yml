@@ -1,0 +1,75 @@
+---
+- name: Get ansible_user home directory
+  shell: |
+    getent passwd {{ ansible_user }} | cut -d: -f6
+  register: ansible_home_result
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  set_fact: ansible_home={{ ansible_home_result.stdout }}
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Install dependencies
+  become: true
+  apt:
+    name:
+      - minicom
+      - libusb-1.0-0-dev
+      - libsdl2-dev
+    state: present
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Place .minirc.dfl
+  template:
+    src: files/minirc.dfl
+    dest: "{{ ansible_home }}/.minirc.dfl"
+    mode: 0755
+    backup: yes
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Install cargo subcommand
+  shell: |
+    {{ ansible_home }}/.cargo/bin/cargo install {{ item }}
+  with_items:
+    - cargo-generate
+    - hf2-cli
+    - cargo-hf2
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Place udev rules for cargo-hf2
+  become: true
+  template:
+    src: files/99-seeed-boards.rules.j2
+    dest: /etc/udev/rules.d/99-seeed-boards.rules
+    mode: 0755
+    backup: yes
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Reload udev rules for wio-terminal
+  become: true
+  shell: udevadm control --reload-rules
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: join dialouot group for USB serial
+  become: true
+  shell: adduser {{ ansible_user }} dialout
+  tags:
+    - config-language
+    - config-arm64-m4
+
+# reboot here
+
