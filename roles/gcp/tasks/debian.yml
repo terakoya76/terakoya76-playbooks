@@ -29,7 +29,6 @@
   shell: |
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-    apt update
   tags:
     - config-tool
     - config-gcp
@@ -41,6 +40,7 @@
       - google-cloud-cli
       - google-cloud-cli-terraform-validator
     state: present
+    update_cache: yes
   when: not ansible_check_mode
   tags:
     - config-tool
