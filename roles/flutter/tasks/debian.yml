@@ -40,6 +40,9 @@
       - lib32z1
       - libbz2-1.0:i386
     state: present
+  tags:
+    - config-language
+    - config-flutter
 
 # https://developer.android.com/studio/run/emulator-acceleration#accel-vm
 # https://developer.android.com/studio/run/emulator-acceleration#vm-linux
@@ -53,15 +56,62 @@
       - libvirt-clients
       - bridge-utils
     state: present
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Setup Remote Debugging
+  become: true
+  apt:
+    name:
+      - adb
+    state: present
+  tags:
+    - config-language
+    - config-flutter
 
 - name: android sdk dir
   become: true
   file:
     path: "{{ ansible_home }}/Android/Sdk"
     state: directory
+  tags:
+    - config-language
+    - config-flutter
 
 - name: config flutter
   shell: |
     flutter config --android-sdk "{{ ansible_home }}/Android/Sdk/"
     flutter config --android-studio-dir /snap/android-studio/current/android-studio/
     export JAVA_HOME=/snap/android-studio/current/android-studio/jre/bin/java
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install fvm
+  shell: dart pub global activate fvm
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Place fvm.sh
+  template:
+    src: files/fvm.sh
+    dest: "$HOME/.bash.d/fvm.sh"
+    mode: 0755
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install Firebase CLI
+  become: true
+  shell: curl -sL https://firebase.tools | bash
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Activate flutterfire CLI
+  shell: dart pub global activate flutterfire_cli
+  tags:
+    - config-language
+    - config-flutter
