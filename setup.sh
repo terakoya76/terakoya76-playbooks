@@ -8,7 +8,12 @@ if [ $# -ne 1 ]; then
 fi
 
 # setup ansible
-case "$1" in
+dist=$(cat /etc/*-release | grep -w NAME | cut -d= -f2 | tr -d '"')
+if [ ${dist} = "Ubuntu" ]; then
+  sudo apt update
+  sudo apt install -y software-properties-common git ansible
+elif [ ${dist} ]
+case "${dist}" in
   mac)
     if ! brew -v > /dev/null 2>&1 ; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -17,21 +22,6 @@ case "$1" in
       brew install ansible
     fi;;
   ubuntu)
-    sudo apt update
-    sudo apt install -y software-properties-common git ansible ;;
-esac
-
-# setup direnv
-case "$1" in
-  mac)
-    if ! which direnv > /dev/null 2>&1 ; then
-      brew install direnv
-    fi;;
-  ubuntu)
-    wget -O direnv https://github.com/direnv/direnv/releases/download/v2.6.0/direnv.linux-amd64
-    chmod +x direnv
-    sudo cp direnv /usr/local/bin/
-    sudo rm direnv ;;
 esac
 
 REPOSITORY_PATH="$HOME/terakoya76-playbooks"
@@ -39,11 +29,4 @@ rm -fr "$REPOSITORY_PATH"
 git clone git@github.com:terakoya76/terakoya76-playbooks.git
 cd "$REPOSITORY_PATH"
 
-case "$1" in
-  mac)
-    ansible-playbook playbooks/development.yml -i inventories/all.yml ;;
-  ubuntu)
-    ansible-playbook playbooks/development.yml -i inventories/all.yml ;;
-  dot)
-    ansible-playbook playbooks/development.yml -i inventories/all.yml -t config-dotfile ;;
-esac
+ansible-playbook -i inventories/all.yml playbooks/development.yml

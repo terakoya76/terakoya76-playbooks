@@ -12,6 +12,7 @@
     - role: rust
     - role: arduino
     - role: arm64-m4
+    - role: raspberry-pi
     - role: aws
     - role: kubernetes
     - role: tools
