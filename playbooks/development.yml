@@ -2,6 +2,7 @@
     - 'default'
   roles:
     - role: dotfiles
+    - role: 1password
     - role: packages
     - role: anyenv
     - role: golang
