@@ -1,0 +1,22 @@
+---
+- name: Get ansible_user home directory
+  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  tags:
+    - config-language
+    - config-raspberrypi
+
+- name: Set the fact for the other scripts to use
+  set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  tags:
+    - config-language
+    - config-raspberrypi
+
+- name: Install rpi-imager
+  snap:
+    name: rpi-imager
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-raspberrypi
