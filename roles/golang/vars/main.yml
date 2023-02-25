@@ -3,10 +3,11 @@ GO_VERSIONS:
   - 1.15.15
   - 1.16.15
   - 1.17.13
-  - 1.18.8
-  - 1.19.3
+  - 1.18.10
+  - 1.19.6
+  - 1.20.1
 
-GLOBAL_GO_VERSION: 1.19.3
+GLOBAL_GO_VERSION: 1.20.1
 
 GO_BINARIES:
   - github.com/cosmtrek/air@latest
