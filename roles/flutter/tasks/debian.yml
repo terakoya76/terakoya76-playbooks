@@ -1,19 +1,23 @@
 ---
 - name: Get ansible_user home directory
-  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
+  changed_when: false
   tags:
     - config-language
     - config-flutter
 
 - name: Set the fact for the other scripts to use
-  set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
   tags:
     - config-language
     - config-flutter
 
 - name: Install flutter
-  snap:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.snap:
     name: flutter
     state: present
     classic: true
@@ -22,7 +26,9 @@
     - config-flutter
 
 - name: Install android-studio
-  snap:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.snap:
     name: android-studio
     state: present
     classic: true
@@ -32,7 +38,7 @@
 
 - name: Install dependencies for android-studio
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - libc6:i386
       - libncurses5:i386
@@ -48,7 +54,7 @@
 # https://developer.android.com/studio/run/emulator-acceleration#vm-linux
 - name: Setup VM Accelaration
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - cpu-checker
       - qemu-kvm
@@ -62,7 +68,7 @@
 
 - name: Setup Remote Debugging
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - adb
     state: present
@@ -72,7 +78,8 @@
 
 - name: android sdk dir
   become: true
-  file:
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
     path: "{{ ansible_home }}/Android/Sdk"
     state: directory
   tags:
@@ -80,22 +87,29 @@
     - config-flutter
 
 - name: config flutter
-  shell: |
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: |
     flutter config --android-sdk "{{ ansible_home }}/Android/Sdk/"
     flutter config --android-studio-dir /snap/android-studio/current/android-studio/
-    export JAVA_HOME=/snap/android-studio/current/android-studio/jre/bin/java
   tags:
     - config-language
     - config-flutter
 
 - name: Install fvm
-  shell: dart pub global activate fvm
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: dart pub global activate fvm
+  environment:
+    JAVA_HOME: "{{ java_home_path }}"
   tags:
     - config-language
     - config-flutter
 
 - name: Place fvm.sh
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/fvm.sh
     dest: "$HOME/.bash.d/fvm.sh"
     mode: 0755
@@ -105,13 +119,18 @@
 
 - name: Install Firebase CLI
   become: true
-  shell: curl -sL https://firebase.tools | bash
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell: set -o pipefail && curl -sL https://firebase.tools | bash
   tags:
     - config-language
     - config-flutter
 
 - name: Activate flutterfire CLI
-  shell: dart pub global activate flutterfire_cli
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: dart pub global activate flutterfire_cli
+  environment:
+    JAVA_HOME: "{{ java_home_path }}"
   tags:
     - config-language
     - config-flutter

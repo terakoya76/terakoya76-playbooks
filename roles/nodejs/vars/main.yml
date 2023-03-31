@@ -1,7 +1,0 @@
----
-NODE_VERSIONS:
-  - 14.21.1
-  - 16.18.1
-  - 18.12.1
-
-GLOBAL_NODE_VERSION: 18.12.1

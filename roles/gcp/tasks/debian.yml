@@ -1,20 +1,22 @@
 ---
 - name: Get ansible_user home directory
-  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
+  changed_when: false
   tags:
     - config-tool
     - config-gcp
 
 - name: Set the fact for the other scripts to use
-  set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
   tags:
     - config-tool
     - config-gcp
 
 - name: Install dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - ca-certificates
@@ -26,7 +28,8 @@
 
 - name: setup google-cloud-cli repo
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
   tags:
@@ -35,12 +38,12 @@
 
 - name: Install google-cloud-cli
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - google-cloud-cli
       - google-cloud-cli-terraform-validator
     state: present
-    update_cache: yes
+    update_cache: true
   when: not ansible_check_mode
   tags:
     - config-tool

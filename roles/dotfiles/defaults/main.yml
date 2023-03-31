@@ -1,0 +1,13 @@
+---
+shell_scripts:
+  - aws.sh
+  - docker.sh
+  # - dockerize.sh
+  - dockerized.sh
+  - fzf.sh
+  - git.sh
+  - history.sh
+  - kubernetes.sh
+  - rails.sh
+  - tmux.sh
+  - tools.sh

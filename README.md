@@ -5,8 +5,7 @@ Setup develop environment w/ ansible
 ### Install/Update
 
 ```shell
-# $1 is ansible_user name
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh) terakoya76
+$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh)
 ```
 
 ### Supported Tags
@@ -26,9 +25,10 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-aws
   * config-gcp
   * config-kubernetes
+  * config-1password
 
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ ansible-playbook playbooks/development.yml -i inventory/all.yml --start-at-task="ruby : Set prefix"
+$ sudo ansible-playbook -i inventory/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
 ```

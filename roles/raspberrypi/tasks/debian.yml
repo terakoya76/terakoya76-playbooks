@@ -1,0 +1,26 @@
+---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-raspberrypi
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-raspberrypi
+
+- name: Install rpi-imager
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.snap:
+    name: rpi-imager
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-raspberrypi

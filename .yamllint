@@ -1,0 +1,83 @@
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+rules:
+  # Warning: 中括弧内のスペースは0または1つ
+  braces:
+    level: warning
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Warning: 大括弧内のスペースは0または1つ
+  brackets:
+    level: warning
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Warning: ':' の前はスペースを空けない、後はスペースを1つ空ける
+  colons:
+    level: warning
+
+   # Warning: ',' の前はスペースを空けない、後はスペースを1つ空ける
+  commas:
+    level: warning
+
+  # Warning: '#' の後はスペースを1つ空ける
+  comments:
+    level: warning
+    min-spaces-from-content: 1
+
+  # 特に制限なし: コメントのインデント数に制限を設けない
+  comments-indentation: disable
+
+  # 特に制限なし: ドキュメント終了記号 '...' を必須にしない
+  document-end: disable
+
+  # 特に制限なし: ドキュメント開始記号 '---' を必須にしない
+  document-start: disable
+
+  # 特に制限なし: 空行の数に制限を設けない
+  empty-lines: disable
+
+  # 特に制限なし: null値を許容する
+  empty-values: disable
+
+  # Warning: '-' の後はスペースを1つ空ける
+  hyphens:
+    level: warning
+
+  # Warning: ブロックごとに一貫したインデントをする
+  indentation:
+    level: warning
+    indent-sequences: consistent
+
+  # Error: 重複したキーの禁止
+  key-duplicates: enable
+
+  # 特に制限なし: キーの順序は問わない
+  key-ordering: disable
+
+  # 特に制限なし: 一行の文字数は制限しない
+  line-length: disable
+
+  # Warning: ファイルの末尾に改行文字を記述する
+  new-line-at-end-of-file:
+    level: warning
+
+  # Error: 改行文字を統一する
+  new-lines: enable
+
+  # 特に制限なし: 8進数表記を制限しない
+  octal-values: disable
+
+  # 特に制限なし: クオートを必須にしない
+  quoted-strings: disable
+
+  # Warning: 行末のスペースを記述しない
+  trailing-spaces:
+    level: warning
+
+  # 特に制限なし: ブーリアン値と解釈される文字列は明示的に記述する
+  truthy: disable

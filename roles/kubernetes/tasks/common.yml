@@ -1,26 +1,47 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
 - name: Place kubeconfig.sh
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/kubeconfig.sh
-    dest: "$HOME/.bash.d/kubeconfig.sh"
+    dest: "{{ ansible_home }}/.bash.d/kubeconfig.sh"
     mode: 0755
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Create target directory for kubectl
-  file: >
-    path="$HOME/.kube"
-    state=directory
-    mode=0755
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ ansible_home }}/.kube"
+    state: directory
+    mode: 0755
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Place kubectl-debug config
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/debug-config
-    dest: "$HOME/.kube/debug-config"
+    dest: "{{ ansible_home }}/.kube/debug-config"
     mode: 0755
   tags:
     - config-tool
@@ -28,11 +49,12 @@
 
 - name: Install kubectl
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     pushd "$(mktemp -d)"
     curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$(uname -s | tr '[A-Z]' '[a-z]')/amd64/kubectl"
     chmod +x ./kubectl
-    mv ./kubectl {{ KUBECTL_PATH }}
+    mv ./kubectl {{ kubectl_path }}
     popd
   tags:
     - config-tool
@@ -40,7 +62,8 @@
 
 - name: Install krew
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
     tar zxvf krew.tar.gz &&
     KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
@@ -52,8 +75,7 @@
 
 - name: Install kubectl plugins
   become: true
-  shell: |
-    $HOME/.krew/bin/kubectl-krew install {{ item }}
+  ansible.builtin.command: "{{ ansible_home }}/.krew/bin/kubectl-krew install {{ item }}"
   with_items:
     - ctx
     - ns
@@ -72,21 +94,22 @@
     - resource-capacity
     - df-pv
   environment:
-    kREW_ROOT: "$HOME/.krew"
-    PATH: "${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+    kREW_ROOT: "{{ ansible_home }}/.krew"
+    PATH: "${KREW_ROOT:-{{ ansible_home }}/.krew}/bin:$PATH"
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install helm
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')-amd64"
     RELEASE="$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select((.name | contains($SYSNAME)) and (.name | contains("sha256") | not)) | .name' | sed s/.asc//)"
     wget https://get.helm.sh/"$RELEASE"
     tar -zxvf "$RELEASE"
     chmod +x "$SYSNAME/helm"
-    mv "$SYSNAME/helm" {{ HELM_PATH }}
+    mv "$SYSNAME/helm" {{ helm_path }}
     rm -r "$SYSNAME"
   tags:
     - config-tool
@@ -94,67 +117,72 @@
 
 - name: Install Helm Plugin
   become: true
-  shell: |
-    {{ HELM_PATH }} plugin install https://github.com/futuresimple/helm-secrets
-    {{ HELM_PATH }} plugin install https://github.com/databus23/helm-diff --version master
-  ignore_errors: yes
+  ansible.builtin.command: |
+    {{ helm_path }} plugin install https://github.com/futuresimple/helm-secrets
+    {{ helm_path }} plugin install https://github.com/databus23/helm-diff --version master
+  ignore_errors: true
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install Helmfile
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     chmod +x "helmfile_$SYSNAME"
-    mv "helmfile_$SYSNAME" {{ HELMFILE_PATH }}
+    mv "helmfile_$SYSNAME" {{ helmfile_path }}
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install stern
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     curl -s https://api.github.com/repos/wercker/stern/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     chmod +x "stern_$SYSNAME"
-    mv "stern_$SYSNAME" {{ STERN_PATH }}
+    mv "stern_$SYSNAME" {{ stern_path }}
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install sops
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')"
     RELEASE="$(curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
     curl -s https://api.github.com/repos/mozilla/sops/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     chmod +x "$RELEASE"
-    mv "$RELEASE" {{ SOPS_PATH }}
+    mv "$RELEASE" {{ sops_path }}
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install sopsed
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r ".assets[] | .browser_download_url" | wget -i -
     chmod +x sopsed
-    mv sopsed {{ SOPSED_PATH }}
+    mv sopsed {{ sopsed_path }}
   tags:
     - config-tool
     - config-kubernetes
 
 - name: Install variant
   become: true
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
     RELEASE="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
     curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
     tar zxvf "$RELEASE"
     chmod +x variant
-    mv variant {{ VARIANT_PATH }}
+    mv variant {{ variant_path }}
   tags:
     - config-tool
     - config-kubernetes

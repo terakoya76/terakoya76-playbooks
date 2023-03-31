@@ -1,20 +1,34 @@
 ---
 - name: Install xpanes
-  shell: |
-    wget https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
-    install -m 0755 xpanes /usr/local/bin/xpanes
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes -O ./xpanes
+    dest: /tmp/xpanes
+    mode: 0755
+  tags:
+    - config-tool
+
+- name: Install xpanes
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell: install -m 0755 /tmp/xpanes /usr/local/bin/xpanes
   tags:
     - config-tool
 
 - name: Install nvim client via gem
-  gem:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.gem:
     name: neovim
     state: present
   tags:
     - config-tool
 
 - name: Install nvim client via pip3
-  pip:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
     name: neovim
     executable: pip3
     state: present
@@ -22,21 +36,27 @@
     - config-tool
 
 - name: Install nvim client via npm
-  npm:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.npm:
     name: neovim
-    global: yes
+    global: true
     state: present
   tags:
     - config-tool
 
 # - name: Fetch Solarized Color Schema
+#   become: true
+#   become_user: "{{ ansible_user }}"
 # shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
 
 # NOTE: check iceberg terminal theme when you're using MacOS
 #   https://cocopon.github.io/iceberg.vim/
 
 - name: Install powerline-shell
-  pip:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
     name: powerline-shell
     executable: pip3
     state: present
@@ -44,6 +64,8 @@
     - config-tool
 
 - name: Install circleci cli
-  shell: curl -fLSs https://circle.ci/cli | bash
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell: set -o pipefail && curl -fLSs https://circle.ci/cli | bash
   tags:
     - config-tool

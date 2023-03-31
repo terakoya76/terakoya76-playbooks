@@ -1,39 +1,64 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
 - name: Download ruby-build
-  git:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.git:
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: $HOME/.anyenv/envs/rbenv/plugins/ruby-build
+    dest: "{{ ansible_home }}/.anyenv/envs/rbenv/plugins/ruby-build"
   tags:
     - config-language
     - config-ruby
 
 - name: Check installed ruby version
-  shell: bash -lc "rbenv versions"
-  register: RBENV_INSTALLED
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: rbenv versions
+  register: rbenv_installed
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-language
     - config-ruby
 
 - name: Install ruby from rbenv
-  shell: bash -lc "rbenv install {{ item }}"
-  with_items: "{{ RUBY_VERSIONS }}"
-  when: 'item not in RBENV_INSTALLED.stdout'
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "rbenv install {{ item }}"
+  with_items: "{{ ruby_versions }}"
+  when: 'item not in rbenv_installed.stdout'
   tags:
     - config-language
     - config-ruby
 
 - name: Set Global version
-  shell: bash -lc "rbenv global {{ GLOBAL_RUBY_VERSION }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "rbenv global {{ global_ruby_version }}"
   tags:
     - config-language
     - config-ruby
 
 - name: Install bundler
-  gem:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.gem:
     name: bundler
-    executable: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
+    executable: "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
     state: present
     user_install: no
   with_items: "{{ RUBY_VERSIONS }}"
@@ -42,7 +67,9 @@
     - config-ruby
 
 - name: update rubygem
-  shell: "$HOME/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
   register: gem_update
   with_items: "{{ RUBY_VERSIONS }}"
   changed_when: gem_update.stdout.find('Latest version already installed') == -1

@@ -1,7 +1,7 @@
 ---
 - name: Install awscli
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - awscli
       - jq
