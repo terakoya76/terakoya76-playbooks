@@ -29,5 +29,5 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ sudo ansible-playbook playbooks/development.yml -i inventory/all.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
+$ sudo ansible-playbook -i inventory/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
 ```
