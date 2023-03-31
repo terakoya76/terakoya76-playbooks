@@ -2,11 +2,6 @@
 
 set -eu
 
-if [ $# -ne 1 ]; then
-  echo "you must pass 1 args" 1>&2
-  exit 1
-fi
-
 # setup ansible
 dist=$(cat /etc/*-release | grep -w NAME | cut -d= -f2 | tr -d '"')
 if [ ${dist} = "Ubuntu" ]; then
@@ -29,4 +24,4 @@ rm -fr "$REPOSITORY_PATH"
 git clone git@github.com:terakoya76/terakoya76-playbooks.git
 cd "$REPOSITORY_PATH"
 
-ansible-playbook -i inventories/all.yml playbooks/development.yml
+sudo ansible-playbook -i inventories/all.yml playbooks/development.yml -e ansible_user=${USER}
