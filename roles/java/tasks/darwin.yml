@@ -1,6 +1,8 @@
 ---
 - name: Install OpenJDK
-  homebrew:
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
     name: "{{ item }}"
     state: present
   with_items:
@@ -12,7 +14,9 @@
     - config-java
 
 - name: Install gradle
-  homebrew:
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
     name: gradle
     state: present
   tags:

@@ -1,0 +1,7 @@
+---
+ruby_versions:
+  - 2.7.7
+  - 3.0.5
+  - 3.1.3
+
+global_ruby_version: 3.1.3

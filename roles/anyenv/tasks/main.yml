@@ -1,22 +1,43 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
 - name: Install anyenv
-  git:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.git:
     repo: https://github.com/riywo/anyenv
-    dest: "$HOME/.anyenv"
+    dest: "{{ ansible_home }}/.anyenv"
   tags:
     - config-base
 
 - name: Install anyenv-update
-  git:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.git:
     repo: https://github.com/znz/anyenv-update
-    dest: "$HOME/.anyenv/plugins/anyenv-update"
+    dest: "{{ ansible_home }}/.anyenv/plugins/anyenv-update"
   tags:
     - config-base
 
-- name: Place Files
-  template:
-    src: files/{{ item }}
-    dest: "$HOME/.bash.d/{{ item }}"
+- name: Place Init File
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: files/anyenv.sh
+    dest: "{{ ansible_home }}/.bash.d/anyenv.sh"
     mode: 0755
   with_items:
     - anyenv.sh
@@ -24,38 +45,46 @@
     - config-base
 
 - name: Init anyenv
-  shell: bash -lc "anyenv install --init"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: anyenv install --init
   environment:
-    ANYENV_ROOT: "$HOME/.anyenv"
-  ignore_errors: yes
+    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
+  ignore_errors: true
   tags:
     - config-base
 
 - name: Check env installed
-  shell: bash -lc "anyenv envs"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: anyenv envs
   register: anyenv_envs
   changed_when: false
   tags:
     - config-base
 
 - name: Install env tools
-  shell: bash -lc "anyenv install {{ item }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "anyenv install {{ item }}"
   with_items:
     - goenv
     - nodenv
     - rbenv
     - tfenv
   environment:
-    ANYENV_ROOT: "$HOME/.anyenv"
+    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
   when: 'item not in anyenv_envs.stdout'
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-base
 
 - name: Update exists tools
-  shell: bash -lc "anyenv update"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: anyenv update
   environment:
-    ANYENV_ROOT: "$HOME/.anyenv"
-  ignore_errors: yes
+    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
+  ignore_errors: true
   tags:
     - config-base

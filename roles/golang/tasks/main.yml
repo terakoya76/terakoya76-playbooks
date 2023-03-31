@@ -1,34 +1,56 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
 - name: Place go-bin.sh
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/go-bin.sh
-    dest: "$HOME/.bash.d/go-bin.sh"
+    dest: "{{ ansible_home }}/.bash.d/go-bin.sh"
     mode: 0755
   tags:
     - config-language
     - config-go
 
 - name: Check installed golang version
-  shell: bash -lc "goenv versions"
-  register: GOENV_INSTALLED
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: goenv versions
+  register: goenv_installed
   changed_when: false
-  ignore_errors: yes
   tags:
     - config-language
     - config-go
 
 - name: Install golang from goenv
-  shell: bash -lc "goenv install {{ item }}"
-  with_items: "{{ GO_VERSIONS }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "goenv install {{ item }}"
+  with_items: "{{ go_versions }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
-  when: 'item not in GOENV_INSTALLED.stdout'
+  when: 'item not in goenv_installed.stdout'
   tags:
     - config-language
     - config-go
 
 - name: Set Global version
-  shell: bash -lc "goenv global {{ GLOBAL_GO_VERSION }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "goenv global {{ global_go_version }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
   tags:
@@ -36,11 +58,14 @@
     - config-go
 
 - name: Install golang libraries
-  shell: bash -lc "GOPATH=$(echo $HOME)/go go install {{ item }}"
-  with_items: "{{ GO_BINARIES }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "go install {{ item }}"
+  with_items: "{{ go_binaries }}"
   environment:
+    GOPATH: "{{ ansible_home }}/go"
     GOENV_DISABLE_GOPATH: "1"
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-language
     - config-go

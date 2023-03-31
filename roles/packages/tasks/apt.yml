@@ -1,7 +1,7 @@
 ---
 - name: Install Apt Packages
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - autoconf
@@ -54,22 +54,23 @@
       - xclip
       - zlib1g-dev
     state: present
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-base
     - config-packages
 
 - name: Install Kernel Modules
   become: true
-  shell: |
+  ansible.builtin.shell: |
     apt install -y linux-headers-$(uname -r)
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-base
     - config-packages
 
 - name: Add Apt-Repository for Docker
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   tags:
@@ -78,10 +79,10 @@
 
 - name: Install Docker
   become: true
-  apt:
+  ansible.builtin.apt:
     name: docker-ce
     state: present
-    update_cache: yes
+    update_cache: true
   tags:
     - config-base
     - config-packages

@@ -1,19 +1,23 @@
 ---
 - name: Get ansible_user home directory
-  shell: 'getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
+  changed_when: false
   tags:
     - config-language
     - config-arduino
 
 - name: Set the fact for the other scripts to use
-  set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
   tags:
     - config-language
     - config-arduino
 
 - name: Install Arduino
-  snap:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.snap:
     name: arduino
     state: present
     classic: true

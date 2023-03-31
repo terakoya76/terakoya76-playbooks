@@ -1,17 +1,25 @@
 ---
 - name: Install awscli
   become: true
-  shell: |
+  ansible.builtin.command: |
     curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
     installer -pkg AWSCLIV2.pkg -target /
   tags:
     - config-tool
     - config-aws
 
+- name: Tap saml2aws
+  community.general.homebrew_tap:
+    name: versent/homebrew-taps
+    state: present
+  tags:
+    - config-tool
+    - config-aws
+
 - name: Install saml2aws
-  shell: |
-    brew tap versent/homebrew-taps
-    brew install saml2aws
+  community.general.homebrew:
+    name: saml2aws
+    state: present
   tags:
     - config-tool
     - config-aws

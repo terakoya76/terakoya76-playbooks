@@ -2,7 +2,6 @@
     - 'default'
   roles:
     - role: dotfiles
-    - role: 1password
     - role: packages
     - role: anyenv
     - role: golang
@@ -12,8 +11,9 @@
     - role: ruby
     - role: rust
     - role: arduino
-    - role: arm64-m4
-    - role: raspberry-pi
+    - role: arm64_m4
+    - role: onepassword
+    - role: raspberrypi
     - role: aws
     - role: kubernetes
     - role: tools

@@ -25,6 +25,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-aws
   * config-gcp
   * config-kubernetes
+  * config-1password
 
 ### When failed
 use `--start-at-task` opt

@@ -1,44 +1,117 @@
 ---
 - name: Brew Tap -> bundle core dupes services versions
-  homebrew_tap:
-    name: "{{ item }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew_tap:
+    name:
+      - homebrew/bundle
+      - homebrew/cask
+      - homebrew/cask-versions
+      - homebrew/core
+      - homebrew/services
+      - ktr0731/evans
+      - osx-cross/avr
+      - PX4/homebrew-px4
     state: present
-  with_items: "{{ BREW_TAP_PACKAGES }}"
   tags:
     - config-base
     - config-packages
 
 - name: Brew Untap
-  homebrew_tap:
-    name: "{{ item }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew_tap:
+    name: homebrew/boneyard
     state: absent
-  with_items:
-    - homebrew/boneyard
   tags:
     - config-base
     - config-packages
 
 - name: Brew Update
-  shell: brew update
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew update
   tags:
     - config-base
     - config-packages
 
 - name: Brew Install
-  homebrew:
-    name: '{{ BREW_PACKAGES | join(",") }}'
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - bash-completion
+      - curl
+      - cmake
+      - evans
+      - git
+      - gnu-getopt
+      - graphviz
+      - hadolint
+      - imagemagick
+      - jq
+      - libmagic
+      - llvm
+      - memcached
+      - mysql
+      - neovim
+      - openssl
+      - pandoc
+      - protobuf
+      - python
+      - readline
+      - reattach-to-user-namespace
+      - shellcheck
+      - tfenv
+      - tig
+      - tmux
+      - translate-shell
+      - vim
+      - wget
+      - yq
+      # AVR
+      - avr-gcc
+      - dfu-programmer
+      - gcc-arm-none-eabi
+      - avrdude
     state: present
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-base
     - config-packages
 
 - name: Install Homebrew cask packages
-  homebrew_cask:
-    name: "{{ item }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew_cask:
+    name:
+      - boostnote
+      - deepl
+      - discord
+      - docker-edge
+      - firefox
+      - gitify
+      - grammarly
+      - google-japanese-ime
+      - google-chrome
+      - kindle
+      - kitematic
+      - licecap
+      - postman
+      - raycast
+      - rstudio
+      - sequel-pro
+      - slack
+      - spectacle
+      - spotify
+      - vagrant
+      - virtualbox
+      - visual-studio-code
+      - vlc
+      - xquartz
+      - wireshark
     state: present
-  with_items: "{{ BREW_CASK_PACKAGES }}"
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - config-base
     - config-packages

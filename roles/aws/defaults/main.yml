@@ -1,0 +1,4 @@
+---
+lsec2_path: /usr/local/bin/lsec2
+aws_iam_authenticator_path: /usr/local/bin/aws-iam-authenticator
+eksctl_path: /usr/local/bin/eksctl

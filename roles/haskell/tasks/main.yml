@@ -1,7 +1,24 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-language
+    - config-arm64-m4
+
 - name: Install Stack
-  # become: true
-  shell: |
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell: |
+    set -o pipefail
     if ! which stack > /dev/null 2>&1; then
       curl -sSL https://get.haskellstack.org/ | sh
     fi
@@ -10,45 +27,57 @@
     - config-haskell
 
 - name: Upgrade Stack
-  shell: stack upgrade
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: stack upgrade
   tags:
     - config-language
     - config-haskell
 
 - name: Create target directory for stack.yaml
-  file: >
-    path="$HOME/.stack/global-project"
-    state=directory
-    mode=0755
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ ansible_home }}/.stack/global-project"
+    state: directory
+    mode: 0755
   tags:
     - config-language
     - config-haskell
 
 - name: Place stack.yaml for specified version of ghc install
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/stack.yaml
-    dest: "$HOME/.stack/global-project/stack.yaml"
+    dest: "{{ ansible_home }}/.stack/global-project/stack.yaml"
   tags:
     - config-language
     - config-haskell
 
 - name: Reinstall ghc
-  shell: stack setup
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: stack setup
   tags:
     - config-language
     - config-haskell
 
 - name: Install useful packages
-  shell: stack install {{ item }}
-  with_items: "{{ HASKELL_BINARIES }}"
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: "stack install {{ item }}"
+  with_items: "{{ haskell_binaries }}"
   tags:
     - config-language
     - config-haskell
 
 - name: Place ghc-mod.sh
-  template:
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
     src: files/ghc-mod.sh
-    dest: "$HOME/.bash.d/ghc-mod.sh"
+    dest: "{{ ansible_home }}/.bash.d/ghc-mod.sh"
     mode: 0755
   tags:
     - config-language
