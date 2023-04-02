@@ -41,11 +41,13 @@
 - name: Install cargo subcommand
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "{{ ansible_home }}/.cargo/bin/cargo install {{ item }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
   with_items:
     - cargo-generate
     - hf2-cli
     - cargo-hf2
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   tags:
     - config-language
     - config-arm64-m4

@@ -4,15 +4,15 @@
   register: ansible_home_result
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-base
+    - config-dotfile
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-base
+    - config-dotfile
 
 - name: Place Default Config
   become: true
@@ -252,7 +252,7 @@
 - name: Configure gitconfig
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: |
+  ansible.builtin.shell: |
     git config --global user.name 'Hajime Terasawa'
     git config --global user.email 'terako.studio@gmail.com'
     git config --global core.excludesfile ~/.gitignore_global

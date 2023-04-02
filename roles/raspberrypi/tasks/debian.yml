@@ -16,7 +16,6 @@
 
 - name: Install rpi-imager
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.snap:
     name: rpi-imager
     state: present

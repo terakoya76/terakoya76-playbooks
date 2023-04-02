@@ -12,6 +12,19 @@
     - config-tool
     - config-aws
 
+- name: Mkdir for aws config
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ ansible_home }}/.aws"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+  tags:
+    - config-tool
+    - config-1password
+
 - name: Place aws/config for awscli
   become: true
   become_user: "{{ ansible_user }}"
@@ -28,12 +41,12 @@
   become: true
   ansible.builtin.shell: |
     set -o pipefail
-    SYSNAME="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
-    RELEASE="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .name')"
-    curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$SYSNAME" '.assets[] | select(.name | contains($SYSNAME)) | .browser_download_url' | wget -i -
-    tar zxvf "$RELEASE"
-    chmod +x lsec2
-    mv lsec2 {{ lsec2_path }}
+    sys_name="$(uname -s | tr '[A-Z]' '[a-z]')_amd64"
+    release_name="$(curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$sys_name" '.assets[] | select(.name | contains($SYSNAME)) | select(.name | contains(".deb")) | .name')"
+    curl -s https://api.github.com/repos/goldeneggg/lsec2/releases/latest | jq -r --arg SYSNAME "$sys_name" '.assets[] | select(.name | contains($SYSNAME)) | select(.name | contains(".deb")) | .browser_download_url' | wget -i -
+    echo $release_name
+    apt install -y ./${release_name}
+    rm ./${release_name}
   tags:
     - config-tool
     - config-aws
@@ -54,8 +67,12 @@
   become: true
   ansible.builtin.shell: |
     set -o pipefail
-    curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz
+    asset_name="eksctl_$(uname -s)_amd64.tar.gz"
+    curl -s "https://api.github.com/repos/weaveworks/eksctl/releases/latest" | jq -r --arg NAME "$asset_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -i -
+    tar zxvf "$asset_name"
+    chmod +x ./eksctl
     mv ./eksctl {{ eksctl_path }}
+    rm "$asset_name"
   tags:
     - config-tool
     - config-aws

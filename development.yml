@@ -1,8 +1,8 @@
 - hosts:
     - 'default'
   roles:
-    - role: dotfiles
     - role: packages
+    - role: dotfiles
     - role: anyenv
     - role: golang
     - role: haskell
@@ -10,10 +10,13 @@
     - role: nodejs
     - role: ruby
     - role: rust
+    - role: flutter
     - role: arduino
     - role: arm64_m4
-    - role: onepassword
     - role: raspberrypi
     - role: aws
+    - role: gcp
     - role: kubernetes
+    - role: onepassword
+    - role: tailscale
     - role: tools

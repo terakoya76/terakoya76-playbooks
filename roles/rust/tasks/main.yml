@@ -5,14 +5,14 @@
   changed_when: false
   tags:
     - config-language
-    - config-raspberrypi
+    - config-rust
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-language
-    - config-raspberrypi
+    - config-rust
 
 - name: Install rustup
   become: true
@@ -33,12 +33,18 @@
     - config-language
     - config-rust
 
+- name: Update rustup
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell: bash -lc "rustup update"
+  tags:
+    - config-language
+    - config-rust
+
 - name: Install rust Lang Server
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: |
-    {{ ansible_home }}/.cargo/bin/rustup update
-    {{ ansible_home }}/.cargo/bin/rustup component add rls-preview rust-analysis rust-src
+  ansible.builtin.shell: bash -lc "rustup component add rls-preview rust-analysis rust-src"
   tags:
     - config-language
     - config-rust
@@ -46,7 +52,7 @@
 - name: Install tool chain
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: cargo install {{ item }}
+  ansible.builtin.shell: bash -lc "cargo install {{ item }}"
   with_items:
     - alacritty
     - bat
@@ -54,6 +60,8 @@
     - exa
     - ripgrep
     - xsv
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   tags:
     - config-language
     - config-rust

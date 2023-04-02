@@ -16,7 +16,6 @@
 
 - name: Install Arduino
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.snap:
     name: arduino
     state: present

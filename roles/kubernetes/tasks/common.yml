@@ -4,15 +4,15 @@
   register: ansible_home_result
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-tool
+    - config-kubernetes
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-tool
+    - config-kubernetes
 
 - name: Place kubeconfig.sh
   become: true
@@ -64,11 +64,14 @@
   become: true
   ansible.builtin.shell: |
     set -o pipefail
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
-    tar zxvf krew.tar.gz &&
-    KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-    "$KREW" install krew
-    "$KREW" update
+    asset_name=krew-linux_amd64.tar.gz
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${asset_name}"
+    tar zxvf ${asset_name}
+    ./krew-linux_amd64 install krew
+    ./krew-linux_amd64 update
+  environment:
+    kREW_ROOT: "{{ ansible_home }}/.krew"
+    PATH: "${KREW_ROOT:-{{ ansible_home }}/.krew}/bin:$PATH"
   tags:
     - config-tool
     - config-kubernetes

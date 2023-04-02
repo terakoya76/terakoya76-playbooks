@@ -16,7 +16,6 @@
 
 - name: Install flutter
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.snap:
     name: flutter
     state: present
@@ -27,7 +26,6 @@
 
 - name: Install android-studio
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.snap:
     name: android-studio
     state: present
@@ -119,7 +117,6 @@
 
 - name: Install Firebase CLI
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.shell: set -o pipefail && curl -sL https://firebase.tools | bash
   tags:
     - config-language
