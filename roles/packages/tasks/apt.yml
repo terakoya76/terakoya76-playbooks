@@ -13,6 +13,7 @@
       - clang
       - cmake
       - curl
+      - direnv
       - gcc
       - g++
       - make
@@ -83,6 +84,21 @@
     name: docker-ce
     state: present
     update_cache: true
+  tags:
+    - config-base
+    - config-packages
+
+# TODO: split files
+- name: Install snap
+  become: true
+  ansible.builtin.snap:
+    name:
+      - discrod
+      - slack
+      - sportify
+      - wireshark
+      - zoom-client
+    state: present
   tags:
     - config-base
     - config-packages

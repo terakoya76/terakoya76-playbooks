@@ -4,15 +4,13 @@
   register: ansible_home_result
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-base
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
-    - config-language
-    - config-arm64-m4
+    - config-base
 
 - name: Install anyenv
   become: true
@@ -44,20 +42,27 @@
   tags:
     - config-base
 
+- name: Check anyenv service already installed
+  become: true
+  ansible.builtin.command: "ls {{ ansible_home }}/.config/anyenv"
+  register: anyenv_initialized
+  failed_when: false
+  changed_when: false
+  tags:
+    - config-base
+
 - name: Init anyenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: anyenv install --init
-  environment:
-    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
-  ignore_errors: true
+  ansible.builtin.command: bash -lc "anyenv install --force-init"
+  when: anyenv_initialized.rc != 0
   tags:
     - config-base
 
 - name: Check env installed
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: anyenv envs
+  ansible.builtin.shell: bash -lc "anyenv envs"
   register: anyenv_envs
   changed_when: false
   tags:
@@ -66,14 +71,12 @@
 - name: Install env tools
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "anyenv install {{ item }}"
+  ansible.builtin.shell: bash -lc "anyenv install {{ item }}"
   with_items:
     - goenv
     - nodenv
     - rbenv
     - tfenv
-  environment:
-    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
   when: 'item not in anyenv_envs.stdout'
   ignore_errors: true
   tags:
@@ -82,9 +85,7 @@
 - name: Update exists tools
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: anyenv update
-  environment:
-    ANYENV_ROOT: "{{ ansible_home }}/.anyenv"
+  ansible.builtin.shell: bash -lc "anyenv update"
   ignore_errors: true
   tags:
     - config-base

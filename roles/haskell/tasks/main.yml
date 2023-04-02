@@ -5,18 +5,17 @@
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-haskell
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-haskell
 
 - name: Install Stack
   become: true
-  become_user: "{{ ansible_user }}"
   ansible.builtin.shell: |
     set -o pipefail
     if ! which stack > /dev/null 2>&1; then

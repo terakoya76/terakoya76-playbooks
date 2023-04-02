@@ -5,14 +5,14 @@
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-java
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-java
 
 - name: Place set_java_version.sh
   become: true

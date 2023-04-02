@@ -5,14 +5,14 @@
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-go
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-go
 
 - name: Place go-bin.sh
   become: true
@@ -28,9 +28,10 @@
 - name: Check installed golang version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: goenv versions
+  ansible.builtin.shell: bash -lc "goenv versions"
   register: goenv_installed
   changed_when: false
+  failed_when: false
   tags:
     - config-language
     - config-go
@@ -38,7 +39,7 @@
 - name: Install golang from goenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "goenv install {{ item }}"
+  ansible.builtin.shell: bash -lc "goenv install {{ item }}"
   with_items: "{{ go_versions }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
@@ -50,7 +51,7 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "goenv global {{ global_go_version }}"
+  ansible.builtin.shell: bash -lc "goenv global {{ global_go_version }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
   tags:
@@ -60,7 +61,7 @@
 - name: Install golang libraries
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "go install {{ item }}"
+  ansible.builtin.command: bash -lc "go install {{ item }}"
   with_items: "{{ go_binaries }}"
   environment:
     GOPATH: "{{ ansible_home }}/go"

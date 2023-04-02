@@ -1,0 +1,65 @@
+---
+- name: Add apt signing key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg
+    state: present
+    keyring: /usr/share/keyrings/tailscale-archive-keyring.gpg
+  tags:
+    - config-tool
+    - config-tailscale
+
+- name: Get lsb_release result
+  ansible.builtin.shell: lsb_release -cs
+  register: lsb_release_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-tailscale
+
+- name: Add apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ lsb_release_result.stdout }} main"
+    state: present
+  tags:
+    - config-tools
+    - config-tailscale
+
+- name: Install tailscale
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tailscale
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-tailscale
+
+- name: Install tailscale
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tailscale
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-tailscale
+
+# - name: Up tailscale
+#   become: true
+#   ansible.builtin.command: tailscale up
+#   tags:
+#     - config-tool
+#     - config-tailscale
+
+- name: allow tailscale from fw
+  become: true
+  ansible.builtin.command: ufw allow in on tailscale0
+  tags:
+    - config-tool
+    - config-tailscale

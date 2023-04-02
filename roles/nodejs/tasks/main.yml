@@ -5,14 +5,14 @@
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-nodejs
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-language
-    - config-arm64-m4
+    - config-nodejs
 
 - name: Place yarn.sh
   become: true
@@ -20,7 +20,7 @@
   ansible.builtin.template:
     src: files/yarn.sh
     dest: "{{ ansible_home }}/.bash.d/yarn.sh"
-    mode: 0j55
+    mode: 0755
   tags:
     - config-language
     - config-nodejs
@@ -28,9 +28,10 @@
 - name: Check installed nodejs version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: nodenv versions
+  ansible.builtin.shell: bash -lc "nodenv versions"
   register: nodenv_installed
   changed_when: false
+  failed_when: false
   ignore_errors: true
   tags:
     - config-language
@@ -38,8 +39,7 @@
 
 - name: Install node-build
   become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
+  ansible.builtin.shell: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
   with_items: "{{ node_versions }}"
   when: 'item not in nodenv_installed.stdout'
   tags:
@@ -49,23 +49,9 @@
 - name: Install nodejs from nodenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "nodenv install {{ item }}"
+  ansible.builtin.shell: bash -lc "nodenv install {{ item }}"
   with_items: "{{ node_versions }}"
   when: 'item not in nodenv_installed.stdout'
-  tags:
-    - config-language
-    - config-nodejs
-
-- name: Install commitizen
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.npm:
-    name: "{{ item }}"
-    global: true
-    state: present
-  with_items:
-    - commitizen
-    - git-cz
   tags:
     - config-language
     - config-nodejs
@@ -73,7 +59,19 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: "nodenv global {{ global_node_version }}"
+  ansible.builtin.shell: bash -lc "nodenv global {{ global_node_version }}"
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install commitizen
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.npm:
+    name: commitizen
+    state: present
+    global: true
+    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-language
     - config-nodejs
