@@ -53,6 +53,7 @@
       - translate-shell
       - vim
       - xclip
+      - xsel
       - zlib1g-dev
     state: present
   ignore_errors: true
@@ -84,21 +85,6 @@
     name: docker-ce
     state: present
     update_cache: true
-  tags:
-    - config-base
-    - config-packages
-
-# TODO: split files
-- name: Install snap
-  become: true
-  ansible.builtin.snap:
-    name:
-      - discrod
-      - slack
-      - sportify
-      - wireshark
-      - zoom-client
-    state: present
   tags:
     - config-base
     - config-packages

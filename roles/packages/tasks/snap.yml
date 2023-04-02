@@ -1,0 +1,14 @@
+---
+- name: Install snap
+  become: true
+  ansible.builtin.snap:
+    name:
+      - discrod
+      - slack
+      - sportify
+      - wireshark
+      - zoom-client
+    state: present
+  tags:
+    - config-base
+    - config-packages
