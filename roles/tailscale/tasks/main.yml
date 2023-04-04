@@ -10,7 +10,7 @@
     - config-tailscale
 
 - name: Get lsb_release result
-  ansible.builtin.shell: lsb_release -cs
+  ansible.builtin.command: lsb_release -cs
   register: lsb_release_result
   changed_when: false
   tags:
@@ -46,16 +46,20 @@
     state: present
     update_cache: true
   when: not ansible_check_mode
+  # notify: Up tailscale
+  notify: Allow tailscale from fw
   tags:
     - config-tool
     - config-tailscale
 
+# need an interaction
 # - name: Up tailscale
 #   become: true
 #   ansible.builtin.command: tailscale up
 #   tags:
 #     - config-tool
 #     - config-tailscale
+#   notify: Allow tailscale from fw
 
 - name: allow tailscale from fw
   become: true
