@@ -60,10 +60,3 @@
 #     - config-tool
 #     - config-tailscale
 #   notify: Allow tailscale from fw
-
-- name: allow tailscale from fw
-  become: true
-  ansible.builtin.command: ufw allow in on tailscale0
-  tags:
-    - config-tool
-    - config-tailscale
