@@ -1,4 +1,4 @@
 ---
-lsec2_path: /usr/local/bin/lsec2
-aws_iam_authenticator_path: /usr/local/bin/aws-iam-authenticator
+target_arch: amd64
+lsec2_version: 0.2.11
 eksctl_path: /usr/local/bin/eksctl
