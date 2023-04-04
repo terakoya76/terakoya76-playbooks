@@ -66,7 +66,6 @@
   environment:
     GOPATH: "{{ ansible_home }}/go"
     GOENV_DISABLE_GOPATH: "1"
-  ignore_errors: true
   tags:
     - config-language
     - config-go

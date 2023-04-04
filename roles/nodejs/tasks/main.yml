@@ -32,7 +32,6 @@
   register: nodenv_installed
   changed_when: false
   failed_when: false
-  ignore_errors: true
   tags:
     - config-language
     - config-nodejs

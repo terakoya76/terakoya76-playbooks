@@ -85,7 +85,6 @@
     - rbenv
     - tfenv
   when: 'item not in anyenv_envs.stdout'
-  ignore_errors: true
   tags:
     - config-base
     - config-anyenv
@@ -94,7 +93,6 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.shell: bash -lc "anyenv update"
-  ignore_errors: true
   tags:
     - config-base
     - config-anyenv

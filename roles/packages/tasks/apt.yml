@@ -56,16 +56,13 @@
       - xsel
       - zlib1g-dev
     state: present
-  ignore_errors: true
   tags:
     - config-base
     - config-packages
 
 - name: Install Kernel Modules
   become: true
-  ansible.builtin.shell: |
-    apt install -y linux-headers-$(uname -r)
-  ignore_errors: true
+  ansible.builtin.shell: apt install -y linux-headers-$(uname -r)
   tags:
     - config-base
     - config-packages
