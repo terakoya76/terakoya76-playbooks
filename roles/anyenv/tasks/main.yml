@@ -5,12 +5,14 @@
   changed_when: false
   tags:
     - config-base
+    - config-anyenv
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
   changed_when: false
   tags:
     - config-base
+    - config-anyenv
 
 - name: Install anyenv
   become: true
@@ -20,6 +22,7 @@
     dest: "{{ ansible_home }}/.anyenv"
   tags:
     - config-base
+    - config-anyenv
 
 - name: Install anyenv-update
   become: true
@@ -41,6 +44,7 @@
     - anyenv.sh
   tags:
     - config-base
+    - config-anyenv
 
 - name: Check anyenv service already installed
   become: true
@@ -50,6 +54,7 @@
   changed_when: false
   tags:
     - config-base
+    - config-anyenv
 
 - name: Init anyenv
   become: true
@@ -58,6 +63,7 @@
   when: anyenv_initialized.rc != 0
   tags:
     - config-base
+    - config-anyenv
 
 - name: Check env installed
   become: true
@@ -67,6 +73,7 @@
   changed_when: false
   tags:
     - config-base
+    - config-anyenv
 
 - name: Install env tools
   become: true
@@ -81,6 +88,7 @@
   ignore_errors: true
   tags:
     - config-base
+    - config-anyenv
 
 - name: Update exists tools
   become: true
@@ -89,3 +97,4 @@
   ignore_errors: true
   tags:
     - config-base
+    - config-anyenv
