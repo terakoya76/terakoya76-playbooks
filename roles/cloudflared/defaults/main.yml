@@ -1,0 +1,3 @@
+---
+target_arch: amd64
+cloudflared_version: "2023.03.1"

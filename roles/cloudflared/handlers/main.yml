@@ -1,0 +1,7 @@
+---
+- name: Restart cloudflared
+  become: true
+  ansible.builtin.service:
+    name: cloudflared
+    state: restarted
+  when: not ansible_check_mode

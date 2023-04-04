@@ -1,0 +1,8 @@
+---
+- name: Install a cloudflared .deb package
+  become: true
+  ansible.builtin.apt:
+    deb: https://github.com/cloudflare/cloudflared/releases/download/{{ cloudflared_version }}/cloudflared-linux-{{ target_arch }}.deb
+  tags:
+    - config-tool
+    - config-cloudflared
