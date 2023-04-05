@@ -44,7 +44,7 @@
 
 - name: Ensure a temporary directory for helmfile download
   become: true
-  tempfile:
+  ansible.builtin.tempfile:
     state: directory
   register: helmfile_temp_dir
   tags:

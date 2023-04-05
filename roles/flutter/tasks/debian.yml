@@ -1,7 +1,7 @@
 ---
 - name: Install flutter
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name: flutter
     state: present
     classic: true
@@ -11,7 +11,7 @@
 
 - name: Install android-studio
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name: android-studio
     state: present
     classic: true
