@@ -9,18 +9,10 @@
     - config-tool
     - config-tailscale
 
-- name: Get lsb_release result
-  ansible.builtin.command: lsb_release -cs
-  register: lsb_release_result
-  changed_when: false
-  tags:
-    - config-tool
-    - config-tailscale
-
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ lsb_release_result.stdout }} main"
+    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main"
     state: present
   tags:
     - config-tools
