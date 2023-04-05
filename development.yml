@@ -1,24 +1,27 @@
 - hosts:
     - 'default'
   roles:
-    - role: packages
-    - role: dotfiles
+    # config-base
     - role: anyenv
+    - role: dotfiles
+    - role: packages
+    # config-language
+    - role: flutter
     - role: golang
     - role: haskell
     - role: java
     - role: nodejs
     - role: ruby
     - role: rust
-    - role: flutter
     - role: arduino
     - role: arm64_m4
     - role: raspberrypi
+    # config-tool
     - role: aws
-    - role: gcp
-    - role: kubernetes
-    - role: helm
-    - role: onepassword
     - role: cloudflared
+    - role: gcp
+    - role: helm
+    - role: kubernetes
+    - role: onepassword
     - role: tailscale
     - role: tools

@@ -14,6 +14,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-dotfile
   * config-packages
 * config-language
+  * config-flutter
   * config-go
   * config-haskell
   * config-java
