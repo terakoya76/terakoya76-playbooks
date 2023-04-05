@@ -28,7 +28,7 @@
 - name: Check installed golang version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "goenv versions"
+  ansible.builtin.command: bash -lc "goenv versions"
   register: goenv_installed
   changed_when: false
   failed_when: false
@@ -39,7 +39,7 @@
 - name: Install golang from goenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "goenv install {{ item }}"
+  ansible.builtin.command: bash -lc "goenv install {{ item }}"
   with_items: "{{ go_versions }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
@@ -51,7 +51,7 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "goenv global {{ global_go_version }}"
+  ansible.builtin.command: bash -lc "goenv global {{ global_go_version }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
   tags:

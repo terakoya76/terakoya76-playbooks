@@ -27,7 +27,7 @@
 - name: Check installed ruby version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "rbenv versions"
+  ansible.builtin.command: bash -lc "rbenv versions"
   register: rbenv_installed
   changed_when: false
   failed_when: false
@@ -38,7 +38,7 @@
 - name: Install ruby from rbenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "rbenv install {{ item }}"
+  ansible.builtin.command: bash -lc "rbenv install {{ item }}"
   with_items: "{{ ruby_versions }}"
   when: 'item not in rbenv_installed.stdout'
   tags:
@@ -48,7 +48,7 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "rbenv global {{ global_ruby_version }}"
+  ansible.builtin.command: bash -lc "rbenv global {{ global_ruby_version }}"
   tags:
     - config-language
     - config-ruby
@@ -69,7 +69,7 @@
 - name: Update rubygem
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
+  ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
   register: gem_update
   with_items: "{{ ruby_versions }}"
   changed_when: gem_update.stdout.find('Latest version already installed') == -1

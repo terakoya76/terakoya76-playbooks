@@ -68,7 +68,7 @@
 - name: Check env installed
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "anyenv envs"
+  ansible.builtin.command: bash -lc "anyenv envs"
   register: anyenv_envs
   changed_when: false
   tags:
@@ -78,7 +78,7 @@
 - name: Install env tools
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "anyenv install {{ item }}"
+  ansible.builtin.command: bash -lc "anyenv install {{ item }}"
   with_items:
     - goenv
     - nodenv
@@ -92,7 +92,7 @@
 - name: Update exists tools
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "anyenv update"
+  ansible.builtin.command: bash -lc "anyenv update"
   tags:
     - config-base
     - config-anyenv

@@ -28,7 +28,7 @@
 - name: Check installed nodejs version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "nodenv versions"
+  ansible.builtin.command: bash -lc "nodenv versions"
   register: nodenv_installed
   changed_when: false
   failed_when: false
@@ -38,7 +38,7 @@
 
 - name: Install node-build
   become: true
-  ansible.builtin.shell: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
+  ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
   with_items: "{{ node_versions }}"
   when: 'item not in nodenv_installed.stdout'
   tags:
@@ -48,7 +48,7 @@
 - name: Install nodejs from nodenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "nodenv install {{ item }}"
+  ansible.builtin.command: bash -lc "nodenv install {{ item }}"
   with_items: "{{ node_versions }}"
   when: 'item not in nodenv_installed.stdout'
   tags:
@@ -58,7 +58,7 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "nodenv global {{ global_node_version }}"
+  ansible.builtin.command: bash -lc "nodenv global {{ global_node_version }}"
   tags:
     - config-language
     - config-nodejs
