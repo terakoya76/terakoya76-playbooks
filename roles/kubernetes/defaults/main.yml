@@ -1,7 +1,5 @@
 ---
-kubectl_path: /usr/local/bin/kubctl
-helm_path: /usr/local/bin/helm
-helmfile_path: /usr/local/bin/helmfile
+sops_version: v3.7.3
 stern_path: /usr/local/bin/stern
 sops_path: /usr/local/bin/sops
 sopsed_path: /usr/local/bin/sopsed

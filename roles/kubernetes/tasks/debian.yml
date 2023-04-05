@@ -1,1 +1,162 @@
 ---
+- name: Add kubectl apt signing key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Add kubectl apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install kubectl
+  become: true
+  ansible.builtin.apt:
+    name: kubectl
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for krew download
+  become: true
+  become_user: "{{ ansible_user }}"
+  tempfile:
+    state: directory
+  register: krew_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install krew
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      bin_name="krew-{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      asset_name="${bin_name}.tar.gz"
+      curl -sLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${asset_name}"
+      tar zxvf ${asset_name}
+      ./${bin_name} install krew
+      ./${bin_name} update
+    chdir: "{{ krew_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install kubectl plugins
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "kubectl krew install {{ item }}"
+  with_items:
+    - ctx
+    - ns
+    - iexec
+    - status
+    - tree
+    - view-secret
+    - whoami
+    - trace
+    - neat
+    - images
+    - rolesum
+    - get-all
+    - ca-cert
+    - resource-capacity
+    - df-pv
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for stern download
+  become: true
+  tempfile:
+    state: directory
+  register: stern_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install stern
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      bin_name="stern_${sys_name}"
+      curl -s https://api.github.com/repos/stern/stern/releases/latest | jq -r --arg NAME ${bin_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${bin_name} -i -
+      chmod +x ${bin_name}
+      mv ${bin_name} {{ stern_path }}
+    chdir: "{{ stern_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install sops
+  become: true
+  ansible.builtin.apt:
+    deb: https://github.com/mozilla/sops/releases/download/v3.7.3/sops_3.7.3_amd64.deb
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for sopsed download
+  become: true
+  tempfile:
+    state: directory
+  register: sopsed_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install sopsed
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r '.assets[] | .browser_download_url' | wget -i -
+      chmod +x sopsed
+      mv sopsed {{ sopsed_path }}
+    chdir: "{{ sopsed_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for variant download
+  become: true
+  tempfile:
+    state: directory
+  register: variant_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install variant
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      asset_name="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .name')"
+      curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -i -
+      tar zxvf ${asset_name}
+      chmod +x variant
+      mv variant {{ variant_path }}
+    chdir: "{{ variant_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
