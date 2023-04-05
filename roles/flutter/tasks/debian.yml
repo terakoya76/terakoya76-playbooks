@@ -65,6 +65,7 @@
   ansible.builtin.file:
     path: "{{ ansible_home }}/Android/Sdk"
     state: directory
+    mode: 0775
   tags:
     - config-language
     - config-flutter

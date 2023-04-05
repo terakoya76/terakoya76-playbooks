@@ -35,6 +35,7 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
     dest: "{{ ansible_home }}/.git-prompt.sh"
+    mode: 0664
   tags:
     - config-base
     - config-dotfile
