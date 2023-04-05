@@ -30,10 +30,12 @@
     - config-tool
     - config-cloudflared
 
-- name: Install cloudflared
-  become: true
-  ansible.builtin.apt:
-    deb: https://github.com/cloudflare/cloudflared/releases/download/{{ cloudflared_version }}/cloudflared-linux-{{ arch_result.stdout }}.deb
-  tags:
-    - config-tool
-    - config-cloudflared
+- name: For debian
+  ansible.builtin.import_tasks: debian.yml
+  when:
+    - ansible_os_family == "Debian"
+
+- name: For darwin
+  ansible.builtin.import_tasks: darwin.yml
+  when:
+    - ansible_os_family == "Darwin"

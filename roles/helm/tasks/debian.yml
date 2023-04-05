@@ -1,0 +1,69 @@
+---
+- name: Add apt signing key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://baltocdn.com/helm/signing.asc
+    state: present
+    keyring: /usr/share/keyrings/helm.gpg
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
+
+- name: Add apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+    state: present
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
+
+- name: Install helm
+  become: true
+  ansible.builtin.apt:
+    name: helm
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
+
+# - name: Install Helm Plugin
+#   become: true
+#   ansible.builtin.command: |
+#     helm plugin install https://github.com/futuresimple/helm-secrets
+#     helm plugin install https://github.com/databus23/helm-diff --version master
+#   tags:
+#     - config-tool
+#     - config-kubernetes
+#     - config-helm
+
+- name: Ensure a temporary directory for helmfile download
+  become: true
+  tempfile:
+    state: directory
+  register: helmfile_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
+
+- name: Install Helmfile
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      bin_name="helmfile_{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg NAME "$bin_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
+      chmod +x ${bin_name}
+      mv ${bin_name} {{ helmfile_path }}
+    chdir: "{{ helmfile_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
