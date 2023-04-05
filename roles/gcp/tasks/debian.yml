@@ -1,24 +1,21 @@
 ---
-- name: Install dependencies
+- name: Add apt signing key
   become: true
-  ansible.builtin.apt:
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - gnupg
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
+    keyring: /usr/share/keyrings/cloud.google.gpg
   tags:
     - config-tool
     - config-gcp
 
-- name: Setup google-cloud-cli repo
+- name: Add apt source
   become: true
-  ansible.builtin.shell: |
-    set -o pipefail
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+    state: present
   tags:
-    - config-tool
+    - config-tools
     - config-gcp
 
 - name: Install google-cloud-cli

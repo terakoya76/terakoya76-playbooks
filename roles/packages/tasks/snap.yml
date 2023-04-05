@@ -3,10 +3,9 @@
   become: true
   community.general.snap:
     name:
-      - discrod
+      - discord
       - slack
-      - sportify
-      - wireshark
+      - spotify
       - zoom-client
     state: present
   tags:
