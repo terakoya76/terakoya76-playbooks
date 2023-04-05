@@ -6,6 +6,7 @@
   tags:
     - config-tool
     - config-kubernetes
+    - config-helm
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
@@ -13,6 +14,7 @@
   tags:
     - config-tool
     - config-kubernetes
+    - config-helm
 
 - name: Get os in lowercase
   ansible.builtin.shell: set -o pipefail && uname | tr '[:upper:]' '[:lower:]'
@@ -21,6 +23,7 @@
   tags:
     - config-tool
     - config-kubernetes
+    - config-helm
 
 - name: Get target arch
   ansible.builtin.shell: set -o pipefail && uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/'
@@ -29,9 +32,7 @@
   tags:
     - config-tool
     - config-kubernetes
-
-- name: For all
-  ansible.builtin.import_tasks: common.yml
+    - config-helm
 
 - name: For debian
   ansible.builtin.import_tasks: debian.yml

@@ -9,3 +9,25 @@
   tags:
     - config-tool
     - config-aws
+
+- name: Install lsec2
+  become: true
+  ansible.builtin.apt:
+    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ lsec2_version }}/lsec2_{{ lsec2_version }}_{{ os_result.stdout }}_{{ arch_result.stdout }}.deb
+  tags:
+    - config-tool
+    - config-aws
+
+- name: Install eksctl
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    asset_name="eksctl_{{ ansible_system }}_{{ arch_result.stdout }}.tar.gz"
+    curl -s "https://api.github.com/repos/weaveworks/eksctl/releases/latest" | jq -r --arg NAME "$asset_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
+    tar zxvf "$asset_name"
+    chmod +x ./eksctl
+    mv ./eksctl {{ eksctl_path }}
+    rm "$asset_name"
+  tags:
+    - config-tool
+    - config-aws

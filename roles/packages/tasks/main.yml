@@ -1,10 +1,15 @@
 ---
-- name: For debian
+- name: Apt for debian
   ansible.builtin.import_tasks: apt.yml
   when:
     - ansible_os_family == "Debian"
 
-- name: For darwin
+- name: Snap for debian
+  ansible.builtin.import_tasks: snap.yml
+  when:
+    - ansible_os_family == "Debian"
+
+- name: Homebrew for darwin
   ansible.builtin.import_tasks: homebrew.yml
   when:
     - ansible_os_family == "Darwin"

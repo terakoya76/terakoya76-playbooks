@@ -1,22 +1,7 @@
 ---
-- name: Get ansible_user home directory
-  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
-  changed_when: false
-  tags:
-    - config-language
-    - config-flutter
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
-  changed_when: false
-  tags:
-    - config-language
-    - config-flutter
-
 - name: Install flutter
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name: flutter
     state: present
     classic: true
@@ -26,7 +11,7 @@
 
 - name: Install android-studio
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name: android-studio
     state: present
     classic: true
@@ -74,17 +59,18 @@
     - config-language
     - config-flutter
 
-- name: android sdk dir
+- name: Mkdir for android sdk
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
     path: "{{ ansible_home }}/Android/Sdk"
     state: directory
+    mode: 0775
   tags:
     - config-language
     - config-flutter
 
-- name: config flutter
+- name: Configure flutter
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: |

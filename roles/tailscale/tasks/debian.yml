@@ -1,0 +1,54 @@
+---
+- name: Add apt signing key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg
+    state: present
+    keyring: /usr/share/keyrings/tailscale-archive-keyring.gpg
+  tags:
+    - config-tool
+    - config-tailscale
+
+- name: Add apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main"
+    state: present
+  tags:
+    - config-tools
+    - config-tailscale
+
+- name: Install tailscale
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tailscale
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-tailscale
+
+- name: Install tailscale
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tailscale
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  # notify: Up tailscale
+  notify: Allow tailscale from fw
+  tags:
+    - config-tool
+    - config-tailscale
+
+# need an interaction
+# - name: Up tailscale
+#   become: true
+#   ansible.builtin.command: tailscale up
+#   tags:
+#     - config-tool
+#     - config-tailscale
+#   notify: Allow tailscale from fw

@@ -50,6 +50,7 @@
   ansible.builtin.template:
     src: files/stack.yaml
     dest: "{{ ansible_home }}/.stack/global-project/stack.yaml"
+    mode: 0644
   tags:
     - config-language
     - config-haskell

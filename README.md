@@ -10,6 +10,7 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 
 ### Supported Tags
 * config-base
+  * config-anyenv
   * config-dotfile
   * config-packages
 * config-language
@@ -21,11 +22,15 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-rust
   * config-arduino
   * config-arm64-m4
+  * config-raspberrypi
 * config-tool
   * config-aws
   * config-gcp
   * config-kubernetes
+    * config-helm
   * config-1password
+  * config-cloudflared
+  * config-tailscale
 
 ### When failed
 use `--start-at-task` opt

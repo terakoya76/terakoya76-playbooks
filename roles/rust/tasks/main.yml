@@ -36,7 +36,7 @@
 - name: Update rustup
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "rustup update"
+  ansible.builtin.command: bash -lc "rustup update"
   tags:
     - config-language
     - config-rust
@@ -44,7 +44,7 @@
 - name: Install rust Lang Server
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "rustup component add rls-preview rust-analysis rust-src"
+  ansible.builtin.command: bash -lc "rustup component add rls-preview rust-analysis rust-src"
   tags:
     - config-language
     - config-rust
@@ -52,7 +52,7 @@
 - name: Install tool chain
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: bash -lc "cargo install {{ item }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
   with_items:
     - alacritty
     - bat

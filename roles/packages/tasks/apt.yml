@@ -53,18 +53,16 @@
       - translate-shell
       - vim
       - xclip
+      - xsel
       - zlib1g-dev
     state: present
-  ignore_errors: true
   tags:
     - config-base
     - config-packages
 
 - name: Install Kernel Modules
   become: true
-  ansible.builtin.shell: |
-    apt install -y linux-headers-$(uname -r)
-  ignore_errors: true
+  ansible.builtin.shell: apt install -y linux-headers-$(uname -r)
   tags:
     - config-base
     - config-packages
@@ -73,7 +71,7 @@
   ansible.builtin.shell: |
     set -o pipefail
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
   tags:
     - config-base
     - config-packages
@@ -84,21 +82,6 @@
     name: docker-ce
     state: present
     update_cache: true
-  tags:
-    - config-base
-    - config-packages
-
-# TODO: split files
-- name: Install snap
-  become: true
-  ansible.builtin.snap:
-    name:
-      - discrod
-      - slack
-      - sportify
-      - wireshark
-      - zoom-client
-    state: present
   tags:
     - config-base
     - config-packages

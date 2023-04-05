@@ -3,3 +3,5 @@
 	name = Hajime Terasawa
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[core]
+	excludesfile = /home/terakoya76/.gitignore_global

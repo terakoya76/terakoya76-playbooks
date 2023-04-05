@@ -1,9 +1,27 @@
 ---
+- name: Ensure a temporary directory for awscli download
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.tempfile:
+    state: directory
+  register: awscli_temp_dir
+  tags:
+    - config-tool
+    - config-aws
+
+- name: Download awscli install package
+  become: true
+  ansible.builtin.get_url:
+    url: https://awscli.amazonaws.com/AWSCLIV2.pkg
+    dest: "{{ awscli_temp_dir.path }}/AWSCLIV2.pkg"
+    mode: 0644
+  tags:
+    - config-tool
+    - config-aws
+
 - name: Install awscli
   become: true
-  ansible.builtin.command: |
-    curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-    installer -pkg AWSCLIV2.pkg -target /
+  ansible.builtin.command: "installer -pkg {{ awscli_temp_dir.path }}/AWSCLIV2.pkg -target /"
   tags:
     - config-tool
     - config-aws
