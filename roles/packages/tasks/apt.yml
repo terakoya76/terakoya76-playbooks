@@ -15,6 +15,7 @@
       - curl
       - direnv
       - gcc
+      - gnupg
       - g++
       - make
       - xz-utils
@@ -54,6 +55,7 @@
       - vim
       - xclip
       - xsel
+      - wireshark
       - zlib1g-dev
     state: present
   tags:
@@ -67,11 +69,21 @@
     - config-base
     - config-packages
 
-- name: Add Apt-Repository for Docker
-  ansible.builtin.shell: |
-    set -o pipefail
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+- name: Add Docker apt signing key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add Docker apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
   tags:
     - config-base
     - config-packages
@@ -79,9 +91,23 @@
 - name: Install Docker
   become: true
   ansible.builtin.apt:
-    name: docker-ce
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
     state: present
     update_cache: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Join docker group
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: dialout
+    append: true
   tags:
     - config-base
     - config-packages
