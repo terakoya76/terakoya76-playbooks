@@ -15,7 +15,7 @@
     repo: "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
     state: present
   tags:
-    - config-tools
+    - config-tool
     - config-gcp
 
 - name: Install google-cloud-cli
