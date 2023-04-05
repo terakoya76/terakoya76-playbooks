@@ -1,4 +1,36 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  tags:
+    - config-tool
+    - config-aws
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  tags:
+    - config-tool
+    - config-aws
+
+- name: Get os in lowercase
+  ansible.builtin.shell: set -o pipefail && uname | tr '[:upper:]' '[:lower:]'
+  register: os_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-aws
+
+- name: Get target arch
+  ansible.builtin.shell: set -o pipefail && uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/'
+  register: arch_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-aws
+
+- name: For all
+  ansible.builtin.import_tasks: common.yml
+
 - name: For debian
   ansible.builtin.import_tasks: debian.yml
   when:
@@ -8,6 +40,3 @@
   ansible.builtin.import_tasks: darwin.yml
   when:
     - ansible_os_family == "Darwin"
-
-- name: For all
-  ansible.builtin.import_tasks: common.yml

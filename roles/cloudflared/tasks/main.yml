@@ -1,8 +1,39 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-cloudflared
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-tool
+    - config-cloudflared
+
+- name: Get os in lowercase
+  ansible.builtin.shell: set -o pipefail && uname | tr '[:upper:]' '[:lower:]'
+  register: os_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-cloudflared
+
+- name: Get target arch
+  ansible.builtin.shell: set -o pipefail && uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/'
+  register: arch_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-cloudflared
+
 - name: Install cloudflared
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/cloudflare/cloudflared/releases/download/{{ cloudflared_version }}/cloudflared-linux-{{ target_arch }}.deb
+    deb: https://github.com/cloudflare/cloudflared/releases/download/{{ cloudflared_version }}/cloudflared-linux-{{ arch_result.stdout }}.deb
   tags:
     - config-tool
     - config-cloudflared

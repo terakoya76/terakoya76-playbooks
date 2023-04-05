@@ -1,4 +1,3 @@
 ---
-target_arch: amd64
 lsec2_version: 0.2.11
 eksctl_path: /usr/local/bin/eksctl

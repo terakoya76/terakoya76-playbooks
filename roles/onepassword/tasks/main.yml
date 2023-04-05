@@ -1,8 +1,39 @@
 ---
+- name: Get ansible_user home directory
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: ansible_home_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-1password
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  changed_when: false
+  tags:
+    - config-tool
+    - config-1password
+
+- name: Get os in lowercase
+  ansible.builtin.shell: set -o pipefail && uname | tr '[:upper:]' '[:lower:]'
+  register: os_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-1password
+
+- name: Get target arch
+  ansible.builtin.shell: set -o pipefail && uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/'
+  register: arch_result
+  changed_when: false
+  tags:
+    - config-tool
+    - config-1password
+
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ target_arch }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ target_arch }} stable main" # yamllint disable-line rule:line-length
+    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ arch_result.stdout }} stable main" # yamllint disable-line rule:line-length
     state: present
   tags:
     - config-tool

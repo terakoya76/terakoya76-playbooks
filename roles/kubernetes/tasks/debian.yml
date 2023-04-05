@@ -96,7 +96,7 @@
       set -e
       sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
       bin_name="stern_${sys_name}"
-      curl -s https://api.github.com/repos/stern/stern/releases/latest | jq -r --arg NAME ${bin_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${bin_name} -i -
+      curl -s https://api.github.com/repos/stern/stern/releases/latest | jq -r --arg NAME ${bin_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${bin_name} -q -i -
       chmod +x ${bin_name}
       mv ${bin_name} {{ stern_path }}
     chdir: "{{ stern_temp_dir.path }}"
@@ -127,7 +127,7 @@
     cmd: |
       set -o pipefail
       set -e
-      curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r '.assets[] | .browser_download_url' | wget -i -
+      curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r '.assets[] | .browser_download_url' | wget -q -i -
       chmod +x sopsed
       mv sopsed {{ sopsed_path }}
     chdir: "{{ sopsed_temp_dir.path }}"
@@ -151,8 +151,8 @@
       set -o pipefail
       set -e
       sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
-      asset_name="$(curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .name')"
-      curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -i -
+      asset_name="variant_${sys_name}.tar.gz"
+      curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name} -q -i -
       tar zxvf ${asset_name}
       chmod +x variant
       mv variant {{ variant_path }}
