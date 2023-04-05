@@ -248,14 +248,3 @@
   tags:
     - config-base
     - config-dotfile
-
-- name: Configure gitconfig
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.shell: |
-    git config --global user.name 'Hajime Terasawa'
-    git config --global user.email 'terako.studio@gmail.com'
-    git config --global core.excludesfile ~/.gitignore_global
-  tags:
-    - config-base
-    - config-dotfile
