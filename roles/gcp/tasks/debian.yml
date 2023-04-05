@@ -11,7 +11,7 @@
     - config-tool
     - config-gcp
 
-- name: setup google-cloud-cli repo
+- name: Setup google-cloud-cli repo
   become: true
   ansible.builtin.shell: |
     set -o pipefail

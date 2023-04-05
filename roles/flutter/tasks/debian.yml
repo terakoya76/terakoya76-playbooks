@@ -59,7 +59,7 @@
     - config-language
     - config-flutter
 
-- name: android sdk dir
+- name: Mkdir for android sdk
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
@@ -69,7 +69,7 @@
     - config-language
     - config-flutter
 
-- name: config flutter
+- name: Configure flutter
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: |
