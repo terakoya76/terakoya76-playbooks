@@ -52,7 +52,9 @@ FZF-EOF"
 }
 
 fghq() {
-  cd $(ghq root)/$(ghq list | fzf)
+  local WORKDIR=$(ghq list -p | fzf --preview "onefetch --show-logo never {}" --preview-window=right,50% --height 70%)
+  [ -z "$WORKDIR" ] && return
+  cd $WORKDIR
 }
 
 fb() {

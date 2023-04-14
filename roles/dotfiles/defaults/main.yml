@@ -8,6 +8,7 @@ shell_scripts:
   - git.sh
   - history.sh
   - kubernetes.sh
+  - prompt.sh
   - rails.sh
   - tmux.sh
   - tools.sh

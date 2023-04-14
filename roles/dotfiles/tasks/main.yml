@@ -40,6 +40,16 @@
     - config-base
     - config-dotfile
 
+- name: Fetch kube-ps1
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.git:
+    repo: https://github.com/jonmosco/kube-ps1
+    dest: "{{ ansible_home }}/kube-ps1"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Fetch z.sh
   become: true
   become_user: "{{ ansible_user }}"

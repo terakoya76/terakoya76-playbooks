@@ -1,4 +1,5 @@
-- hosts:
+- name: Play for development env
+  hosts:
     - 'default'
   roles:
     # config-base
