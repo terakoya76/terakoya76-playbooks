@@ -7,7 +7,7 @@
     - config-aws
 
 - name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home='{{ansible_home_result.stdout}}'
+  ansible.builtin.set_fact: ansible_home='{{ ansible_home_result.stdout }}'
   tags:
     - config-tool
     - config-aws
