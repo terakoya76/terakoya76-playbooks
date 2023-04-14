@@ -79,6 +79,58 @@
     - config-tool
     - config-kubernetes
 
+- name: Ensure a temporary directory for kustomize download
+  become: true
+  ansible.builtin.tempfile:
+    state: directory
+  register: kustomize_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install kustomize
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      asset_name="kustomize_v{{ kustomize_version }}_${sys_name}.tar.gz"
+      curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name} -q -i -
+      tar zxvf ${asset_name}
+      chmod +x kustomize
+      mv kustomize {{ kustomize_path }}
+    chdir: "{{ kustomize_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for kubeseal download
+  become: true
+  ansible.builtin.tempfile:
+    state: directory
+  register: kubeseal_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install kubeseal
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      sys_name="{{ os_result.stdout }}-{{ arch_result.stdout }}"
+      asset_name="kubeseal-{{ kubeseal_version }}-${sys_name}"
+      curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name}.tar.gz -q -i -
+      tar zxvf "${asset_name}.tar.gz" || true
+      chmod +x kubeseal
+      mv kubeseal {{ kubeseal_path }}
+    chdir: "{{ kubeseal_temp_dir.path }}"
+  tags:
+    - config-tool
+    - config-kubernetes
+
 - name: Ensure a temporary directory for stern download
   become: true
   ansible.builtin.tempfile:
@@ -107,7 +159,7 @@
 - name: Install sops
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/mozilla/sops/releases/download/v3.7.3/sops_3.7.3_amd64.deb
+    deb: https://github.com/mozilla/sops/releases/download/v{{ sops_version }}/sops_{{ sops_version }}_{{ arch_result.stdout }}.deb
   tags:
     - config-tool
     - config-kubernetes
