@@ -1,26 +1,35 @@
 # bash completion
 source <(kubectl completion bash)
-
-# fzf k8s describe
-# $1 = resource, $2 = namespace
-fkd() {
-  bin/kubectl get "$1" -n "$2" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs bin/kubectl describe "$1"
-}
-fskd() {
-  bin/stkubectl get "$1" -n "$2" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs bin/stkubectl describe "$1"
-}
-
-# fzf k8s logs pod
-# $1 = namespace
-fkl() {
-  bin/kubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs bin/kubectl logs
-}
-fskl() {
-  bin/stkubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs bin/stkubectl logs
-}
+complete -o default -F __start_kubectl k
 
 # kubectl
 alias k="kubectl"
 
 # staging kubectl
 alias sk="stkubectl"
+
+# fzf k8s describe
+# $1 = namespace, $2 = resource
+fkd() {
+  kubectl -n "$1" get "$2" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs kubectl -n "$1" describe "$2"
+}
+fskd() {
+  stkubectl -n "$1" get "$2" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs stkubectl -n "$1" describe "$2"
+}
+
+# fzf k8s logs pod
+# $1 = namespace
+fkl() {
+  kubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs kubectl logs
+}
+fskl() {
+  stkubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs stkubectl logs
+}
+
+eks-write-config() {
+  local cluster=$(aws eks list-clusters | jq -r .clusters[] | fzf | awk 'NR>1 {print}')
+  if [[ $cluster != '' ]]; then
+    eksctl utils write-kubeconfig --name "${cluster}"
+  fi
+}
+alias fe="eks-write-config"

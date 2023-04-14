@@ -1,4 +1,6 @@
-tf-move() {
+alias tf="terraform"
+
+tf_move() {
   pj_from=$1
   pj_from=$2
 
