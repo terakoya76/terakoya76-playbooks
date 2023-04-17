@@ -88,7 +88,6 @@
     src: "files/bash.d/{{ item }}"
     dest: "{{ ansible_home }}/.bash.d/{{ item }}"
     mode: 0755
-    backup: true
   with_items: "{{ shell_scripts }}"
   tags:
     - config-base
