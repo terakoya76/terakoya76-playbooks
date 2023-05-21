@@ -12,7 +12,7 @@ HISTSIZE=50000
 # wrapper for history
 export HISTCONTROL="ignoredups"
 fzf_history() {
-  READLINE_LINE=$(history | sed -e 's/^\s*[0-9]\+\s\+//' | awk '!a[$0]++' | fzf-tmux -m --reverse --query="$1" | awk '{$1=""; print}')
+  READLINE_LINE=$(history | sed -e 's/^\s*[0-9]\+\s\+//' | awk '!a[$0]++' | fzf-tmux -m --reverse --query="$1")
   if [ -n "$READLINE_LINE" ] ; then
     echo "$READLINE_LINE" >&2
     eval "$READLINE_LINE"
