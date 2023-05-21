@@ -8,7 +8,8 @@
     - config-ruby
 
 - name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  ansible.builtin.set_fact:
+    ansible_home: "{{ ansible_home_result.stdout }}"
   changed_when: false
   tags:
     - config-language
@@ -17,7 +18,7 @@
 - name: Download ruby-build
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "{{ ansible_home }}/.anyenv/envs/rbenv/plugins/ruby-build"
   tags:
@@ -60,7 +61,7 @@
     name: bundler
     executable: "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
     state: present
-    user_install: no
+    user_install: false
   with_items: "{{ ruby_versions }}"
   tags:
     - config-language

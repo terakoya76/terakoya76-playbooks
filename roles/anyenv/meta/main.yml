@@ -1,4 +1,6 @@
 ---
+galaxy_info:
+  standalone: true
 dependencies:
-  - packages
-  - dotfiles
+  - role: packages
+  - role: dotfiles
