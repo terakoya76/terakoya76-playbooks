@@ -1,7 +1,4 @@
-# see https://ansible-lint.readthedocs.io/en/latest/configuring/
+offline: false
 
-# List of additional kind:pattern to be added at the top of the default
-# match list, first match determines the file kind.
-
-kinds:
-  - playbook: "development.yml"
+exclude_paths:
+  - roles/dotfiles/files/alacritty.yml
