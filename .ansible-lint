@@ -2,3 +2,8 @@ offline: false
 
 exclude_paths:
   - roles/dotfiles/files/alacritty.yml
+
+warn_list:
+  - schema[meta]
+  - meta-no-info
+  - no-changed-when
