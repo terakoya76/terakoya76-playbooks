@@ -114,6 +114,17 @@
     - config-tool
     - config-kubernetes
 
+- name: Install kubeseal dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - age
+      - gnupg
+    state: present
+  tags:
+    - config-tool
+    - config-kubernetes
+
 - name: Install kubeseal
   become: true
   ansible.builtin.shell:

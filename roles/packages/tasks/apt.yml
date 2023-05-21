@@ -41,18 +41,6 @@
       - python3-pip
       - software-properties-common
       - zlib1g-dev
-      # vim
-      - neovim
-      - vim
-      - llvm
-      - lldb
-      # tmux
-      - tmux
-      - xclip
-      - xsel
-      # encryption
-      - age
-      - gnupg
       # independent utils
       - bash-completion
       - jq

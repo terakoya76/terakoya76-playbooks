@@ -8,3 +8,26 @@
     chmod +x /usr/local/bin/ctags
   tags:
     - config-tool
+
+- name: Install Packages for vim
+  become: true
+  ansible.builtin.apt:
+    name:
+      - neovim
+      - vim
+      - llvm
+      - lldb
+    state: present
+  tags:
+    - config-tool
+
+- name: Install Packages for tmux
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tmux
+      - xclip
+      - xsel
+    state: present
+  tags:
+    - config-tool
