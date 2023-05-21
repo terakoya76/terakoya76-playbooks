@@ -56,9 +56,12 @@
   with_items:
     - alacritty
     - bat
-    - fd-find
     - exa
+    - fd-find
+    - git-delta
+    - onefetch
     - ripgrep
+    - tokei
     - xsv
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
