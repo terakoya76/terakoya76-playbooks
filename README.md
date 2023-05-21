@@ -24,6 +24,7 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-rust
   * config-arduino
   * config-arm64-m4
+  * config-esp32
   * config-raspberrypi
 * config-tool
   * config-aws

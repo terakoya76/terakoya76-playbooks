@@ -1,0 +1,144 @@
+---
+- name: Install dependencies for esp-idf
+  become: true
+  ansible.builtin.apt:
+    name:
+      - git
+      - wget
+      - flex
+      - bison
+      - gperf
+      - python3
+      - python3-pip
+      - python3-venv
+      - cmake
+      - ninja-build
+      - ccache
+      - libffi-dev
+      - libssl-dev
+      - dfu-util
+      - libusb-1.0-0
+    state: present
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Ensure a temporary directory for esp-idf download
+  become: true
+  ansible.builtin.tempfile:
+    state: directory
+  register: esp_idf_temp_dir
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Fetch esp-idf
+  become: true
+    # become_user: "{{ ansible_user }}"
+  ansible.builtin.git: # noqa: latest
+    repo: https://github.com/espressif/esp-idf
+    dest: "{{ esp_idf_temp_dir.path }}/esp-idf"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install esp-idf
+  become: true
+  ansible.builtin.shell:
+    cmd: ./install.sh esp32
+    chdir: "{{ esp_idf_temp_dir.path }}/esp-idf"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - gcc
+      - build-essential
+      - curl
+      - pkg-config
+    state: present
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install rust-src
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "rustup toolchain install nightly --component rust-src"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Add RISC-V target
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "rustup target add {{ item }}"
+  with_items:
+    - riscv32imc-unknown-none-elf # For ESP32-C2 and ESP32-C3
+    - riscv32imac-unknown-none-elf # For ESP32-C6 and ESP32-H2
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install espup
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
+  with_items:
+    - espup
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install ldproxy
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
+  with_items:
+    - ldproxy
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install espflash dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libuv-dev
+    state: present
+    classic: true
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install espflash
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
+  with_items:
+    - espflash
+    - cargo-espflash
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install espmonitor
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install {{ item }}"
+  with_items:
+    - espmonitor
+  environment:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  tags:
+    - config-language
+    - config-esp32

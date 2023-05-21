@@ -28,7 +28,6 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "cargo install {{ item }}"
   with_items:
-    - cargo-generate
     - hf2-cli
     - cargo-hf2
   environment:

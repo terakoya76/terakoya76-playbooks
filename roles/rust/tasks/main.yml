@@ -57,6 +57,7 @@
   with_items:
     - alacritty
     - bat
+    - cargo-generate
     - exa
     - fd-find
     - git-delta
