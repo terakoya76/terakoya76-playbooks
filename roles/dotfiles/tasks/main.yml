@@ -30,6 +30,31 @@
     - config-base
     - config-dotfile
 
+- name: Install bash-completion
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - bash-completion
+    state: present
+  when:
+    - ansible_os_family == "Darwin"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Install bash-completion
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bash-completion
+    state: present
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Fetch git-prompt.sh
   become: true
   become_user: "{{ ansible_user }}"

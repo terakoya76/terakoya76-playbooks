@@ -42,7 +42,6 @@
       - software-properties-common
       - zlib1g-dev
       # independent utils
-      - bash-completion
       - jq
       - multitime
       - translate-shell

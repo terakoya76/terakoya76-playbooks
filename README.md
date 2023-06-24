@@ -22,6 +22,8 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-nodejs
   * config-ruby
   * config-rust
+  * config-llvm
+  * config-ml
   * config-arduino
   * config-arm64-m4
   * config-esp32

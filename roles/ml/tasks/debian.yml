@@ -1,0 +1,21 @@
+---
+- name: Install dependencies for esp-idf
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ffmpeg
+    state: present
+  tags:
+    - config-language
+    - config-ml
+
+- name: Install nvim client via pip3
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
+    name: openai-whisper
+    state: present
+    executable: pip3
+  tags:
+    - config-language
+    - config-ml

@@ -16,3 +16,35 @@
     state: present
   tags:
     - config-tool
+
+- name: Install Packages for vim
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - neovim
+      - vim
+    state: present
+  tags:
+    - config-tool
+
+- name: Install Packages for vim
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - neovim
+      - vim
+    state: present
+  tags:
+    - config-tool
+
+- name: Install Packages for tmux
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - tmux
+    state: present
+  tags:
+    - config-tool

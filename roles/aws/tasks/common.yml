@@ -23,3 +23,14 @@
   tags:
     - config-tool
     - config-aws
+
+- name: Install nvim client via pip3
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
+    name: awsebcli
+    state: present
+    executable: pip3
+  tags:
+    - config-tool
+    - config-aws

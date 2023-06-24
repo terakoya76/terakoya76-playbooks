@@ -15,8 +15,6 @@
     name:
       - neovim
       - vim
-      - llvm
-      - lldb
     state: present
   tags:
     - config-tool
