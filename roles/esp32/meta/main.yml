@@ -3,3 +3,4 @@ galaxy_info:
   standalone: true
 dependencies:
   - role: rust
+  - role: llvm

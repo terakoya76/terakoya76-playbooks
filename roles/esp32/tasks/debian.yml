@@ -1,4 +1,12 @@
 ---
+- name: Set nightly channel as cargo defualt
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "rustup default nightly"
+  tags:
+    - config-language
+    - config-esp32
+
 - name: Install dependencies for esp-idf
   become: true
   ansible.builtin.apt:
@@ -34,7 +42,6 @@
 
 - name: Fetch esp-idf
   become: true
-    # become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/espressif/esp-idf
     dest: "{{ esp_idf_temp_dir.path }}/esp-idf"
@@ -72,6 +79,30 @@
     - config-language
     - config-esp32
 
+- name: Install cargo-binutils
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install cargo-binutils"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install llvm-tools-preview
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "rustup toolchain install nightly --component llvm-tools-preview"
+  tags:
+    - config-language
+    - config-esp32
+
+- name: Install cargo-generate
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "cargo install cargo-generate"
+  tags:
+    - config-language
+    - config-esp32
+
 - name: Add RISC-V target
   become: true
   become_user: "{{ ansible_user }}"
@@ -86,21 +117,7 @@
 - name: Install espup
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "cargo install {{ item }}"
-  with_items:
-    - espup
-  environment:
-    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-  tags:
-    - config-language
-    - config-esp32
-
-- name: Install ldproxy
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "cargo install {{ item }}"
-  with_items:
-    - ldproxy
+  ansible.builtin.command: bash -lc "cargo install espup"
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   tags:
@@ -117,24 +134,14 @@
     - config-language
     - config-esp32
 
-- name: Install espflash
+- name: Install espressif toolchain
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "cargo install {{ item }}"
   with_items:
+    - ldproxy
     - espflash
     - cargo-espflash
-  environment:
-    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-  tags:
-    - config-language
-    - config-esp32
-
-- name: Install espmonitor
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "cargo install {{ item }}"
-  with_items:
     - espmonitor
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
