@@ -1,5 +1,5 @@
 ---
-- name: Install dependencies for esp-idf
+- name: Install dependencies for whisper
   become: true
   ansible.builtin.apt:
     name:
@@ -9,7 +9,7 @@
     - config-language
     - config-ml
 
-- name: Install nvim client via pip3
+- name: Install whisper
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.pip:

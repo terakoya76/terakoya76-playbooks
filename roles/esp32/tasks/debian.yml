@@ -44,7 +44,7 @@
 
 - name: Install esp-idf
   become: true
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: ./install.sh esp32
     chdir: "{{ esp_idf_temp_dir.path }}/esp-idf"
   tags:
@@ -111,9 +111,8 @@
   become: true
   ansible.builtin.apt:
     name:
-      - libuv-dev
+      - libuv1-dev
     state: present
-    classic: true
   tags:
     - config-language
     - config-esp32
