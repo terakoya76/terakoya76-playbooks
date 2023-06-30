@@ -8,7 +8,8 @@
     - config-anyenv
 
 - name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  ansible.builtin.set_fact:
+    ansible_home: "{{ ansible_home_result.stdout }}"
   changed_when: false
   tags:
     - config-base
@@ -17,7 +18,7 @@
 - name: Install anyenv
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/riywo/anyenv
     dest: "{{ ansible_home }}/.anyenv"
   tags:
@@ -27,7 +28,7 @@
 - name: Install anyenv-update
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/znz/anyenv-update
     dest: "{{ ansible_home }}/.anyenv/plugins/anyenv-update"
   tags:

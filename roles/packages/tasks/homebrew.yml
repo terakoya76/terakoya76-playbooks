@@ -51,10 +51,8 @@
       - imagemagick
       - jq
       - libmagic
-      - llvm
       - memcached
       - mysql
-      - neovim
       - openssl
       - pandoc
       - protobuf
@@ -64,9 +62,7 @@
       - shellcheck
       - tfenv
       - tig
-      - tmux
       - translate-shell
-      - vim
       - wget
       - yq
       # AVR

@@ -19,5 +19,6 @@ go_binaries:
   - github.com/plumber-cd/terraform-backend-git@latest
   - github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
   - github.com/spf13/cobra-cli@latest
+  - github.com/terraform-docs/terraform-docs@latest
   - github.com/x-motemen/ghq@latest
   - honnef.co/go/tools/cmd/...@latest

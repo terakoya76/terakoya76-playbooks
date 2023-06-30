@@ -32,15 +32,23 @@
     - config-kubernetes
     - config-helm
 
-# - name: Install Helm Plugin
-#   become: true
-#   ansible.builtin.command: |
-#     helm plugin install https://github.com/futuresimple/helm-secrets
-#     helm plugin install https://github.com/databus23/helm-diff --version master
-#   tags:
-#     - config-tool
-#     - config-kubernetes
-#     - config-helm
+- name: Install helm-secrets plugin
+  become: true
+  ansible.builtin.command: |
+    helm plugin install https://github.com/futuresimple/helm-secrets
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
+
+- name: Install helm-diff plugin
+  become: true
+  ansible.builtin.command: |
+    helm plugin install https://github.com/databus23/helm-diff
+  tags:
+    - config-tool
+    - config-kubernetes
+    - config-helm
 
 - name: Ensure a temporary directory for helmfile download
   become: true

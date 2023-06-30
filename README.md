@@ -2,10 +2,11 @@
 
 Setup develop environment w/ ansible
 
-### Install/Update
+## Install/Update
 
-```shell
-$ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playbooks/master/setup.sh)
+How to execute
+```bash
+$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER}
 ```
 
 ### Supported Tags
@@ -21,8 +22,11 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
   * config-nodejs
   * config-ruby
   * config-rust
+  * config-llvm
+  * config-ml
   * config-arduino
   * config-arm64-m4
+  * config-esp32
   * config-raspberrypi
 * config-tool
   * config-aws
@@ -36,5 +40,5 @@ $ bash <(curl -s https://raw.githubusercontent.com/terakoya76/terakoya76-playboo
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ sudo ansible-playbook -i inventory/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
+$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
 ```

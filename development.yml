@@ -14,8 +14,11 @@
     - role: nodejs
     - role: ruby
     - role: rust
+    - role: llvm
+    - role: ml
     - role: arduino
     - role: arm64_m4
+    - role: esp32
     - role: raspberrypi
     # config-tool
     - role: aws

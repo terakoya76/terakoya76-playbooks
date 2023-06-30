@@ -20,10 +20,10 @@ fskd() {
 # fzf k8s logs pod
 # $1 = namespace
 fkl() {
-  kubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs kubectl logs
+  kubectl -n "$1" get po | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs kubectl -n "$1" logs
 }
 fskl() {
-  stkubectl get po -n "$1" | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs stkubectl logs
+  stkubectl -n "$1" get po | sed 1d | fzf-tmux -m --reverse | awk '{print $1}' | xargs stkubectl -n "$1" logs
 }
 
 eks-write-config() {

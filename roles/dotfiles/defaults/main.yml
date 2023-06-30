@@ -10,5 +10,6 @@ shell_scripts:
   - kubernetes.sh
   - prompt.sh
   - rails.sh
+  - terraform.sh
   - tmux.sh
   - tools.sh

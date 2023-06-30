@@ -8,7 +8,8 @@
     - config-rust
 
 - name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  ansible.builtin.set_fact:
+    ansible_home: "{{ ansible_home_result.stdout }}"
   changed_when: false
   tags:
     - config-language
@@ -56,9 +57,13 @@
   with_items:
     - alacritty
     - bat
-    - fd-find
+    - cargo-generate
     - exa
+    - fd-find
+    - git-delta
+    - onefetch
     - ripgrep
+    - tokei
     - xsv
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"

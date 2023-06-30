@@ -1,6 +1,8 @@
 ---
+galaxy_info:
+  standalone: true
 dependencies:
-  - packages
-  - nodejs
-  # - python
-  - ruby
+  - role: packages
+  - role: nodejs
+  # - role: python
+  - role: ruby

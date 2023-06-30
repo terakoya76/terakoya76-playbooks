@@ -1,0 +1,11 @@
+---
+- name: Install llvm
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - llvm
+    state: present
+  tags:
+    - config-language
+    - config-llvm

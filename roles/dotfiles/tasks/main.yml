@@ -8,7 +8,8 @@
     - config-dotfile
 
 - name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact: ansible_home={{ ansible_home_result.stdout }}
+  ansible.builtin.set_fact:
+    ansible_home: "{{ ansible_home_result.stdout }}"
   changed_when: false
   tags:
     - config-base
@@ -29,6 +30,31 @@
     - config-base
     - config-dotfile
 
+- name: Install bash-completion
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - bash-completion
+    state: present
+  when:
+    - ansible_os_family == "Darwin"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Install bash-completion
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bash-completion
+    state: present
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Fetch git-prompt.sh
   become: true
   become_user: "{{ ansible_user }}"
@@ -43,7 +69,7 @@
 - name: Fetch aws-ps1
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/eddiecorrigall/awscli-ext
     dest: "{{ ansible_home }}/awscli-ext"
   tags:
@@ -53,7 +79,7 @@
 - name: Fetch kube-ps1
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/jonmosco/kube-ps1
     dest: "{{ ansible_home }}/kube-ps1"
   tags:
@@ -63,7 +89,7 @@
 - name: Fetch z.sh
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/rupa/z
     dest: "{{ ansible_home }}/z"
   tags:
@@ -88,7 +114,6 @@
     src: "files/bash.d/{{ item }}"
     dest: "{{ ansible_home }}/.bash.d/{{ item }}"
     mode: 0755
-    backup: true
   with_items: "{{ shell_scripts }}"
   tags:
     - config-base
@@ -179,7 +204,7 @@
 - name: Fetch tpm
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.git:
+  ansible.builtin.git: # noqa: latest
     repo: https://github.com/tmux-plugins/tpm
     dest: "{{ ansible_home }}/.tmux/plugins/tpm"
   tags:

@@ -7,13 +7,13 @@ rules:
   # Warning: 中括弧内のスペースは0または1つ
   braces:
     level: warning
-    min-spaces-inside: 0
+    min-spaces-inside: 1
     max-spaces-inside: 1
 
   # Warning: 大括弧内のスペースは0または1つ
   brackets:
     level: warning
-    min-spaces-inside: 0
+    min-spaces-inside: 1
     max-spaces-inside: 1
 
   # Warning: ':' の前はスペースを空けない、後はスペースを1つ空ける
@@ -35,11 +35,15 @@ rules:
   # 特に制限なし: ドキュメント終了記号 '...' を必須にしない
   document-end: disable
 
-  # 特に制限なし: ドキュメント開始記号 '---' を必須にしない
+  # NOTE: vars/main.yml が暗号化されている場合のため
+  # ドキュメント開始記号 '---' を必須にしない
   document-start: disable
 
-  # 特に制限なし: 空行の数に制限を設けない
-  empty-lines: disable
+  # 空行の数に制限を設ける
+  empty-lines:
+    max: 1
+    max-start: 0
+    max-end: 0
 
   # 特に制限なし: null値を許容する
   empty-values: disable
@@ -79,5 +83,5 @@ rules:
   trailing-spaces:
     level: warning
 
-  # 特に制限なし: ブーリアン値と解釈される文字列は明示的に記述する
-  truthy: disable
+  # ブーリアン値と解釈される文字列は明示的に記述する
+  truthy: enable
