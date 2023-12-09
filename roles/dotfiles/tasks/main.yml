@@ -3,6 +3,18 @@
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
   changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Get ansible_user home directory
+  ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
+  register: ansible_home_result
+  changed_when: false
+  when:
+    - ansible_os_family == "Darwin"
   tags:
     - config-base
     - config-dotfile
@@ -26,6 +38,26 @@
   with_items:
     - bash_profile
     - bashrc
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place Default Config
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: files/{{ item }}
+    dest: "{{ ansible_home }}/.{{ item }}"
+    mode: 0755
+    backup: true
+  with_items:
+    # - zshrc
+    - bash_profile
+    - bashrc
+  when:
+    - ansible_os_family == "Darwin"
   tags:
     - config-base
     - config-dotfile

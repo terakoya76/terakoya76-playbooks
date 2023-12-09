@@ -1,5 +1,5 @@
 ---
-- name: Install ctags/gtags
+- name: Tap ctags/gtags
   become: true
   become_user: "{{ ansible_user }}"
   community.general.homebrew_tap:
@@ -14,6 +14,7 @@
   community.general.homebrew:
     name: universal-ctags/universal-ctags/universal-ctags
     state: present
+    install_options: HEAD
   tags:
     - config-tool
 

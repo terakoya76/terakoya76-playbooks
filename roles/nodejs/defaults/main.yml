@@ -3,5 +3,6 @@ node_versions:
   - 14.21.1
   - 16.18.1
   - 18.12.1
+  - 20.10.0
 
-global_node_version: 18.12.1
+global_node_version: 20.10.0

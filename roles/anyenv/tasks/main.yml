@@ -3,6 +3,18 @@
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
   register: ansible_home_result
   changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - config-base
+    - config-anyenv
+
+- name: Get ansible_user home directory
+  ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
+  register: ansible_home_result
+  changed_when: false
+  when:
+    - ansible_os_family == "Darwin"
   tags:
     - config-base
     - config-anyenv
@@ -86,6 +98,27 @@
     - rbenv
     - tfenv
   when: 'item not in anyenv_envs.stdout'
+  tags:
+    - config-base
+    - config-anyenv
+
+- name: Create target directory for anyenv-update
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ ansible_home }}/.anyenv/plugins"
+    state: directory
+    mode: 0755
+  tags:
+    - config-base
+    - config-anyenv
+
+- name: Fetch anyenv-update
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.git: # noqa: latest
+    repo: https://github.com/znz/anyenv-update
+    dest: "{{ ansible_home }}/.anyenv/plugins/anyenv-update"
   tags:
     - config-base
     - config-anyenv
