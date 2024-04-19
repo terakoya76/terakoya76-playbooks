@@ -1,1 +1,1 @@
-alias nr="npm run"
+alias nr="npx nr"

@@ -87,3 +87,103 @@
   tags:
     - config-language
     - config-nodejs
+
+- name: Install ni
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.npm:
+    name: @antfu/ni
+    state: present
+    global: true
+    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Place .nirc
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: files/nirc
+    dest: "{{ ansible_home }}/.nirc"
+    mode: 0755
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Check installed nodejs version
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "nodenv versions"
+  register: nodenv_installed
+  changed_when: false
+  failed_when: false
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install node-build
+  become: true
+  ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
+  with_items: "{{ node_versions }}"
+  when: 'item not in nodenv_installed.stdout'
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install nodejs from nodenv
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "nodenv install {{ item }}"
+  with_items: "{{ node_versions }}"
+  when: 'item not in nodenv_installed.stdout'
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Set Global version
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "nodenv global {{ global_node_version }}"
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install commitizen
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.npm:
+    name: commitizen
+    state: present
+    global: true
+    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install ni
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.npm:
+    name: @antfu/ni
+    state: present
+    global: true
+    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Place .nirc
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: files/nirc
+    dest: ".nirc"
+    mode: 0755
+  tags:
+    - config-language
+    - config-nodejs
+    mode: 0755
+  tags:
+    - config-language
+    - config-nodejs

@@ -1,0 +1,2 @@
+defaultAgent=npm # default "prompt"
+globalAgent=npm
