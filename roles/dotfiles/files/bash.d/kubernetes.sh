@@ -29,7 +29,7 @@ fskl() {
 eks-write-config() {
   local cluster=$(aws eks list-clusters | jq -r .clusters[] | fzf | awk 'NR>1 {print}')
   if [[ $cluster != '' ]]; then
-    eksctl utils write-kubeconfig --name "${cluster}"
+    eksctl utils write-kubeconfig --cluster "${cluster}"
   fi
 }
 alias fe="eks-write-config"

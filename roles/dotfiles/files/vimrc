@@ -22,6 +22,8 @@ endif
 
 " plugins
 call plug#begin('~/.vim/plugged')
+"" editconfig
+Plug 'editorconfig/editorconfig-vim'
 "" color schema
 Plug 'cocopon/iceberg.vim'
 "" delete white space
@@ -104,6 +106,9 @@ highlight CursorLine term=none cterm=none ctermfg=none ctermbg=darkgray
 highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste
 
+" for python3 provider
+let g:python3_host_prog = '/usr/bin/python3'
+
 " for ruby provider
 let g:ruby_host_prog = '$HOME/.anyenv/envs/rbenv/versions/3.0.1/bin/neovim-ruby-host'
 
@@ -178,9 +183,9 @@ nmap ga <Plug>(EasyAlign)
 " deol
 let g:deol#prompt_pattern = '% \|%$'
 let g:deol#shell_history_path = '~/.bash_history'
-nnoremap <Leader>df :Deol -split=floating<CR>
-nnoremap <Leader>dv :Deol -split=vertical<CR>
-nnoremap <Leader>ds :Deol -split=horizontal<CR>
+nnoremap <Leader>df <Cmd>call deol#start(#{split: 'floating' })<CR>
+nnoremap <Leader>dv <Cmd>call deol#start(#{split: 'vertical'})<CR>
+nnoremap <Leader>ds <Cmd>call deol#start(#{split: 'horizontal'})<CR>
 tnoremap <ESC>   <C-\><C-n>
 
 "" open-browser-github.vim
