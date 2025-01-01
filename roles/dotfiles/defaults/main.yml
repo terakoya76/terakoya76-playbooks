@@ -6,6 +6,7 @@ shell_scripts:
   - dockerized.sh
   - fzf.sh
   - git.sh
+  - gpg.sh
   - history.sh
   - kubernetes.sh
   - prompt.sh

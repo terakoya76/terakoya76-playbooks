@@ -1,7 +1,10 @@
 [user]
 	email = terako.studio@gmail.com
 	name = Hajime Terasawa
+	signingkey = D4ECD029454122A6
 [url "git@github.com:"]
 	insteadOf = https://github.com/
 [core]
 	excludesfile = /home/terakoya76/.gitignore_global
+[commit]
+	gpgsign = true
