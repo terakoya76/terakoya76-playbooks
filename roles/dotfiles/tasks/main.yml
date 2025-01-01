@@ -139,7 +139,7 @@
     - config-base
     - config-dotfile
 
-- name: Place Files
+- name: Place Shell Files
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
@@ -147,18 +147,6 @@
     dest: "{{ ansible_home }}/.bash.d/{{ item }}"
     mode: 0755
   with_items: "{{ shell_scripts }}"
-  tags:
-    - config-base
-    - config-dotfile
-
-- name: Place .vimrc for vim
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: files/vimrc
-    dest: "{{ ansible_home }}/.vimrc"
-    mode: 0755
-    backup: true
   tags:
     - config-base
     - config-dotfile
@@ -174,14 +162,48 @@
     - config-base
     - config-dotfile
 
-- name: Place .vimrc for nvim
+- name: Create target directory for nvim plugins
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ ansible_home }}/.config/nvim/lua/plugins"
+    state: directory
+    mode: 0755
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place init.lua for nvim
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: files/vimrc
-    dest: "{{ ansible_home }}/.config/nvim/init.vim"
+    src: files/nvim.lua
+    dest: "{{ ansible_home }}/.config/nvim/init.lua"
     mode: 0755
-    backup: true
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place nvim init components
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/nvim/{{ item }}"
+    dest: "{{ ansible_home }}/.config/nvim/lua/{{ item }}"
+    mode: 0755
+  with_items: "{{ nvim_init_components }}"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place nvim plugins
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/nvim/plugins/{{ item }}"
+    dest: "{{ ansible_home }}/.config/nvim/lua/plugins/{{ item }}"
+    mode: 0755
+  with_items: "{{ nvim_plugins }}"
   tags:
     - config-base
     - config-dotfile
@@ -193,6 +215,7 @@
     path: "{{ ansible_home }}/.translate-shell"
     state: directory
     mode: 0755
+    recurse: true
   tags:
     - config-base
     - config-dotfile
