@@ -6,6 +6,7 @@ shell_scripts:
   - dockerized.sh
   - fzf.sh
   - git.sh
+  - gpg.sh
   - history.sh
   - kubernetes.sh
   - prompt.sh
@@ -13,3 +14,25 @@ shell_scripts:
   - terraform.sh
   - tmux.sh
   - tools.sh
+
+nvim_init_components:
+  - base.lua
+  - options.lua
+  - autocmds.lua
+  - keymaps.lua
+
+nvim_plugins:
+  - coding-align.lua
+  - coding-autopairs.lua
+  - coding-cmp.lua
+  - coding-comment.lua
+  - coding-diffview.lua
+  - coding-gitblame.lua
+  - coding-indent.lua
+  - theme-bufferline.lua
+  - theme-everforest.lua
+  - theme-gitsigns.lua
+  - theme-lualine.lua
+  - theme-tree.lua
+  - util-telescope.lua
+  - util-toggleterm.lua
