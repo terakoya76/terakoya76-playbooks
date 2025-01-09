@@ -208,6 +208,18 @@
     - config-base
     - config-dotfile
 
+- name: Place nvim lualine custom functions
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/nvim/lualine/{{ item }}"
+    dest: "{{ ansible_home }}/.config/nvim/lua/lualine/{{ item }}"
+    mode: 0755
+  with_items: "{{ nvim_lualine }}"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Create target directory for translate-shell
   become: true
   become_user: "{{ ansible_user }}"
