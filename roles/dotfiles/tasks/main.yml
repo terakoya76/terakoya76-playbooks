@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: ansible_home_result
+  register: mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -23,6 +23,16 @@
   ansible.builtin.set_fact:
     ansible_home: "{{ ansible_home_result.stdout }}"
   changed_when: false
+  when: ansible_home_result.stdout is defined
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact:
+    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+  changed_when: false
+  when: mac_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-dotfile
@@ -204,6 +214,18 @@
     dest: "{{ ansible_home }}/.config/nvim/lua/plugins/{{ item }}"
     mode: 0755
   with_items: "{{ nvim_plugins }}"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place nvim lualine custom functions
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/nvim/lualine/{{ item }}"
+    dest: "{{ ansible_home }}/.config/nvim/lua/lualine/{{ item }}"
+    mode: 0755
+  with_items: "{{ nvim_lualine }}"
   tags:
     - config-base
     - config-dotfile

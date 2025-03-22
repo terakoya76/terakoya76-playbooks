@@ -90,7 +90,6 @@
       - containerd.io
       - docker-compose-plugin
     state: present
-    update_cache: true
   tags:
     - config-base
     - config-packages

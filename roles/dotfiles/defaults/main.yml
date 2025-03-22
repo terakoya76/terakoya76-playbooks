@@ -25,6 +25,7 @@ nvim_plugins:
   - coding-align.lua
   - coding-autopairs.lua
   - coding-cmp.lua
+  - coding-codecompanion.lua
   - coding-comment.lua
   - coding-diffview.lua
   - coding-gitblame.lua
@@ -36,3 +37,6 @@ nvim_plugins:
   - theme-tree.lua
   - util-telescope.lua
   - util-toggleterm.lua
+
+nvim_lualine:
+  - codecompanion.lua
