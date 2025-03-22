@@ -63,6 +63,11 @@
   when:
     - ansible_os_family == "Debian"
 
+- name: AppImage for debian
+  ansible.builtin.import_tasks: appimage.yml
+  when:
+    - ansible_os_family == "Debian"
+
 - name: Homebrew for darwin
   ansible.builtin.import_tasks: homebrew.yml
   when:

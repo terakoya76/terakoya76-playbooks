@@ -1,0 +1,94 @@
+---
+# - name: Check cursor installed
+#   become: true
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.command: bash -lc "which cursor"
+#   register: cursor_installed
+#   changed_when: false
+#   failed_when: false
+#   tags:
+#     - config-base
+#     - config-packages
+
+# - name: Install Cursor
+#   become: true
+#   ansible.builtin.get_url:
+#     url:
+#     dest: /usr/local/bin/cursor
+#     mode: 0755
+#   when: cursor_installed.stdout != ""
+#   tags:
+#     - config-base
+#     - config-packages
+
+- name: Register cursor app
+  become: true
+  ansible.builtin.template:
+    src: templates/cursor.desktop
+    dest: "{{ ansible_home }}/.local/share/applications/cursor.desktop"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+  tags:
+    - config-base
+    - config-packages
+
+# AnsibleError: template error while templating string: Missing end of comment tag.
+# - name: Register cursor icon
+#   become: true
+#   ansible.builtin.template:
+#     src: files/cursor.png
+#     dest: "{{ cursor_icon_path }}"
+#     owner: root
+#     group: root
+#     mode: 0644
+#   tags:
+#     - config-base
+#     - config-packages
+
+- name: Check obsidian installed
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "which obsidian"
+  register: obsidian_installed
+  changed_when: false
+  failed_when: false
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install Obsidian
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ obsidian_version }}/Obsidian-{{ obsidian_version }}.AppImage"
+    dest: "{{ obsidian_bin_path }}"
+    mode: 0755
+  when: obsidian_installed.stdout != ""
+  tags:
+    - config-base
+    - config-packages
+
+- name: Register obsidian app
+  become: true
+  ansible.builtin.template:
+    src: templates/obsidian.desktop
+    dest: "{{ ansible_home }}/.local/share/applications/obsidian.desktop"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+  tags:
+    - config-base
+    - config-packages
+
+# AnsibleError: template error while templating string: Missing end of comment tag.
+# - name: Register obsidian icon
+#   become: true
+#   ansible.builtin.template:
+#     src: files/obsidian.png
+#     dest: "{{ obsidian_icon_path }}"
+#     owner: root
+#     group: root
+#     mode: 0644
+#   tags:
+#     - config-base
+#     - config-packages
