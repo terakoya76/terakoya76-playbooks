@@ -44,6 +44,7 @@
     if ! which stack > /dev/null 2>&1; then
       curl -sSL https://get.haskellstack.org/ | sh
     fi
+  changed_when: false
   tags:
     - config-language
     - config-haskell
@@ -52,6 +53,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: stack upgrade
+  changed_when: false
   tags:
     - config-language
     - config-haskell
@@ -62,7 +64,7 @@
   ansible.builtin.file:
     path: "{{ ansible_home }}/.stack/global-project"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-haskell
@@ -73,7 +75,7 @@
   ansible.builtin.template:
     src: files/stack.yaml
     dest: "{{ ansible_home }}/.stack/global-project/stack.yaml"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-language
     - config-haskell
@@ -82,6 +84,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: stack setup
+  changed_when: false
   tags:
     - config-language
     - config-haskell
@@ -91,6 +94,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: "stack install {{ item }}"
   with_items: "{{ haskell_binaries }}"
+  changed_when: false
   tags:
     - config-language
     - config-haskell
@@ -101,7 +105,7 @@
   ansible.builtin.template:
     src: files/ghc-mod.sh
     dest: "{{ ansible_home }}/.bash.d/ghc-mod.sh"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-haskell

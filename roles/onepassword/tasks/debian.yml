@@ -2,7 +2,8 @@
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ arch_result.stdout }} stable main" # yamllint disable-line rule:line-length
+    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ arch_result.stdout
+      }} stable main" # yamllint disable-line rule:line-length
     state: present
   tags:
     - config-tool
@@ -25,7 +26,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   tags:
     - config-tool
     - config-1password
@@ -35,7 +36,7 @@
   ansible.builtin.get_url:
     url: https://downloads.1password.com/linux/debian/debsig/1password.pol
     dest: /etc/debsig/policies/AC2D62742012EA22/1password.pol
-    mode: 0644
+    mode: "0644"
   tags:
     - config-tool
     - config-1password
@@ -47,7 +48,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   tags:
     - config-tool
     - config-1password

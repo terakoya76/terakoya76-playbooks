@@ -7,7 +7,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: staff
-    mode: 0755
+    mode: "0755"
   tags:
     - config-tool
     - config-aws
@@ -18,7 +18,7 @@
   ansible.builtin.template:
     src: files/awsconfig
     dest: "{{ ansible_home }}/.aws/config"
-    mode: 0755
+    mode: "0755"
     backup: true
   tags:
     - config-tool
@@ -39,7 +39,7 @@
   ansible.builtin.get_url:
     url: https://awscli.amazonaws.com/AWSCLIV2.pkg
     dest: "{{ awscli_temp_dir.path }}/AWSCLIV2.pkg"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-tool
     - config-aws
@@ -47,6 +47,7 @@
 - name: Install awscli
   become: true
   ansible.builtin.command: "installer -pkg {{ awscli_temp_dir.path }}/AWSCLIV2.pkg -target /"
+  changed_when: false
   tags:
     - config-tool
     - config-aws

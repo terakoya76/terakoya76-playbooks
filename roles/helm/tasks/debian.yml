@@ -36,6 +36,7 @@
   become: true
   ansible.builtin.command: |
     helm plugin install https://github.com/futuresimple/helm-secrets
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -45,6 +46,7 @@
   become: true
   ansible.builtin.command: |
     helm plugin install https://github.com/databus23/helm-diff
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -71,6 +73,7 @@
       chmod +x ${bin_name}
       mv ${bin_name} {{ helmfile_path }}
     chdir: "{{ helmfile_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes

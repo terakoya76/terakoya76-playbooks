@@ -1,5 +1,8 @@
 ---
 galaxy_info:
+  author: terakoya76
+  description: ESP32 development environment setup
+  license: MIT
   standalone: true
 dependencies:
   - role: rust

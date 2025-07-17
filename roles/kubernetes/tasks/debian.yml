@@ -51,6 +51,7 @@
       ./${bin_name} install krew
       ./${bin_name} update
     chdir: "{{ krew_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -75,6 +76,7 @@
     - ca-cert
     - resource-capacity
     - df-pv
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -95,12 +97,13 @@
       set -o pipefail
       set -e
       sys_name="{{ os_result.stdout }}_{{ arch_result.stdout }}"
-      asset_name="kustomize_v{{ kustomize_version }}_${sys_name}.tar.gz"
+      asset_name="kustomize_v{{ kubernetes_kustomize_version }}_${sys_name}.tar.gz"
       curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name} -q -i -
       tar zxvf ${asset_name}
       chmod +x kustomize
-      mv kustomize {{ kustomize_path }}
+      mv kustomize {{ kubernetes_kustomize_path }}
     chdir: "{{ kustomize_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -132,12 +135,13 @@
       set -o pipefail
       set -e
       sys_name="{{ os_result.stdout }}-{{ arch_result.stdout }}"
-      asset_name="kubeseal-{{ kubeseal_version }}-${sys_name}"
+      asset_name="kubeseal-{{ kubernetes_kubeseal_version }}-${sys_name}"
       curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name}.tar.gz -q -i -
       tar zxvf "${asset_name}.tar.gz" || true
       chmod +x kubeseal
-      mv kubeseal {{ kubeseal_path }}
+      mv kubeseal {{ kubernetes_kubeseal_path }}
     chdir: "{{ kubeseal_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -161,8 +165,9 @@
       bin_name="stern_${sys_name}"
       curl -s https://api.github.com/repos/stern/stern/releases/latest | jq -r --arg NAME ${bin_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${bin_name} -q -i -
       chmod +x ${bin_name}
-      mv ${bin_name} {{ stern_path }}
+      mv ${bin_name} {{ kubernetes_stern_path }}
     chdir: "{{ stern_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -170,7 +175,7 @@
 - name: Install sops
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/mozilla/sops/releases/download/v{{ sops_version }}/sops_{{ sops_version }}_{{ arch_result.stdout }}.deb
+    deb: https://github.com/mozilla/sops/releases/download/v{{ kubernetes_sops_version }}/sops_{{ kubernetes_sops_version }}_{{ arch_result.stdout }}.deb
   tags:
     - config-tool
     - config-kubernetes
@@ -192,8 +197,9 @@
       set -e
       curl -s https://api.github.com/repos/mumoshu/sopsed/releases/latest | jq -r '.assets[] | .browser_download_url' | wget -q -i -
       chmod +x sopsed
-      mv sopsed {{ sopsed_path }}
+      mv sopsed {{ kubernetes_sopsed_path }}
     chdir: "{{ sopsed_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes
@@ -218,8 +224,9 @@
       curl -s https://api.github.com/repos/mumoshu/variant/releases/latest | jq -r --arg NAME ${sys_name} '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -O ${asset_name} -q -i -
       tar zxvf ${asset_name}
       chmod +x variant
-      mv variant {{ variant_path }}
+      mv variant {{ kubernetes_variant_path }}
     chdir: "{{ variant_temp_dir.path }}"
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes

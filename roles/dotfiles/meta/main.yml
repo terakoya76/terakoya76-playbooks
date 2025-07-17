@@ -1,5 +1,8 @@
 ---
 galaxy_info:
+  author: terakoya76
+  description: Dotfiles and configuration management
+  license: MIT
   standalone: true
 dependencies:
   - role: packages

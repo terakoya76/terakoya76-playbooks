@@ -43,7 +43,7 @@
   ansible.builtin.template:
     src: files/yarn.sh
     dest: "{{ ansible_home }}/.bash.d/yarn.sh"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-nodejs
@@ -62,8 +62,9 @@
 - name: Install node-build
   become: true
   ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
-  with_items: "{{ node_versions }}"
+  with_items: "{{ nodejs_node_versions }}"
   when: '"item" in nodenv_versions_installed.stdout'
+  changed_when: false
   tags:
     - config-language
     - config-nodejs
@@ -72,8 +73,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "nodenv install {{ item }}"
-  with_items: "{{ node_versions }}"
+  with_items: "{{ nodejs_node_versions }}"
   when: item not in nodenv_versions_installed.stdout
+  changed_when: false
   tags:
     - config-language
     - config-nodejs
@@ -81,7 +83,8 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "nodenv global {{ global_node_version }}"
+  ansible.builtin.command: bash -lc "nodenv global {{ nodejs_global_node_version }}"
+  changed_when: false
   tags:
     - config-language
     - config-nodejs
@@ -116,7 +119,7 @@
   ansible.builtin.template:
     src: files/nirc
     dest: "{{ ansible_home }}/.nirc"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-nodejs

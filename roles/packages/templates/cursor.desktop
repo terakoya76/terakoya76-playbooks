@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Cursor
-Exec={{ cursor_bin_path }} --no-sandobox
-Icon={{ cursor_icon_path }}
+Exec={{ packages_cursor_bin_path }} --no-sandobox
+Icon={{ packages_cursor_icon_path }}
 Type=Application
 Terminal=false
 Categories=Development

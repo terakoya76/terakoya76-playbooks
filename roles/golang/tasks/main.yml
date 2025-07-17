@@ -43,7 +43,7 @@
   ansible.builtin.template:
     src: files/go-bin.sh
     dest: "{{ ansible_home }}/.bash.d/go-bin.sh"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-go
@@ -63,10 +63,11 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "goenv install {{ item }}"
-  with_items: "{{ go_versions }}"
+  with_items: "{{ golang_go_versions }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
   when: item not in goenv_versions_installed.stdout
+  changed_when: false
   tags:
     - config-language
     - config-go
@@ -74,9 +75,10 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "goenv global {{ global_go_version }}"
+  ansible.builtin.command: bash -lc "goenv global {{ golang_global_go_version }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
+  changed_when: false
   tags:
     - config-language
     - config-go
@@ -85,10 +87,11 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "go install {{ item }}"
-  with_items: "{{ go_binaries }}"
+  with_items: "{{ golang_go_binaries }}"
   environment:
     GOPATH: "{{ ansible_home }}/go"
     GOENV_DISABLE_GOPATH: "1"
+  changed_when: false
   tags:
     - config-language
     - config-go

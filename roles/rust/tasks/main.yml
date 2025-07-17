@@ -41,6 +41,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.shell: set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -51,7 +52,7 @@
   ansible.builtin.template:
     src: files/rustup.sh
     dest: "{{ ansible_home }}/.bash.d/rustup.sh"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-rust
@@ -60,6 +61,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup update"
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -68,6 +70,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup component add rls-preview rust-analysis rust-src"
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -89,6 +92,7 @@
     - xsv
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  changed_when: false
   tags:
     - config-language
     - config-rust

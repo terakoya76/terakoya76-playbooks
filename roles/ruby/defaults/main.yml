@@ -4,4 +4,4 @@ ruby_versions:
   - 3.3.8
   - 3.4.5
 
-global_ruby_version: 3.4.5
+ruby_global_ruby_version: 3.4.5

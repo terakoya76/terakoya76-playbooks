@@ -64,6 +64,7 @@
   ansible.builtin.command: bash -lc "rbenv install {{ item }}"
   with_items: "{{ ruby_versions }}"
   when: item not in rbenv_versions_installed.stdout
+  changed_when: false
   tags:
     - config-language
     - config-ruby
@@ -71,7 +72,8 @@
 - name: Set Global version
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "rbenv global {{ global_ruby_version }}"
+  ansible.builtin.command: bash -lc "rbenv global {{ ruby_global_ruby_version }}"
+  changed_when: false
   tags:
     - config-language
     - config-ruby

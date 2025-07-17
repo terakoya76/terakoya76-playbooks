@@ -3,6 +3,7 @@
   become: true
   # https://scrapbox.io/r-hanafusa/xcode-select:_error:_tool_'xcodebuild'_requires_Xcode,_but...%E3%81%A8%E3%81%84%E3%81%86%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E5%87%BA%E3%81%9F%E3%81%A8%E3%81%8D%E3%81%AE%E5%AF%BE%E5%87%A6%E6%B3%95
   ansible.builtin.command: xcode-select -s /Applications/Xcode.app/Contents/Developer
+  changed_when: false
   tags:
     - config-language
     - config-haskell
@@ -39,6 +40,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: brew update
+  changed_when: false
   tags:
     - config-base
     - config-packages

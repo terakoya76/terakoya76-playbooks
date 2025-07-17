@@ -1,6 +1,7 @@
+---
 - name: Play for development env
   hosts:
-    - 'default'
+    - "default"
   roles:
     # config-base
     - role: anyenv

@@ -28,7 +28,7 @@
     dest: "{{ ansible_home }}/.local/share/applications/cursor.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-base
     - config-packages
@@ -38,7 +38,7 @@
 #   become: true
 #   ansible.builtin.template:
 #     src: files/cursor.png
-#     dest: "{{ cursor_icon_path }}"
+#     dest: "{{ packages_cursor_icon_path }}"
 #     owner: root
 #     group: root
 #     mode: 0644
@@ -60,9 +60,9 @@
 - name: Install Obsidian
   become: true
   ansible.builtin.get_url:
-    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ obsidian_version }}/Obsidian-{{ obsidian_version }}.AppImage"
-    dest: "{{ obsidian_bin_path }}"
-    mode: 0755
+    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ packages_obsidian_version }}/Obsidian-{{ packages_obsidian_version }}.AppImage"
+    dest: "{{ packages_obsidian_bin_path }}"
+    mode: "0755"
   when: obsidian_installed.stdout != ""
   tags:
     - config-base
@@ -75,7 +75,7 @@
     dest: "{{ ansible_home }}/.local/share/applications/obsidian.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-base
     - config-packages
@@ -85,7 +85,7 @@
 #   become: true
 #   ansible.builtin.template:
 #     src: files/obsidian.png
-#     dest: "{{ obsidian_icon_path }}"
+#     dest: "{{ packages_obsidian_icon_path }}"
 #     owner: root
 #     group: root
 #     mode: 0644

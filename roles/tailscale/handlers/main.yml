@@ -2,6 +2,7 @@
 - name: Allow tailscale from fw
   become: true
   ansible.builtin.command: ufw allow in on tailscale0
+  changed_when: false
   when: not ansible_check_mode
   tags:
     - config-tool

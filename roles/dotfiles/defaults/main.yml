@@ -1,5 +1,5 @@
 ---
-shell_scripts:
+dotfiles_shell_scripts:
   - aws.sh
   - docker.sh
   # - dockerize.sh
@@ -15,13 +15,13 @@ shell_scripts:
   - tmux.sh
   - tools.sh
 
-nvim_init_components:
+dotfiles_nvim_init_components:
   - base.lua
   - options.lua
   - autocmds.lua
   - keymaps.lua
 
-nvim_plugins:
+dotfiles_nvim_plugins:
   - coding-align.lua
   - coding-autopairs.lua
   - coding-cmp.lua
@@ -38,5 +38,5 @@ nvim_plugins:
   - util-telescope.lua
   - util-toggleterm.lua
 
-nvim_lualine:
+dotfiles_nvim_lualine:
   - codecompanion.lua
