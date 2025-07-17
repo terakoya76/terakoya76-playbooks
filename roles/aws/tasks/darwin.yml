@@ -3,7 +3,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.aws"
+    path: "{{ aws_ansible_home }}/.aws"
     state: directory
     owner: "{{ ansible_user }}"
     group: staff
@@ -17,7 +17,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/awsconfig
-    dest: "{{ ansible_home }}/.aws/config"
+    dest: "{{ aws_ansible_home }}/.aws/config"
     mode: "0755"
     backup: true
   tags:
@@ -29,7 +29,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.tempfile:
     state: directory
-  register: awscli_temp_dir
+  register: aws_awscli_temp_dir
   tags:
     - config-tool
     - config-aws
@@ -38,7 +38,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awscli.amazonaws.com/AWSCLIV2.pkg
-    dest: "{{ awscli_temp_dir.path }}/AWSCLIV2.pkg"
+    dest: "{{ aws_awscli_temp_dir.path }}/AWSCLIV2.pkg"
     mode: "0644"
   tags:
     - config-tool
@@ -46,7 +46,7 @@
 
 - name: Install awscli
   become: true
-  ansible.builtin.command: "installer -pkg {{ awscli_temp_dir.path }}/AWSCLIV2.pkg -target /"
+  ansible.builtin.command: "installer -pkg {{ aws_awscli_temp_dir.path }}/AWSCLIV2.pkg -target /"
   changed_when: false
   tags:
     - config-tool

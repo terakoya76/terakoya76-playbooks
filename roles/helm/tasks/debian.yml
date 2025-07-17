@@ -13,7 +13,7 @@
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+    repo: "deb [arch={{ helm_arch_result.stdout }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
     state: present
   tags:
     - config-tool
@@ -56,7 +56,7 @@
   become: true
   ansible.builtin.tempfile:
     state: directory
-  register: helmfile_temp_dir
+  register: helm_helmfile_temp_dir
   tags:
     - config-tool
     - config-kubernetes
@@ -68,11 +68,11 @@
     cmd: |
       set -o pipefail
       set -e
-      bin_name="helmfile_{{ os_result.stdout }}_{{ arch_result.stdout }}"
+      bin_name="helmfile_{{ helm_os_result.stdout }}_{{ helm_arch_result.stdout }}"
       curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg NAME "$bin_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
       chmod +x ${bin_name}
       mv ${bin_name} {{ helmfile_path }}
-    chdir: "{{ helmfile_temp_dir.path }}"
+    chdir: "{{ helm_helmfile_temp_dir.path }}"
   changed_when: false
   tags:
     - config-tool

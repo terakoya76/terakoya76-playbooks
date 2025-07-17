@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: nodejs_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: nodejs_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    nodejs_ansible_home: "{{ nodejs_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: nodejs_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-nodejs
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    nodejs_ansible_home: "{{ nodejs_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: nodejs_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-nodejs
@@ -42,7 +42,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/yarn.sh
-    dest: "{{ ansible_home }}/.bash.d/yarn.sh"
+    dest: "{{ nodejs_ansible_home }}/.bash.d/yarn.sh"
     mode: "0755"
   tags:
     - config-language
@@ -52,7 +52,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "nodenv versions"
-  register: nodenv_versions_installed
+  register: nodejs_nodenv_versions_installed
   changed_when: false
   failed_when: false
   tags:
@@ -61,9 +61,9 @@
 
 - name: Install node-build
   become: true
-  ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
+  ansible.builtin.command: bash -lc "{{ nodejs_ansible_home }}/.anyenv/envs/nodenv/plugins/node-build/install.sh"
   with_items: "{{ nodejs_node_versions }}"
-  when: '"item" in nodenv_versions_installed.stdout'
+  when: '"item" in nodejs_nodenv_versions_installed.stdout'
   changed_when: false
   tags:
     - config-language
@@ -74,7 +74,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "nodenv install {{ item }}"
   with_items: "{{ nodejs_node_versions }}"
-  when: item not in nodenv_versions_installed.stdout
+  when: item not in nodejs_nodenv_versions_installed.stdout
   changed_when: false
   tags:
     - config-language
@@ -96,7 +96,7 @@
     name: commitizen
     state: present
     global: true
-    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+    executable: "{{ nodejs_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-language
     - config-nodejs
@@ -108,7 +108,7 @@
     name: "@antfu/ni"
     state: present
     global: true
-    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+    executable: "{{ nodejs_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-language
     - config-nodejs
@@ -118,7 +118,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/nirc
-    dest: "{{ ansible_home }}/.nirc"
+    dest: "{{ nodejs_ansible_home }}/.nirc"
     mode: "0755"
   tags:
     - config-language

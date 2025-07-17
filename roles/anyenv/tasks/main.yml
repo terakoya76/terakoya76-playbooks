@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: anyenv_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: anyenv_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    anyenv_ansible_home: "{{ anyenv_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: anyenv_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-anyenv
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    anyenv_ansible_home: "{{ anyenv_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: anyenv_mac_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-anyenv
@@ -42,7 +42,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/riywo/anyenv
-    dest: "{{ ansible_home }}/.anyenv"
+    dest: "{{ anyenv_ansible_home }}/.anyenv"
   tags:
     - config-base
     - config-anyenv
@@ -52,7 +52,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/znz/anyenv-update
-    dest: "{{ ansible_home }}/.anyenv/plugins/anyenv-update"
+    dest: "{{ anyenv_ansible_home }}/.anyenv/plugins/anyenv-update"
   tags:
     - config-base
 
@@ -61,7 +61,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/anyenv.sh
-    dest: "{{ ansible_home }}/.bash.d/anyenv.sh"
+    dest: "{{ anyenv_ansible_home }}/.bash.d/anyenv.sh"
     mode: "0755"
   with_items:
     - anyenv.sh
@@ -71,8 +71,8 @@
 
 - name: Check anyenv service already installed
   become: true
-  ansible.builtin.command: "ls {{ ansible_home }}/.config/anyenv"
-  register: anyenv_initialized
+  ansible.builtin.command: "ls {{ anyenv_ansible_home }}/.config/anyenv"
+  register: anyenv_anyenv_initialized
   failed_when: false
   changed_when: false
   tags:
@@ -83,8 +83,8 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "anyenv install --force-init"
-  when: anyenv_initialized.rc != 0
-  changed_when: anyenv_initialized.rc != 0
+  when: anyenv_anyenv_initialized.rc != 0
+  changed_when: anyenv_anyenv_initialized.rc != 0
   tags:
     - config-base
     - config-anyenv
@@ -93,7 +93,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "anyenv envs"
-  register: anyenv_envs_installed
+  register: anyenv_anyenv_envs_installed
   changed_when: false
   tags:
     - config-base
@@ -108,8 +108,8 @@
     - nodenv
     - rbenv
     - tfenv
-  when: item not in anyenv_envs_installed.stdout
-  changed_when: item not in anyenv_envs_installed.stdout
+  when: item not in anyenv_anyenv_envs_installed.stdout
+  changed_when: item not in anyenv_anyenv_envs_installed.stdout
   tags:
     - config-base
     - config-anyenv
@@ -118,7 +118,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.anyenv/plugins"
+    path: "{{ anyenv_ansible_home }}/.anyenv/plugins"
     state: directory
     mode: "0755"
   tags:
@@ -130,7 +130,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/znz/anyenv-update
-    dest: "{{ ansible_home }}/.anyenv/plugins/anyenv-update"
+    dest: "{{ anyenv_ansible_home }}/.anyenv/plugins/anyenv-update"
   tags:
     - config-base
     - config-anyenv

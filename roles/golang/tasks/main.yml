@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: golang_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: golang_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    golang_ansible_home: "{{ golang_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: golang_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-go
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    golang_ansible_home: "{{ golang_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: golang_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-go
@@ -42,7 +42,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/go-bin.sh
-    dest: "{{ ansible_home }}/.bash.d/go-bin.sh"
+    dest: "{{ golang_ansible_home }}/.bash.d/go-bin.sh"
     mode: "0755"
   tags:
     - config-language
@@ -52,7 +52,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "goenv versions"
-  register: goenv_versions_installed
+  register: golang_goenv_versions_installed
   changed_when: false
   failed_when: false
   tags:
@@ -66,7 +66,7 @@
   with_items: "{{ golang_go_versions }}"
   environment:
     GOENV_DISABLE_GOPATH: "1"
-  when: item not in goenv_versions_installed.stdout
+  when: item not in golang_goenv_versions_installed.stdout
   changed_when: false
   tags:
     - config-language
@@ -89,7 +89,7 @@
   ansible.builtin.command: bash -lc "go install {{ item }}"
   with_items: "{{ golang_go_binaries }}"
   environment:
-    GOPATH: "{{ ansible_home }}/go"
+    GOPATH: "{{ golang_ansible_home }}/go"
     GOENV_DISABLE_GOPATH: "1"
   changed_when: false
   tags:

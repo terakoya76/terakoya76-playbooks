@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: ruby_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: ruby_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    ruby_ansible_home: "{{ ruby_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: ruby_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-ruby
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    ruby_ansible_home: "{{ ruby_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: ruby_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-ruby
@@ -42,7 +42,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: "{{ ansible_home }}/.anyenv/envs/rbenv/plugins/ruby-build"
+    dest: "{{ ruby_ansible_home }}/.anyenv/envs/rbenv/plugins/ruby-build"
   tags:
     - config-language
     - config-ruby
@@ -51,7 +51,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rbenv versions"
-  register: rbenv_versions_installed
+  register: ruby_rbenv_versions_installed
   changed_when: false
   failed_when: false
   tags:
@@ -63,7 +63,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rbenv install {{ item }}"
   with_items: "{{ ruby_versions }}"
-  when: item not in rbenv_versions_installed.stdout
+  when: item not in ruby_rbenv_versions_installed.stdout
   changed_when: false
   tags:
     - config-language
@@ -83,7 +83,7 @@
   become_user: "{{ ansible_user }}"
   community.general.gem:
     name: bundler
-    executable: "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
+    executable: "{{ ruby_ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem"
     state: present
     user_install: false
   with_items: "{{ ruby_versions }}"
@@ -94,10 +94,10 @@
 - name: Update rubygem
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "{{ ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
-  register: gem_update
+  ansible.builtin.command: bash -lc "{{ ruby_ansible_home }}/.anyenv/envs/rbenv/versions/{{ item }}/bin/gem update --system --no-document"
+  register: ruby_gem_update
   with_items: "{{ ruby_versions }}"
-  changed_when: gem_update.stdout.find('Latest version already installed') == -1
+  changed_when: ruby_gem_update.stdout.find('Latest version already installed') == -1
   tags:
     - config-language
     - config-ruby

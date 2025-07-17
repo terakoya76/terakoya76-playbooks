@@ -2,7 +2,7 @@
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ arch_result.stdout
+    repo: "deb [arch={{ onepassword_arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ onepassword_arch_result.stdout
       }} stable main" # yamllint disable-line rule:line-length
     state: present
   tags:

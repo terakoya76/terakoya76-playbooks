@@ -36,7 +36,7 @@
   become: true
   ansible.builtin.tempfile:
     state: directory
-  register: esp_idf_temp_dir
+  register: esp32_esp_idf_temp_dir
   tags:
     - config-language
     - config-esp32
@@ -45,7 +45,7 @@
   become: true
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/espressif/esp-idf
-    dest: "{{ esp_idf_temp_dir.path }}/esp-idf"
+    dest: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
   tags:
     - config-language
     - config-esp32
@@ -54,7 +54,7 @@
   become: true
   ansible.builtin.command:
     cmd: ./install.sh all
-    chdir: "{{ esp_idf_temp_dir.path }}/esp-idf"
+    chdir: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
   changed_when: false
   tags:
     - config-language

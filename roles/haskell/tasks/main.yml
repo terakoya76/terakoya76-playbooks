@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: haskell_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: haskell_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    haskell_ansible_home: "{{ haskell_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: haskell_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-haskell
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    haskell_ansible_home: "{{ haskell_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: haskell_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-haskell
@@ -62,7 +62,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.stack/global-project"
+    path: "{{ haskell_ansible_home }}/.stack/global-project"
     state: directory
     mode: "0755"
   tags:
@@ -74,7 +74,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/stack.yaml
-    dest: "{{ ansible_home }}/.stack/global-project/stack.yaml"
+    dest: "{{ haskell_ansible_home }}/.stack/global-project/stack.yaml"
     mode: "0644"
   tags:
     - config-language
@@ -104,7 +104,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/ghc-mod.sh
-    dest: "{{ ansible_home }}/.bash.d/ghc-mod.sh"
+    dest: "{{ haskell_ansible_home }}/.bash.d/ghc-mod.sh"
     mode: "0755"
   tags:
     - config-language

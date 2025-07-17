@@ -4,7 +4,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/set_java_version.sh
-    dest: "{{ ansible_home }}/.bash.d/set_java_version.sh"
+    dest: "{{ java_ansible_home }}/.bash.d/set_java_version.sh"
     mode: "0755"
   tags:
     - config-language
@@ -14,7 +14,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.gradle"
+    path: "{{ java_ansible_home }}/.gradle"
     state: directory
     mode: "0755"
   tags:
@@ -26,7 +26,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/gradle.properties
-    dest: "{{ ansible_home }}/.gradle/gradle.properties"
+    dest: "{{ java_ansible_home }}/.gradle/gradle.properties"
     mode: "0755"
   tags:
     - config-language

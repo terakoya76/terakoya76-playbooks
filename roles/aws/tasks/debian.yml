@@ -3,7 +3,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.aws"
+    path: "{{ aws_ansible_home }}/.aws"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -17,7 +17,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/awsconfig
-    dest: "{{ ansible_home }}/.aws/config"
+    dest: "{{ aws_ansible_home }}/.aws/config"
     mode: "0755"
     backup: true
   tags:
@@ -39,7 +39,7 @@
   become: true
   ansible.builtin.apt:
     deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb
-  when: arch_result.stdout == "amd64"
+  when: aws_arch_result.stdout == "amd64"
   tags:
     - config-tool
     - config-aws
@@ -48,7 +48,7 @@
   become: true
   ansible.builtin.apt:
     deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_arm64/session-manager-plugin.deb
-  when: arch_result.stdout == "arm64"
+  when: aws_arch_result.stdout == "arm64"
   tags:
     - config-tool
     - config-aws
@@ -56,8 +56,7 @@
 - name: Install lsec2
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ os_result.stdout }}_{{
-      arch_result.stdout }}.deb
+    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{ aws_arch_result.stdout }}.deb
   tags:
     - config-tool
     - config-aws
@@ -66,7 +65,7 @@
   become: true
   ansible.builtin.shell: |
     set -o pipefail
-    asset_name="eksctl_{{ ansible_system }}_{{ arch_result.stdout }}.tar.gz"
+    asset_name="eksctl_{{ ansible_system }}_{{ aws_arch_result.stdout }}.tar.gz"
     curl -s "https://api.github.com/repos/weaveworks/eksctl/releases/latest" | jq -r --arg NAME "$asset_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
     tar zxvf "$asset_name"
     chmod +x ./eksctl

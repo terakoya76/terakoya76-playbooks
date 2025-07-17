@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(LC_ALL=C.UTF-8 ansible-lint --fix development.yml)"
+      "Bash(LC_ALL=C.UTF-8 ansible-lint --fix development.yml)",
+      "Bash(LC_ALL=C.UTF-8 ansible-lint:*)"
     ],
     "deny": []
   }

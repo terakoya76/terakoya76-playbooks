@@ -22,7 +22,7 @@
   community.general.gem:
     name: neovim
     state: present
-    executable: "{{ ansible_home }}/.anyenv/envs/rbenv/shims/gem"
+    executable: "{{ tools_ansible_home }}/.anyenv/envs/rbenv/shims/gem"
   tags:
     - config-tool
 
@@ -43,7 +43,7 @@
     name: neovim
     state: present
     global: true
-    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+    executable: "{{ tools_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-tool
 

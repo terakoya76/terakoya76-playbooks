@@ -16,7 +16,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/minirc.dfl
-    dest: "{{ ansible_home }}/.minirc.dfl"
+    dest: "{{ arm64_m4_ansible_home }}/.minirc.dfl"
     mode: "0755"
     backup: true
   tags:

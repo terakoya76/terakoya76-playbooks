@@ -63,7 +63,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/Android/Sdk"
+    path: "{{ flutter_ansible_home }}/Android/Sdk"
     state: directory
     mode: "0775"
   tags:
@@ -74,7 +74,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: |
-    flutter config --android-sdk "{{ ansible_home }}/Android/Sdk/"
+    flutter config --android-sdk "{{ flutter_ansible_home }}/Android/Sdk/"
     flutter config --android-studio-dir /snap/android-studio/current/android-studio/
   changed_when: false
   tags:

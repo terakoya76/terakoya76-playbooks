@@ -25,7 +25,7 @@
   become: true
   ansible.builtin.template:
     src: templates/cursor.desktop
-    dest: "{{ ansible_home }}/.local/share/applications/cursor.desktop"
+    dest: "{{ packages_ansible_home }}/.local/share/applications/cursor.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
@@ -50,7 +50,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "which obsidian"
-  register: obsidian_installed
+  register: packages_obsidian_installed
   changed_when: false
   failed_when: false
   tags:
@@ -63,7 +63,7 @@
     url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ packages_obsidian_version }}/Obsidian-{{ packages_obsidian_version }}.AppImage"
     dest: "{{ packages_obsidian_bin_path }}"
     mode: "0755"
-  when: obsidian_installed.stdout != ""
+  when: packages_obsidian_installed.stdout != ""
   tags:
     - config-base
     - config-packages
@@ -72,7 +72,7 @@
   become: true
   ansible.builtin.template:
     src: templates/obsidian.desktop
-    dest: "{{ ansible_home }}/.local/share/applications/obsidian.desktop"
+    dest: "{{ packages_ansible_home }}/.local/share/applications/obsidian.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
