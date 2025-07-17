@@ -1,8 +1,7 @@
 ---
 node_versions:
-  - 16.20.2
-  - 18.20.7
-  - 20.19.0
-  - 22.14.0
+  - 20.19.4
+  - 22.17.1
+  - 24.4.1
 
-global_node_version: 22.14.0
+global_node_version: 24.4.1
