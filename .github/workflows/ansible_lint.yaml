@@ -6,8 +6,9 @@ jobs:
     name: Ansible Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      # cf. https://github.com/ansible/ansible-lint-action/issues/99#issuecomment-1509335165
-      - uses: ansible/ansible-lint-action@v6.11.0
+      - uses: actions/checkout@v4
+      - uses: ansible/ansible-lint@v25
         with:
-          path: "development.yml"
+          args: "development.yml"
+          setup_python: "true"
+          requirements_file: "requirements.yml"
