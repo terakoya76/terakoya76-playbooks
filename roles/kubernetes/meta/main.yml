@@ -1,5 +1,8 @@
 ---
 galaxy_info:
+  author: terakoya76
+  description: Kubernetes tools and utilities setup
+  license: MIT
   standalone: true
 dependencies:
   - role: packages

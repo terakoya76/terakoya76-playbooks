@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Obsidian
-Exec={{ obsidian_bin_path }}
-Icon={{ obsidian_icon_path }}
+Exec={{ packages_obsidian_bin_path }}
+Icon={{ packages_obsidian_icon_path }}
 Type=Application
 Terminal=false
 Categories=Development

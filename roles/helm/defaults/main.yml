@@ -1,2 +1,2 @@
 ---
-helmfile_path: /usr/local/bin/helmfile
+helm_helmfile_path: /usr/local/bin/helmfile

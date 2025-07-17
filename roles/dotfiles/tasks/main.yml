@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: dotfiles_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: dotfiles_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    dotfiles_ansible_home: "{{ dotfiles_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: dotfiles_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-dotfile
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    dotfiles_ansible_home: "{{ dotfiles_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: dotfiles_mac_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-dotfile
@@ -42,8 +42,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/{{ item }}
-    dest: "{{ ansible_home }}/.{{ item }}"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.{{ item }}"
+    mode: "0755"
     backup: true
   with_items:
     - bash_profile
@@ -59,8 +59,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/{{ item }}
-    dest: "{{ ansible_home }}/.{{ item }}"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.{{ item }}"
+    mode: "0755"
     backup: true
   with_items:
     # - zshrc
@@ -102,8 +102,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-    dest: "{{ ansible_home }}/.git-prompt.sh"
-    mode: 0664
+    dest: "{{ dotfiles_ansible_home }}/.git-prompt.sh"
+    mode: "0664"
   tags:
     - config-base
     - config-dotfile
@@ -113,7 +113,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/eddiecorrigall/awscli-ext
-    dest: "{{ ansible_home }}/awscli-ext"
+    dest: "{{ dotfiles_ansible_home }}/awscli-ext"
   tags:
     - config-base
     - config-dotfile
@@ -123,7 +123,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/jonmosco/kube-ps1
-    dest: "{{ ansible_home }}/kube-ps1"
+    dest: "{{ dotfiles_ansible_home }}/kube-ps1"
   tags:
     - config-base
     - config-dotfile
@@ -133,7 +133,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/rupa/z
-    dest: "{{ ansible_home }}/z"
+    dest: "{{ dotfiles_ansible_home }}/z"
   tags:
     - config-base
     - config-dotfile
@@ -142,9 +142,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.bash.d"
+    path: "{{ dotfiles_ansible_home }}/.bash.d"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-base
     - config-dotfile
@@ -154,9 +154,9 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: "files/bash.d/{{ item }}"
-    dest: "{{ ansible_home }}/.bash.d/{{ item }}"
-    mode: 0755
-  with_items: "{{ shell_scripts }}"
+    dest: "{{ dotfiles_ansible_home }}/.bash.d/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_shell_scripts }}"
   tags:
     - config-base
     - config-dotfile
@@ -165,9 +165,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.config/nvim"
+    path: "{{ dotfiles_ansible_home }}/.config/nvim"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-base
     - config-dotfile
@@ -176,9 +176,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.config/nvim/lua/plugins"
+    path: "{{ dotfiles_ansible_home }}/.config/nvim/lua/plugins"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-base
     - config-dotfile
@@ -188,8 +188,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/nvim.lua
-    dest: "{{ ansible_home }}/.config/nvim/init.lua"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/init.lua"
+    mode: "0755"
   tags:
     - config-base
     - config-dotfile
@@ -199,9 +199,9 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: "files/nvim/{{ item }}"
-    dest: "{{ ansible_home }}/.config/nvim/lua/{{ item }}"
-    mode: 0755
-  with_items: "{{ nvim_init_components }}"
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_nvim_init_components }}"
   tags:
     - config-base
     - config-dotfile
@@ -211,9 +211,9 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: "files/nvim/plugins/{{ item }}"
-    dest: "{{ ansible_home }}/.config/nvim/lua/plugins/{{ item }}"
-    mode: 0755
-  with_items: "{{ nvim_plugins }}"
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/plugins/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_nvim_plugins }}"
   tags:
     - config-base
     - config-dotfile
@@ -223,9 +223,9 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: "files/nvim/lualine/{{ item }}"
-    dest: "{{ ansible_home }}/.config/nvim/lua/lualine/{{ item }}"
-    mode: 0755
-  with_items: "{{ nvim_lualine }}"
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/lualine/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_nvim_lualine }}"
   tags:
     - config-base
     - config-dotfile
@@ -234,9 +234,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.translate-shell"
+    path: "{{ dotfiles_ansible_home }}/.translate-shell"
     state: directory
-    mode: 0755
+    mode: "0755"
     recurse: true
   tags:
     - config-base
@@ -247,8 +247,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/init.trans
-    dest: "{{ ansible_home }}/.translate-shell/init.trans"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.translate-shell/init.trans"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -259,8 +259,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/ctags
-    dest: "{{ ansible_home }}/.ctags"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.ctags"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -271,8 +271,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/tmux.conf
-    dest: "{{ ansible_home }}/.tmux.conf"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.tmux.conf"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -283,7 +283,7 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/tmux-plugins/tpm
-    dest: "{{ ansible_home }}/.tmux/plugins/tpm"
+    dest: "{{ dotfiles_ansible_home }}/.tmux/plugins/tpm"
   tags:
     - config-base
     - config-dotfile
@@ -292,9 +292,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.config/alacritty"
+    path: "{{ dotfiles_ansible_home }}/.config/alacritty"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-base
     - config-dotfile
@@ -305,8 +305,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/alacritty.yml
-    dest: "{{ ansible_home }}/.config/alacritty/alacritty.yml"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.config/alacritty/alacritty.yml"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -317,8 +317,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/my.cnf
-    dest: "{{ ansible_home }}/.my.cnf"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.my.cnf"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -329,8 +329,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/gitconfig
-    dest: "{{ ansible_home }}/.gitconfig"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.gitconfig"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -341,8 +341,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/gitignore_global
-    dest: "{{ ansible_home }}/.gitignore_global"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.gitignore_global"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -353,8 +353,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/globalrc
-    dest: "{{ ansible_home }}/.globalrc"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.globalrc"
+    mode: "0755"
     backup: true
   tags:
     - config-base
@@ -365,8 +365,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/tigrc
-    dest: "{{ ansible_home }}/.tigrc"
-    mode: 0755
+    dest: "{{ dotfiles_ansible_home }}/.tigrc"
+    mode: "0755"
     backup: true
   tags:
     - config-base

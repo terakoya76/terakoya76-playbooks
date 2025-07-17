@@ -3,6 +3,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup default nightly"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -35,7 +36,7 @@
   become: true
   ansible.builtin.tempfile:
     state: directory
-  register: esp_idf_temp_dir
+  register: esp32_esp_idf_temp_dir
   tags:
     - config-language
     - config-esp32
@@ -44,7 +45,7 @@
   become: true
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/espressif/esp-idf
-    dest: "{{ esp_idf_temp_dir.path }}/esp-idf"
+    dest: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
   tags:
     - config-language
     - config-esp32
@@ -53,7 +54,8 @@
   become: true
   ansible.builtin.command:
     cmd: ./install.sh all
-    chdir: "{{ esp_idf_temp_dir.path }}/esp-idf"
+    chdir: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -75,6 +77,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup toolchain install nightly --component rust-src"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -83,6 +86,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "cargo install cargo-binutils"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -91,6 +95,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup toolchain install nightly --component llvm-tools-preview"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -99,6 +104,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "cargo install cargo-generate"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -110,6 +116,7 @@
   with_items:
     - riscv32imc-unknown-none-elf # For ESP32-C2 and ESP32-C3
     - riscv32imac-unknown-none-elf # For ESP32-C6 and ESP32-H2
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -122,6 +129,7 @@
     - xtensa-esp32-espidf # For ESP32
     - xtensa-esp32s2-espidf # For ESP32-S2
     - xtensa-esp32s3-espidf # For ESP32-S3
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -132,6 +140,7 @@
   ansible.builtin.command: bash -lc "cargo install espup"
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  changed_when: false
   tags:
     - config-language
     - config-esp32
@@ -157,6 +166,7 @@
     - espmonitor
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  changed_when: false
   tags:
     - config-language
     - config-esp32

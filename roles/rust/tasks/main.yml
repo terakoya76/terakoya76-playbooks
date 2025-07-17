@@ -1,7 +1,7 @@
 ---
 - name: Get ansible_user home directory
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: ansible_home_result
+  register: rust_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: mac_ansible_home_result
+  register: rust_mac_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,18 +21,18 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ ansible_home_result.stdout }}"
+    rust_ansible_home: "{{ rust_ansible_home_result.stdout }}"
   changed_when: false
-  when: ansible_home_result.stdout is defined
+  when: rust_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-rust
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    ansible_home: "{{ mac_ansible_home_result.stdout }}"
+    rust_ansible_home: "{{ rust_mac_ansible_home_result.stdout }}"
   changed_when: false
-  when: mac_ansible_home_result.stdout is defined
+  when: rust_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-rust
@@ -41,6 +41,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.shell: set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -50,8 +51,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/rustup.sh
-    dest: "{{ ansible_home }}/.bash.d/rustup.sh"
-    mode: 0755
+    dest: "{{ rust_ansible_home }}/.bash.d/rustup.sh"
+    mode: "0755"
   tags:
     - config-language
     - config-rust
@@ -60,6 +61,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup update"
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -68,6 +70,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "rustup component add rls-preview rust-analysis rust-src"
+  changed_when: false
   tags:
     - config-language
     - config-rust
@@ -89,6 +92,7 @@
     - xsv
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  changed_when: false
   tags:
     - config-language
     - config-rust

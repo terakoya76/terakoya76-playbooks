@@ -5,13 +5,14 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/greymd/tmux-xpanes/v4.1.1/bin/xpanes
     dest: /tmp/xpanes
-    mode: 0755
+    mode: "0755"
   tags:
     - config-tool
 
 - name: Install xpanes
   become: true
   ansible.builtin.command: install -m 0755 /tmp/xpanes /usr/local/bin/xpanes
+  changed_when: false
   tags:
     - config-tool
 
@@ -21,7 +22,7 @@
   community.general.gem:
     name: neovim
     state: present
-    executable: "{{ ansible_home }}/.anyenv/envs/rbenv/shims/gem"
+    executable: "{{ tools_ansible_home }}/.anyenv/envs/rbenv/shims/gem"
   tags:
     - config-tool
 
@@ -42,7 +43,7 @@
     name: neovim
     state: present
     global: true
-    executable: "{{ ansible_home }}/.anyenv/envs/nodenv/shims/npm"
+    executable: "{{ tools_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-tool
 
@@ -66,6 +67,7 @@
 - name: Install circleci cli
   become: true
   ansible.builtin.shell: set -o pipefail && curl -fLSs https://circle.ci/cli | bash
+  changed_when: false
   tags:
     - config-tool
 

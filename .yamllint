@@ -7,7 +7,6 @@ rules:
   # Warning: 中括弧内のスペースは0または1つ
   braces:
     level: warning
-    min-spaces-inside: 1
     max-spaces-inside: 1
 
   # Warning: 大括弧内のスペースは0または1つ
@@ -72,9 +71,6 @@ rules:
 
   # Error: 改行文字を統一する
   new-lines: enable
-
-  # 特に制限なし: 8進数表記を制限しない
-  octal-values: disable
 
   # 特に制限なし: クオートを必須にしない
   quoted-strings: disable

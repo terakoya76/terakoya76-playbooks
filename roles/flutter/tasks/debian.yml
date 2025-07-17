@@ -63,9 +63,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/Android/Sdk"
+    path: "{{ flutter_ansible_home }}/Android/Sdk"
     state: directory
-    mode: 0775
+    mode: "0775"
   tags:
     - config-language
     - config-flutter
@@ -74,8 +74,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: |
-    flutter config --android-sdk "{{ ansible_home }}/Android/Sdk/"
+    flutter config --android-sdk "{{ flutter_ansible_home }}/Android/Sdk/"
     flutter config --android-studio-dir /snap/android-studio/current/android-studio/
+  changed_when: false
   tags:
     - config-language
     - config-flutter
@@ -84,8 +85,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: dart pub global activate fvm
+  changed_when: false
   environment:
-    JAVA_HOME: "{{ java_home_path }}"
+    JAVA_HOME: "{{ flutter_java_home_path }}"
   tags:
     - config-language
     - config-flutter
@@ -96,7 +98,7 @@
   ansible.builtin.template:
     src: files/fvm.sh
     dest: "$HOME/.bash.d/fvm.sh"
-    mode: 0755
+    mode: "0755"
   tags:
     - config-language
     - config-flutter
@@ -104,6 +106,7 @@
 - name: Install Firebase CLI
   become: true
   ansible.builtin.shell: set -o pipefail && curl -sL https://firebase.tools | bash
+  changed_when: false
   tags:
     - config-language
     - config-flutter
@@ -112,8 +115,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: dart pub global activate flutterfire_cli
+  changed_when: false
   environment:
-    JAVA_HOME: "{{ java_home_path }}"
+    JAVA_HOME: "{{ flutter_java_home_path }}"
   tags:
     - config-language
     - config-flutter

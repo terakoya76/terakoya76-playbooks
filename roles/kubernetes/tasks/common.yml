@@ -4,8 +4,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/kubeconfig.sh
-    dest: "{{ ansible_home }}/.bash.d/kubeconfig.sh"
-    mode: 0755
+    dest: "{{ kubernetes_ansible_home }}/.bash.d/kubeconfig.sh"
+    mode: "0755"
   tags:
     - config-tool
     - config-kubernetes
@@ -14,9 +14,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.file:
-    path: "{{ ansible_home }}/.kube"
+    path: "{{ kubernetes_ansible_home }}/.kube"
     state: directory
-    mode: 0755
+    mode: "0755"
   tags:
     - config-tool
     - config-kubernetes
@@ -26,8 +26,8 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
     src: files/krew.sh
-    dest: "{{ ansible_home }}/.bash.d/krew.sh"
-    mode: 0755
+    dest: "{{ kubernetes_ansible_home }}/.bash.d/krew.sh"
+    mode: "0755"
   tags:
     - config-tool
     - config-kubernetes

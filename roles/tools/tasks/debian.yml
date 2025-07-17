@@ -6,6 +6,7 @@
     curl -O https://raw.githubusercontent.com/universal-ctags/ctags-docker/master/uctags
     mv ctags /usr/local/bin
     chmod +x /usr/local/bin/ctags
+  changed_when: false
   tags:
     - config-tool
 

@@ -1,7 +1,7 @@
 ---
-cursor_bin_path: /usr/local/bin/cursor
-cursor_icon_path: /usr/local/share/icons/cursor.png
+packages_cursor_bin_path: /usr/local/bin/cursor
+packages_cursor_icon_path: /usr/local/share/icons/cursor.png
 
-obsidian_version: 1.8.9
-obsidian_bin_path: /usr/local/bin/obsidian
-obsidian_icon_path: /usr/local/share/icons/obsidian.png
+packages_obsidian_version: 1.8.9
+packages_obsidian_bin_path: /usr/local/bin/obsidian
+packages_obsidian_icon_path: /usr/local/share/icons/obsidian.png

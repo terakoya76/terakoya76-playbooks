@@ -25,10 +25,10 @@
   become: true
   ansible.builtin.template:
     src: templates/cursor.desktop
-    dest: "{{ ansible_home }}/.local/share/applications/cursor.desktop"
+    dest: "{{ packages_ansible_home }}/.local/share/applications/cursor.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-base
     - config-packages
@@ -38,7 +38,7 @@
 #   become: true
 #   ansible.builtin.template:
 #     src: files/cursor.png
-#     dest: "{{ cursor_icon_path }}"
+#     dest: "{{ packages_cursor_icon_path }}"
 #     owner: root
 #     group: root
 #     mode: 0644
@@ -50,7 +50,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "which obsidian"
-  register: obsidian_installed
+  register: packages_obsidian_installed
   changed_when: false
   failed_when: false
   tags:
@@ -60,10 +60,10 @@
 - name: Install Obsidian
   become: true
   ansible.builtin.get_url:
-    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ obsidian_version }}/Obsidian-{{ obsidian_version }}.AppImage"
-    dest: "{{ obsidian_bin_path }}"
-    mode: 0755
-  when: obsidian_installed.stdout != ""
+    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ packages_obsidian_version }}/Obsidian-{{ packages_obsidian_version }}.AppImage"
+    dest: "{{ packages_obsidian_bin_path }}"
+    mode: "0755"
+  when: packages_obsidian_installed.stdout != ""
   tags:
     - config-base
     - config-packages
@@ -72,10 +72,10 @@
   become: true
   ansible.builtin.template:
     src: templates/obsidian.desktop
-    dest: "{{ ansible_home }}/.local/share/applications/obsidian.desktop"
+    dest: "{{ packages_ansible_home }}/.local/share/applications/obsidian.desktop"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0644
+    mode: "0644"
   tags:
     - config-base
     - config-packages
@@ -85,7 +85,7 @@
 #   become: true
 #   ansible.builtin.template:
 #     src: files/obsidian.png
-#     dest: "{{ obsidian_icon_path }}"
+#     dest: "{{ packages_obsidian_icon_path }}"
 #     owner: root
 #     group: root
 #     mode: 0644

@@ -1,5 +1,8 @@
 ---
 galaxy_info:
+  author: terakoya76
+  description: ARM64 M4 microcontroller development setup
+  license: MIT
   standalone: true
 dependencies:
   - role: rust

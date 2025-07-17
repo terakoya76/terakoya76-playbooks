@@ -1,7 +1,7 @@
 ---
 - name: Install Arduino
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name: arduino
     state: present
     classic: true
