@@ -230,6 +230,78 @@
     - config-base
     - config-dotfile
 
+- name: Create target directory for claude code fragments
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.claude"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place claude code setting global settings
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/claude/{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/{{ item }}"
+    mode: "0755"
+  with_items:
+    - CLAUDE.md
+    - mcp.json
+    - settings.json
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Create target directory for claude code command fragments
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.claude/commands"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place claude code command files
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/claude/commands/{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/commands/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_claude_code_command_files }}"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Create target directory for claude code hook fragments
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.claude/hooks"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place claude code hook files
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/claude/hooks/{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/hooks/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_claude_code_hook_files }}"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Create target directory for translate-shell
   become: true
   become_user: "{{ ansible_user }}"
