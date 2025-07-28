@@ -40,3 +40,17 @@ dotfiles_nvim_plugins:
 
 dotfiles_nvim_lualine:
   - codecompanion.lua
+
+dotfiles_claude_code_command_files:
+  # - plan.md
+  # - exec.md
+  - explain.md
+  - refactor.md
+  - commit.md
+  - code-review.md
+  - code-fix.md
+  - dev.md
+
+dotfiles_claude_code_hook_files:
+  - notify_slack.sh
+  - task_medium_prep_hook.py

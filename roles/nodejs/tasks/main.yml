@@ -37,12 +37,12 @@
     - config-language
     - config-nodejs
 
-- name: Place yarn.sh
+- name: Place ni.sh
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: files/yarn.sh
-    dest: "{{ nodejs_ansible_home }}/.bash.d/yarn.sh"
+    src: files/ni.sh
+    dest: "{{ nodejs_ansible_home }}/.bash.d/ni.sh"
     mode: "0755"
   tags:
     - config-language
@@ -85,6 +85,18 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "nodenv global {{ nodejs_global_node_version }}"
   changed_when: false
+  tags:
+    - config-language
+    - config-nodejs
+
+- name: Install pnpm
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.npm:
+    name: "pnpm@latest-10"
+    state: present
+    global: true
+    executable: "{{ nodejs_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
   tags:
     - config-language
     - config-nodejs
