@@ -42,14 +42,22 @@ dotfiles_nvim_lualine:
   - codecompanion.lua
 
 dotfiles_claude_code_command_files:
-  # - plan.md
-  # - exec.md
+  - commit.md
+  - dev-easy.md
+  - dev-medium.md
   - explain.md
   - refactor.md
-  - commit.md
-  - code-review.md
-  - code-fix.md
-  - dev.md
+  - review.md
+  - serena.md
+
+dotfiles_claude_code_agent_files:
+  - architecture-reviewer.md
+  - code-flow-mapper.md
+  - code-reviewer.md
+  - investigator.md
+  - planner.md
+  - quality-control-enforcer.md
+  - serena-expert.md
 
 dotfiles_claude_code_hook_files:
   - notify_slack.sh

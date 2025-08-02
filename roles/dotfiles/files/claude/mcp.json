@@ -16,9 +16,22 @@
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"]
     },
-    "mcp-deepwiki": {
+    "deepwiki": {
       "command": "npx",
       "args": ["-y", "mcp-deepwiki@latest"]
+    },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--enable-web-dashboard",
+        "false"
+      ]
     }
   }
 }

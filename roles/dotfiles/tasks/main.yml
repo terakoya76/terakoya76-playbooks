@@ -279,6 +279,29 @@
     - config-base
     - config-dotfile
 
+- name: Create target directory for claude code agent fragments
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.claude/agents"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place claude code agent files
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: "files/claude/agents/{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/agents/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_claude_code_agent_files }}"
+  tags:
+    - config-base
+    - config-dotfile
+
 - name: Create target directory for claude code hook fragments
   become: true
   become_user: "{{ ansible_user }}"
