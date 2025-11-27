@@ -1,7 +1,7 @@
 ---
 ruby_versions:
-  - 3.2.8
-  - 3.3.8
-  - 3.4.5
+  - 3.2.9
+  - 3.3.9
+  - 3.4.7
 
-ruby_global_ruby_version: 3.4.5
+ruby_global_ruby_version: 3.4.7
