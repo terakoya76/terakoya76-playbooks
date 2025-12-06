@@ -8,7 +8,7 @@
       - libsdl2-dev
     state: present
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 - name: Place .minirc.dfl
@@ -20,7 +20,7 @@
     mode: "0755"
     backup: true
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 - name: Install cargo subcommand
@@ -34,7 +34,7 @@
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 - name: Place udev rules for cargo-hf2
@@ -45,7 +45,7 @@
     mode: "0755"
     backup: true
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 - name: Reload udev rules for wio-terminal
@@ -53,7 +53,7 @@
   ansible.builtin.command: udevadm control --reload-rules
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 - name: Join dialouot group for USB serial
@@ -63,7 +63,7 @@
     groups: dialout
     append: true
   tags:
-    - config-language
+    - config-iot
     - config-arm64-m4
 
 # reboot here

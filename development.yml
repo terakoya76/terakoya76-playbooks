@@ -8,8 +8,11 @@
     - role: packages
     # config-language
     - role: flutter
+    - role: haskell
+    - role: java
     - role: rust
     - role: llvm
+    # config-iot
     - role: arduino
     - role: arm64_m4
     - role: esp32
