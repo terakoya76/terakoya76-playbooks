@@ -9,3 +9,22 @@
   changed_when: false
   tags:
     - config-tool
+
+- name: Install dependencies for whisper
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ffmpeg
+    state: present
+  tags:
+    - config-tool
+
+- name: Install whisper
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
+    name: openai-whisper
+    state: present
+    executable: pip3
+  tags:
+    - config-tool

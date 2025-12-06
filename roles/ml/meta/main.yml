@@ -1,8 +1,0 @@
----
-galaxy_info:
-  author: terakoya76
-  description: Machine learning development environment setup
-  license: MIT
-  standalone: true
-dependencies:
-  - role: rust

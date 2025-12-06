@@ -6,4 +6,4 @@ galaxy_info:
   standalone: true
 dependencies:
   - role: packages
-  - role: python
+  - role: rust

@@ -10,7 +10,6 @@
     - role: flutter
     - role: rust
     - role: llvm
-    - role: ml
     - role: arduino
     - role: arm64_m4
     - role: esp32
