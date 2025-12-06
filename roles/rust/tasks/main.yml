@@ -69,7 +69,7 @@
 - name: Install rust Lang Server
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "rustup component add rls-preview rust-analysis rust-src"
+  ansible.builtin.command: bash -lc "rustup component add rust-analyzer rust-analysis rust-src"
   changed_when: false
   tags:
     - config-language
@@ -86,6 +86,7 @@
     - exa
     - fd-find
     - git-delta
+    - neovide
     - onefetch
     - ripgrep
     - tokei
