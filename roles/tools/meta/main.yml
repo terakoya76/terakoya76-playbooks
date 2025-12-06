@@ -7,4 +7,3 @@ galaxy_info:
 dependencies:
   - role: packages
   - role: python
-  - role: ruby

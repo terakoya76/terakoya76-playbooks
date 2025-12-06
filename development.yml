@@ -13,7 +13,6 @@
     - role: haskell
     - role: java
     - role: python
-    - role: ruby
     - role: rust
     - role: llvm
     - role: ml

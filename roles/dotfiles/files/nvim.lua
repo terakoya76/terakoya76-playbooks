@@ -41,4 +41,4 @@ require("everforest").load()
 -- for python3 provider
 vim.g.python3_host_prog = '/usr/bin/python3'
 -- for ruby provider
-vim.g.ruby_host_prog = '$HOME/.anyenv/envs/rbenv/versions/3.0.1/bin/neovim-ruby-host'
+vim.g.ruby_host_prog = '/usr/bin/ruby'

@@ -16,26 +16,6 @@
   tags:
     - config-tool
 
-- name: Install nvim client via gem
-  become: true
-  become_user: "{{ ansible_user }}"
-  community.general.gem:
-    name: neovim
-    state: present
-    executable: "{{ tools_ansible_home }}/.anyenv/envs/rbenv/shims/gem"
-  tags:
-    - config-tool
-
-- name: Install nvim client via pip3
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.pip:
-    name: neovim
-    state: present
-    executable: pip3
-  tags:
-    - config-tool
-
 # - name: Fetch Solarized Color Schema
 #   become: true
 #   become_user: "{{ ansible_user }}"

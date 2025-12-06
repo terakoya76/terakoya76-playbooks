@@ -20,7 +20,6 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-haskell
   * config-java
   * config-python
-  * config-ruby
   * config-rust
   * config-llvm
   * config-ml
@@ -40,5 +39,5 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
+$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="dotfiles : Get ansible_user home directory"
 ```
