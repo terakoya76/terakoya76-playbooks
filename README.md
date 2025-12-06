@@ -11,12 +11,10 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 
 ### Supported Tags
 * config-base
-  * config-anyenv
   * config-dotfile
   * config-packages
 * config-language
   * config-flutter
-  * config-go
   * config-haskell
   * config-java
   * config-rust

@@ -4,7 +4,6 @@
     - "default"
   roles:
     # config-base
-    - role: anyenv
     - role: dotfiles
     - role: packages
     # config-language
