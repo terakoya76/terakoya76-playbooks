@@ -20,6 +20,7 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-haskell
   * config-java
   * config-nodejs
+  * config-python
   * config-ruby
   * config-rust
   * config-llvm
