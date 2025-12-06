@@ -1,17 +1,20 @@
 ---
-- name: Add kubectl apt signing key
+- name: Add kubernetes apt signing key
   become: true
-  ansible.builtin.apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes.asc
+    mode: "0644"
+    force: true
   tags:
     - config-tool
     - config-kubernetes
 
-- name: Add kubectl apt source
+- name: Add kubernetes apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.asc] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /"
+    filename: kubernetes
     state: present
   tags:
     - config-tool
@@ -175,7 +178,8 @@
 - name: Install sops
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/mozilla/sops/releases/download/v{{ kubernetes_sops_version }}/sops_{{ kubernetes_sops_version }}_{{ kubernetes_arch_result.stdout }}.deb
+    deb: https://github.com/mozilla/sops/releases/download/v{{ kubernetes_sops_version }}/sops_{{ kubernetes_sops_version }}_{{ kubernetes_arch_result.stdout
+      }}.deb
   tags:
     - config-tool
     - config-kubernetes
@@ -226,6 +230,121 @@
       chmod +x variant
       mv variant {{ kubernetes_variant_path }}
     chdir: "{{ kubernetes_variant_temp_dir.path }}"
+  changed_when: false
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Add helm apt signing key
+  become: true
+  ansible.builtin.get_url:
+    url: https://packages.buildkite.com/helm-linux/helm-debian/gpgkey
+    dest: /etc/apt/keyrings/helm.asc
+    mode: "0644"
+    force: true
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Add helm apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ kubernetes_arch_result.stdout }} signed-by=/etc/apt/keyrings/helm.asc] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main"
+    filename: helm
+    state: present
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install helm
+  become: true
+  ansible.builtin.apt:
+    name: helm
+    state: present
+    update_cache: true
+  when: not ansible_check_mode
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Check helm-secrets plugin
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "helm secrets -h"
+  register: kubernetes_helm_secrets_installed
+  changed_when: false
+  ignore_errors: true
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install helm-secrets plugin
+  become: true
+  ansible.builtin.command: |
+    helm plugin install https://github.com/jkroepke/helm-secrets
+  when: kubernetes_helm_secrets_installed | failed
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Update helm-secrets plugin
+  become: true
+  ansible.builtin.command: helm plugin update secrets
+  when: kubernetes_helm_secrets_installed | success
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Check helm-diff plugin
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: bash -lc "helm diff -h"
+  register: kubernetes_helm_diff_installed
+  changed_when: false
+  ignore_errors: true
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install helm-diff plugin
+  become: true
+  ansible.builtin.command: |
+    helm plugin install https://github.com/databus23/helm-diff
+  changed_when: false
+  when: kubernetes_helm_diff_installed | failed
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Update helm-diff plugin
+  become: true
+  ansible.builtin.command: helm plugin update diff
+  changed_when: false
+  when: kubernetes_helm_diff_installed | success
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Ensure a temporary directory for helmfile download
+  become: true
+  ansible.builtin.tempfile:
+    state: directory
+  register: kubernetes_helmfile_temp_dir
+  tags:
+    - config-tool
+    - config-kubernetes
+
+- name: Install Helmfile
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      bin_name="helmfile_{{ kubernetes_os_result.stdout }}_{{ kubernetes_arch_result.stdout }}"
+      curl -s https://api.github.com/repos/roboll/helmfile/releases/latest | jq -r --arg NAME "$bin_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
+      chmod +x ${bin_name}
+      mv ${bin_name} {{ kubernetes_helmfile_path }}
+    chdir: "{{ kubernetes_helmfile_temp_dir.path }}"
   changed_when: false
   tags:
     - config-tool

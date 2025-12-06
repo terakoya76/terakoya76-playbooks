@@ -1,6 +1,6 @@
 # terakoya76-playbooks
 
-Setup develop environment w/ ansible
+Setup develop environment with ansible
 
 ## Install/Update
 
@@ -11,19 +11,14 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 
 ### Supported Tags
 * config-base
-  * config-anyenv
   * config-dotfile
   * config-packages
 * config-language
   * config-flutter
-  * config-go
   * config-haskell
   * config-java
-  * config-nodejs
-  * config-ruby
   * config-rust
-  * config-llvm
-  * config-ml
+* config-iot
   * config-arduino
   * config-arm64-m4
   * config-esp32
@@ -32,7 +27,6 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-aws
   * config-gcp
   * config-kubernetes
-    * config-helm
   * config-1password
   * config-cloudflared
   * config-tailscale
@@ -40,5 +34,5 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="ruby : Set prefix"
+$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="dotfiles : Get ansible_user home directory"
 ```

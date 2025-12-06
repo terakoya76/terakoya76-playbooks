@@ -1,13 +1,13 @@
+---
 name: ansible-lint
 on: [pull_request]
-
 jobs:
   ansible-lint:
     name: Ansible Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ansible/ansible-lint@v25.6.1
+      - uses: ansible/ansible-lint@v25.12.0
         with:
           args: "development.yml"
           setup_python: "true"

@@ -1,9 +1,0 @@
----
-galaxy_info:
-  author: terakoya76
-  description: Anyenv version manager setup
-  license: MIT
-  standalone: true
-dependencies:
-  - role: packages
-  - role: dotfiles

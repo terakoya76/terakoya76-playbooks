@@ -1,4 +1,6 @@
 ---
+packages_neovim_bin_path: /usr/local/bin/nvim
+
 packages_cursor_bin_path: /usr/local/bin/cursor
 packages_cursor_icon_path: /usr/local/share/icons/cursor.png
 

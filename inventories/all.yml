@@ -1,3 +1,4 @@
+---
 all:
   children:
     default:
@@ -6,4 +7,4 @@ all:
         ansible_connection: local
         group: ubuntu
         ansible_shell_executable: /bin/bash
-        workdir: ~
+        workdir: "~"

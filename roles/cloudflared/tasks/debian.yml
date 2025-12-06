@@ -1,8 +1,31 @@
 ---
+- name: Add apt signing key
+  become: true
+  ansible.builtin.get_url:
+    url: https://pkg.cloudflare.com/cloudflare-main.gpg
+    dest: /etc/apt/keyrings/cloudflare-main.gpg
+    mode: "0644"
+    force: true
+  tags:
+    - config-tool
+    - config-cloudflared
+
+- name: Add apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ cloudflared_arch_result.stdout }} signed-by=/etc/apt/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main"
+    filename: cloudflare
+    state: present
+  tags:
+    - config-tool
+    - config-cloudflared
+
 - name: Install cloudflared
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/cloudflare/cloudflared/releases/download/{{ cloudflared_version }}/cloudflared-linux-{{ cloudflared_arch_result.stdout }}.deb
+    name:
+      - mise
+    state: present
   tags:
     - config-tool
     - config-cloudflared

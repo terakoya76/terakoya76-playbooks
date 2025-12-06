@@ -5,7 +5,7 @@
   ansible.builtin.command: bash -lc "rustup default nightly"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install dependencies for esp-idf
@@ -29,7 +29,7 @@
       - libusb-1.0-0
     state: present
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Ensure a temporary directory for esp-idf download
@@ -38,7 +38,7 @@
     state: directory
   register: esp32_esp_idf_temp_dir
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Fetch esp-idf
@@ -47,7 +47,7 @@
     repo: https://github.com/espressif/esp-idf
     dest: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install esp-idf
@@ -57,7 +57,7 @@
     chdir: "{{ esp32_esp_idf_temp_dir.path }}/esp-idf"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install dependencies
@@ -70,7 +70,7 @@
       - pkg-config
     state: present
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install rust-src
@@ -79,7 +79,7 @@
   ansible.builtin.command: bash -lc "rustup toolchain install nightly --component rust-src"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install cargo-binutils
@@ -88,7 +88,7 @@
   ansible.builtin.command: bash -lc "cargo install cargo-binutils"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install llvm-tools-preview
@@ -97,7 +97,7 @@
   ansible.builtin.command: bash -lc "rustup toolchain install nightly --component llvm-tools-preview"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install cargo-generate
@@ -106,7 +106,7 @@
   ansible.builtin.command: bash -lc "cargo install cargo-generate"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Add RISC-V target
@@ -118,7 +118,7 @@
     - riscv32imac-unknown-none-elf # For ESP32-C6 and ESP32-H2
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Add Xtensa target
@@ -131,7 +131,7 @@
     - xtensa-esp32s3-espidf # For ESP32-S3
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install espup
@@ -142,7 +142,7 @@
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install espflash dependencies
@@ -152,7 +152,7 @@
       - libuv1-dev
     state: present
   tags:
-    - config-language
+    - config-iot
     - config-esp32
 
 - name: Install espressif toolchain
@@ -168,5 +168,5 @@
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   changed_when: false
   tags:
-    - config-language
+    - config-iot
     - config-esp32

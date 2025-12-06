@@ -10,23 +10,21 @@
   tags:
     - config-tool
 
-- name: Install Packages for vim
+- name: Install dependencies for whisper
   become: true
   ansible.builtin.apt:
     name:
-      - neovim
-      - vim
+      - ffmpeg
     state: present
   tags:
     - config-tool
 
-- name: Install Packages for tmux
+- name: Install whisper
   become: true
-  ansible.builtin.apt:
-    name:
-      - tmux
-      - xclip
-      - xsel
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.pip:
+    name: openai-whisper
     state: present
+    executable: pip3
   tags:
     - config-tool

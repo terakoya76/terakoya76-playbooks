@@ -5,5 +5,5 @@ galaxy_info:
   license: MIT
   standalone: true
 dependencies:
+  - role: packages
   - role: rust
-  - role: llvm

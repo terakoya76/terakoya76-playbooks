@@ -1,20 +1,22 @@
 ---
-- name: Add apt source
+- name: Add apt signing key
   become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [arch={{ onepassword_arch_result.stdout }} signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/{{ onepassword_arch_result.stdout
-      }} stable main" # yamllint disable-line rule:line-length
-    state: present
+  ansible.builtin.get_url:
+    url: https://downloads.1password.com/linux/keys/1password.asc
+    dest: /etc/apt/keyrings/1password.asc
+    mode: "0644"
+    force: true
   tags:
     - config-tool
     - config-1password
 
-- name: Add apt signing key
+- name: Add apt source
   become: true
-  ansible.builtin.apt_key:
-    url: https://downloads.1password.com/linux/keys/1password.asc
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ onepassword_arch_result.stdout }} signed-by=/etc/apt/keyrings/1password.asc] https://downloads.1password.com/linux/debian/{{ onepassword_arch_result.stdout
+      }} stable main" # yamllint disable-line rule:line-length
+    filename: 1password
     state: present
-    keyring: /usr/share/keyrings/1password-archive-keyring.gpg
   tags:
     - config-tool
     - config-1password
@@ -44,7 +46,7 @@
 - name: Mkdir for Debsig-Verify keyring
   become: true
   ansible.builtin.file:
-    path: /usr/share/debsig/keyrings/AC2D62742012EA22
+    path: /etc/debsig/keyrings/AC2D62742012EA22
     state: directory
     owner: root
     group: root
@@ -55,10 +57,11 @@
 
 - name: Add apt signing key for Debsig-Verify
   become: true
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: https://downloads.1password.com/linux/keys/1password.asc
-    state: present
-    keyring: /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+    dest: /etc/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+    mode: "0644"
+    force: true
   tags:
     - config-tool
     - config-1password

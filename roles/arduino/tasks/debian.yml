@@ -6,5 +6,5 @@
     state: present
     classic: true
   tags:
-    - config-language
+    - config-iot
     - config-arduino

@@ -4,19 +4,14 @@
     - "default"
   roles:
     # config-base
-    - role: anyenv
     - role: dotfiles
     - role: packages
     # config-language
     - role: flutter
-    - role: golang
     - role: haskell
     - role: java
-    - role: nodejs
-    - role: ruby
     - role: rust
-    - role: llvm
-    - role: ml
+    # config-iot
     - role: arduino
     - role: arm64_m4
     - role: esp32
@@ -25,7 +20,6 @@
     - role: aws
     - role: cloudflared
     - role: gcp
-    - role: helm
     - role: kubernetes
     - role: onepassword
     - role: tailscale

@@ -69,29 +69,7 @@
 - name: Install rust Lang Server
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "rustup component add rls-preview rust-analysis rust-src"
-  changed_when: false
-  tags:
-    - config-language
-    - config-rust
-
-- name: Install tool chain
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "cargo install {{ item }}"
-  with_items:
-    - alacritty
-    - bat
-    - cargo-generate
-    - exa
-    - fd-find
-    - git-delta
-    - onefetch
-    - ripgrep
-    - tokei
-    - xsv
-  environment:
-    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  ansible.builtin.command: bash -lc "rustup component add rust-analyzer rust-analysis rust-src"
   changed_when: false
   tags:
     - config-language

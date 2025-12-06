@@ -56,7 +56,8 @@
 - name: Install lsec2
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{ aws_arch_result.stdout }}.deb
+    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{
+      aws_arch_result.stdout }}.deb
   tags:
     - config-tool
     - config-aws

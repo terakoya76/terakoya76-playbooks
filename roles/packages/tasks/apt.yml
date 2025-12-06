@@ -12,13 +12,11 @@
       - clang
       - cmake
       - curl
-      - direnv
       - gcc
       - g++
       - make
       - xz-utils
       - zlib1g-dev
-      # - libgdbm5
       - git
       - imagemagick
       - libc6-dev
@@ -47,9 +45,46 @@
       - translate-shell
       - tree
       - wireshark
-      # lint
+      - wtype
+      # dev
+      - direnv
+      # https://github.com/neovim/neovim/blob/master/INSTALL.md
+      # we chose appimage
+      # - neovim
+      - vim
+      - tmux
+      - xclip
+      - xsel
       # - hadolint
       - shellcheck
+      # llvm
+      ## clang
+      - clang-format
+      - clang-tidy
+      - clang-tools
+      - clang
+      - clangd
+      - libclang-dev
+      - libclang1
+      - python3-clang
+      ## libc
+      - libc++-dev
+      - libc++1
+      - libc++abi-dev
+      - libc++abi1
+      ## openmp
+      - libomp-dev
+      - libomp5
+      ## lld
+      - lld
+      ## lldb
+      - liblldb-dev
+      - lldb
+      ## llvm
+      - libllvm-ocaml-dev
+      - llvm-dev
+      - llvm-runtime
+      - llvm
     state: present
   tags:
     - config-base
@@ -63,27 +98,29 @@
     - config-base
     - config-packages
 
-- name: Add Docker apt signing key
+- name: Add docker apt signing key
   become: true
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+    force: true
   tags:
     - config-base
     - config-packages
 
-- name: Add Docker apt source
+- name: Add docker apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release
       }} stable"
+    filename: docker
     state: present
   tags:
     - config-base
     - config-packages
 
-- name: Install Docker
+- name: Install docker
   become: true
   ansible.builtin.apt:
     name:
@@ -102,6 +139,37 @@
     name: "{{ ansible_user }}"
     groups: dialout
     append: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add mise apt signing key
+  become: true
+  ansible.builtin.get_url:
+    url: https://mise.jdx.dev/gpg-key.pub
+    dest: /etc/apt/keyrings/mise.asc
+    mode: "0644"
+    force: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add mise apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/mise.asc] https://mise.jdx.dev/deb stable main"
+    filename: mise
+    state: present
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install mise
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mise
+    state: present
   tags:
     - config-base
     - config-packages
