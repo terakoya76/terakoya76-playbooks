@@ -1,7 +1,8 @@
+---
 yaml-files:
-  - '*.yaml'
-  - '*.yml'
-  - '.yamllint'
+  - "*.yaml"
+  - "*.yml"
+  - ".yamllint"
 
 rules:
   # Warning: 中括弧内のスペースは0または1つ
@@ -19,7 +20,7 @@ rules:
   colons:
     level: warning
 
-   # Warning: ',' の前はスペースを空けない、後はスペースを1つ空ける
+  # Warning: ',' の前はスペースを空けない、後はスペースを1つ空ける
   commas:
     level: warning
 

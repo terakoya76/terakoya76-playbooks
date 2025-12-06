@@ -1,3 +1,4 @@
+---
 offline: false
 
 exclude_paths:
@@ -7,3 +8,4 @@ warn_list:
   - schema[meta]
   - meta-no-info
   - no-changed-when
+  - yaml[brackets]
