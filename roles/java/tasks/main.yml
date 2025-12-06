@@ -55,13 +55,3 @@
 
 - name: For all
   ansible.builtin.import_tasks: common.yml
-
-- name: For debian
-  ansible.builtin.import_tasks: debian.yml
-  when:
-    - ansible_os_family == "Debian"
-
-- name: For darwin
-  ansible.builtin.import_tasks: darwin.yml
-  when:
-    - ansible_os_family == "Darwin"

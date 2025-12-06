@@ -1,15 +1,4 @@
 ---
-- name: Place set_java_version.sh
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: files/set_java_version.sh
-    dest: "{{ java_ansible_home }}/.bash.d/set_java_version.sh"
-    mode: "0755"
-  tags:
-    - config-language
-    - config-java
-
 - name: Create target directory for gradle properties
   become: true
   become_user: "{{ ansible_user }}"
