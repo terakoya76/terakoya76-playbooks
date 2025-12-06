@@ -1,6 +1,6 @@
 # terakoya76-playbooks
 
-Setup develop environment w/ ansible
+Setup develop environment with ansible
 
 ## Install/Update
 
