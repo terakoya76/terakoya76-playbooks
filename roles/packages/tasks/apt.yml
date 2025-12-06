@@ -50,6 +50,7 @@
       # lint
       # - hadolint
       - shellcheck
+      - wtype
     state: present
   tags:
     - config-base
@@ -63,27 +64,29 @@
     - config-base
     - config-packages
 
-- name: Add Docker apt signing key
+- name: Add docker apt signing key
   become: true
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+    force: true
   tags:
     - config-base
     - config-packages
 
-- name: Add Docker apt source
+- name: Add docker apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release
       }} stable"
+    filename: docker
     state: present
   tags:
     - config-base
     - config-packages
 
-- name: Install Docker
+- name: Install docker
   become: true
   ansible.builtin.apt:
     name:
@@ -102,6 +105,37 @@
     name: "{{ ansible_user }}"
     groups: dialout
     append: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add mise apt signing key
+  become: true
+  ansible.builtin.get_url:
+    url: https://mise.jdx.dev/gpg-key.pub
+    dest: /etc/apt/keyrings/mise.asc
+    mode: "0644"
+    force: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add mise apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/mise.asc] https://mise.jdx.dev/deb stable main"
+    filename: mise
+    state: present
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install mise
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mise
+    state: present
   tags:
     - config-base
     - config-packages

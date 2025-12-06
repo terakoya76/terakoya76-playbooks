@@ -1,10 +1,11 @@
 ---
 - name: Add apt signing key
   become: true
-  ansible.builtin.apt_key:
-    url: https://baltocdn.com/helm/signing.asc
-    state: present
-    keyring: /usr/share/keyrings/helm.gpg
+  ansible.builtin.get_url:
+    url: https://packages.buildkite.com/helm-linux/helm-debian/gpgkey
+    dest: /etc/apt/keyrings/helm.asc
+    mode: "0644"
+    force: true
   tags:
     - config-tool
     - config-kubernetes
@@ -13,7 +14,8 @@
 - name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ helm_arch_result.stdout }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+    repo: "deb [arch={{ helm_arch_result.stdout }} signed-by=/etc/apt/keyrings/helm.asc] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main"
+    filename: helm
     state: present
   tags:
     - config-tool

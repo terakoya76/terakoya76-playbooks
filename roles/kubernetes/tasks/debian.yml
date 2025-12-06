@@ -1,17 +1,20 @@
 ---
-- name: Add kubectl apt signing key
+- name: Add apt signing key
   become: true
-  ansible.builtin.apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes.asc
+    mode: "0644"
+    force: true
   tags:
     - config-tool
     - config-kubernetes
 
-- name: Add kubectl apt source
+- name: Add apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.asc] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /"
+    filename: kubernetes
     state: present
   tags:
     - config-tool
@@ -175,7 +178,8 @@
 - name: Install sops
   become: true
   ansible.builtin.apt:
-    deb: https://github.com/mozilla/sops/releases/download/v{{ kubernetes_sops_version }}/sops_{{ kubernetes_sops_version }}_{{ kubernetes_arch_result.stdout }}.deb
+    deb: https://github.com/mozilla/sops/releases/download/v{{ kubernetes_sops_version }}/sops_{{ kubernetes_sops_version }}_{{ kubernetes_arch_result.stdout
+      }}.deb
   tags:
     - config-tool
     - config-kubernetes
