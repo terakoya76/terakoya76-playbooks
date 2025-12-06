@@ -19,7 +19,6 @@
     - role: aws
     - role: cloudflared
     - role: gcp
-    - role: helm
     - role: kubernetes
     - role: onepassword
     - role: tailscale

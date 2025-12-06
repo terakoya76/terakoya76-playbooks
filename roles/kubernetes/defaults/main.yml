@@ -13,3 +13,5 @@ kubernetes_sops_path: /usr/local/bin/sops
 kubernetes_sopsed_path: /usr/local/bin/sopsed
 
 kubernetes_variant_path: /usr/local/bin/variant
+
+kubernetes_helmfile_path: /usr/local/bin/helmfile

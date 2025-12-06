@@ -1,8 +1,0 @@
----
-galaxy_info:
-  author: terakoya76
-  description: Helm package manager setup
-  license: MIT
-  standalone: true
-dependencies:
-  - role: kubernetes
