@@ -12,13 +12,11 @@
       - clang
       - cmake
       - curl
-      - direnv
       - gcc
       - g++
       - make
       - xz-utils
       - zlib1g-dev
-      # - libgdbm5
       - git
       - imagemagick
       - libc6-dev
@@ -47,10 +45,18 @@
       - translate-shell
       - tree
       - wireshark
-      # lint
+      - wtype
+      # dev
+      - direnv
+      # https://github.com/neovim/neovim/blob/master/INSTALL.md
+      # we chose appimage
+      # - neovim
+      - vim
+      - tmux
+      - xclip
+      - xsel
       # - hadolint
       - shellcheck
-      - wtype
     state: present
   tags:
     - config-base

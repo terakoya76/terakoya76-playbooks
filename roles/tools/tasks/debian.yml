@@ -9,24 +9,3 @@
   changed_when: false
   tags:
     - config-tool
-
-- name: Install Packages for vim
-  become: true
-  ansible.builtin.apt:
-    name:
-      - neovim
-      - vim
-    state: present
-  tags:
-    - config-tool
-
-- name: Install Packages for tmux
-  become: true
-  ansible.builtin.apt:
-    name:
-      - tmux
-      - xclip
-      - xsel
-    state: present
-  tags:
-    - config-tool

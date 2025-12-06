@@ -9,9 +9,6 @@
     - role: packages
     # config-language
     - role: flutter
-    - role: golang
-    - role: haskell
-    - role: java
     - role: python
     - role: rust
     - role: llvm

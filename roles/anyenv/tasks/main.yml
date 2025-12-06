@@ -104,8 +104,6 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: bash -lc "anyenv install {{ item }}"
   with_items:
-    - goenv
-    - rbenv
     - tfenv
   when: item not in anyenv_anyenv_envs_installed.stdout
   changed_when: item not in anyenv_anyenv_envs_installed.stdout
