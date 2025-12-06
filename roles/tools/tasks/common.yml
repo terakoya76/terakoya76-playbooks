@@ -36,17 +36,6 @@
   tags:
     - config-tool
 
-- name: Install nvim client via npm
-  become: true
-  become_user: "{{ ansible_user }}"
-  community.general.npm:
-    name: neovim
-    state: present
-    global: true
-    executable: "{{ tools_ansible_home }}/.anyenv/envs/nodenv/shims/npm"
-  tags:
-    - config-tool
-
 # - name: Fetch Solarized Color Schema
 #   become: true
 #   become_user: "{{ ansible_user }}"

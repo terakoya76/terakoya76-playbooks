@@ -1,8 +1,0 @@
----
-galaxy_info:
-  author: terakoya76
-  description: Node.js development environment setup
-  license: MIT
-  standalone: true
-dependencies:
-  - role: packages

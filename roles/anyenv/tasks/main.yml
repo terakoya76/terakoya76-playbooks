@@ -105,7 +105,6 @@
   ansible.builtin.command: bash -lc "anyenv install {{ item }}"
   with_items:
     - goenv
-    - nodenv
     - rbenv
     - tfenv
   when: item not in anyenv_anyenv_envs_installed.stdout

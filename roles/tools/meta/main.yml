@@ -6,6 +6,5 @@ galaxy_info:
   standalone: true
 dependencies:
   - role: packages
-  - role: nodejs
-  # - role: python
+  - role: python
   - role: ruby
