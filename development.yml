@@ -9,7 +9,6 @@
     - role: packages
     # config-language
     - role: flutter
-    - role: python
     - role: rust
     - role: llvm
     - role: ml

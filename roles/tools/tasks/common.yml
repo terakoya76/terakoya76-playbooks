@@ -1,4 +1,15 @@
 ---
+- name: Install uv
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+  tags:
+    - config-tool
+
 - name: Download xpanes
   become: true
   become_user: "{{ ansible_user }}"
