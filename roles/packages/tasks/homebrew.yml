@@ -84,6 +84,8 @@
       - vim
       - tmux
       - hadolint
+      # llvm
+      - llvm
     state: present
   tags:
     - config-base

@@ -18,7 +18,6 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-haskell
   * config-java
   * config-rust
-  * config-llvm
 * config-iot
   * config-arduino
   * config-arm64-m4

@@ -57,6 +57,34 @@
       - xsel
       # - hadolint
       - shellcheck
+      # llvm
+      ## clang
+      - clang-format
+      - clang-tidy
+      - clang-tools
+      - clang
+      - clangd
+      - libclang-dev
+      - libclang1
+      - python3-clang
+      ## libc
+      - libc++-dev
+      - libc++1
+      - libc++abi-dev
+      - libc++abi1
+      ## openmp
+      - libomp-dev
+      - libomp5
+      ## lld
+      - lld
+      ## lldb
+      - liblldb-dev
+      - lldb
+      ## llvm
+      - libllvm-ocaml-dev
+      - llvm-dev
+      - llvm-runtime
+      - llvm
     state: present
   tags:
     - config-base
