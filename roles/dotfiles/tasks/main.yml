@@ -349,12 +349,24 @@
     - config-base
     - config-dotfile
 
-- name: Place .ctags
+- name: Create target directory for mise
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.config/mise"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+    - skip_ansible_lint
+
+- name: Place mise config
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: files/ctags
-    dest: "{{ dotfiles_ansible_home }}/.ctags"
+    src: files/mise.toml
+    dest: "{{ dotfiles_ansible_home }}/.config/mise/config.toml"
     mode: "0755"
     backup: true
   tags:
@@ -419,24 +431,24 @@
     - config-base
     - config-dotfile
 
-- name: Place .gitconfig
+- name: Place git config files
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: files/gitconfig
-    dest: "{{ dotfiles_ansible_home }}/.gitconfig"
+    src: "files/git/{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/{{ item }}"
     mode: "0755"
-    backup: true
+  with_items: "{{ dotfiles_git_files }}"
   tags:
     - config-base
     - config-dotfile
 
-- name: Place .gitignore_global
+- name: Place .ctags
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: files/gitignore_global
-    dest: "{{ dotfiles_ansible_home }}/.gitignore_global"
+    src: files/ctags
+    dest: "{{ dotfiles_ansible_home }}/.ctags"
     mode: "0755"
     backup: true
   tags:

@@ -1,0 +1,26 @@
+min_version = "2025.12.0"
+
+[tools]
+#----------------------
+# node
+#----------------------
+node = "24"
+"npm:pnpm" = "10"
+"npm:neovim" = "latest"
+"npm:@antfu/ni" = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+"npm:difit" = "latest"
+
+#----------------------
+# python
+#----------------------
+python = "3"
+ruff = "latest"
+uv = "latest"
+
+[env]
+#----------------------
+# node
+#----------------------
+# This will make CLIs installed with npm available without npx.
+_.path = ["{{config_root}}/node_modules/.bin"]
