@@ -47,11 +47,13 @@ dotfiles_claude_code_command_files:
   - dev-medium.md
   - explain.md
   - refactor.md
+  - repro.md
   - review.md
   - serena.md
 
 dotfiles_claude_code_agent_files:
   - architecture-reviewer.md
+  - bug-reproducer.md
   - code-flow-mapper.md
   - code-reviewer.md
   - investigator.md
@@ -62,3 +64,7 @@ dotfiles_claude_code_agent_files:
 dotfiles_claude_code_hook_files:
   - notify_slack.sh
   - task_medium_prep_hook.py
+
+dotfiles_git_files:
+  - .gitconfig
+  - .gitignore_global
