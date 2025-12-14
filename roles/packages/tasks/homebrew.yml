@@ -5,8 +5,8 @@
   ansible.builtin.command: xcode-select -s /Applications/Xcode.app/Contents/Developer
   changed_when: false
   tags:
-    - config-language
-    - config-haskell
+    - config-base
+    - config-packages
 
 - name: Brew Tap -> bundle core dupes services versions
   become: true
@@ -14,9 +14,6 @@
   community.general.homebrew_tap:
     name:
       - homebrew/bundle
-      - homebrew/cask
-      - homebrew/cask-versions
-      - homebrew/core
       - homebrew/services
       - ktr0731/evans
       - osx-cross/avr
@@ -55,6 +52,7 @@
       - cmake
       - direnv
       - evans
+      - fzf
       - git
       - gnu-getopt
       - graphviz
@@ -86,6 +84,8 @@
       - hadolint
       # llvm
       - llvm
+      # mise
+      - mise
     state: present
   tags:
     - config-base
@@ -99,7 +99,7 @@
       - alacritty
       - deepl
       - discord
-      - docker-edge
+      - docker
       - firefox
       - gitify
       - grammarly

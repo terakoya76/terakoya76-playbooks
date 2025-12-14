@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: arm64_m4_mac_ansible_home_result
+  register: arm64_m4_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -24,15 +24,6 @@
     arm64_m4_ansible_home: "{{ arm64_m4_ansible_home_result.stdout }}"
   changed_when: false
   when: arm64_m4_ansible_home_result.stdout is defined
-  tags:
-    - config-iot
-    - config-arm64-m4
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact:
-    arm64_m4_ansible_home: "{{ arm64_m4_mac_ansible_home_result.stdout }}"
-  changed_when: false
-  when: arm64_m4_mac_ansible_home_result.stdout is defined
   tags:
     - config-iot
     - config-arm64-m4

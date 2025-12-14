@@ -1,5 +1,4 @@
 ---
 haskell_binaries:
-  - ghc-mod
   - hlint
-  - hdevtools
+  - apply-refact

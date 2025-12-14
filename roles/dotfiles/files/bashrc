@@ -1,3 +1,1 @@
-# direnv
-eval "$(direnv hook bash)"
 eval "$(mise activate bash)"

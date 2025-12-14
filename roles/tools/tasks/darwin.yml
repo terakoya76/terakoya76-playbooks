@@ -12,7 +12,7 @@
   become: true
   become_user: "{{ ansible_user }}"
   community.general.homebrew:
-    name: universal-ctags/universal-ctags/universal-ctags
+    name: universal-ctags
     state: present
     install_options: HEAD
   tags:
