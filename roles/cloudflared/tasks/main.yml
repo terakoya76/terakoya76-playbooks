@@ -1,7 +1,7 @@
 ---
-- name: Get ansible_user home directory
+- name: Get ansible_user home directory (Debian)
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: cloudflared_ansible_home_result
+  register: cloudflared_ansible_home_result_debian
   changed_when: false
   when:
     - ansible_os_family == "Debian"
@@ -9,9 +9,9 @@
     - config-tool
     - config-cloudflared
 
-- name: Get ansible_user home directory
+- name: Get ansible_user home directory (Darwin)
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: cloudflared_ansible_home_result
+  register: cloudflared_ansible_home_result_darwin
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -21,9 +21,9 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    cloudflared_ansible_home: "{{ cloudflared_ansible_home_result.stdout }}"
+    cloudflared_ansible_home: "{{ cloudflared_ansible_home_result_debian.stdout | default(cloudflared_ansible_home_result_darwin.stdout | default('')) }}"
   changed_when: false
-  when: cloudflared_ansible_home_result.stdout is defined
+  when: (cloudflared_ansible_home_result_debian.stdout is defined) or (cloudflared_ansible_home_result_darwin.stdout is defined)
   tags:
     - config-tool
     - config-cloudflared
