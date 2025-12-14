@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: kubernetes_mac_ansible_home_result
+  register: kubernetes_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -24,15 +24,6 @@
     kubernetes_ansible_home: "{{ kubernetes_ansible_home_result.stdout }}"
   changed_when: false
   when: kubernetes_ansible_home_result.stdout is defined
-  tags:
-    - config-tool
-    - config-kubernetes
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact:
-    kubernetes_ansible_home: "{{ kubernetes_mac_ansible_home_result.stdout }}"
-  changed_when: false
-  when: kubernetes_mac_ansible_home_result.stdout is defined
   tags:
     - config-tool
     - config-kubernetes

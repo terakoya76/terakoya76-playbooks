@@ -10,7 +10,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: tools_mac_ansible_home_result
+  register: tools_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -22,14 +22,6 @@
     tools_ansible_home: "{{ tools_ansible_home_result.stdout }}"
   changed_when: false
   when: tools_ansible_home_result.stdout is defined
-  tags:
-    - config-tool
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact:
-    tools_ansible_home: "{{ tools_mac_ansible_home_result.stdout }}"
-  changed_when: false
-  when: tools_mac_ansible_home_result.stdout is defined
   tags:
     - config-tool
 

@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: flutter_mac_ansible_home_result
+  register: flutter_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -24,15 +24,6 @@
     flutter_ansible_home: "{{ flutter_ansible_home_result.stdout }}"
   changed_when: false
   when: flutter_ansible_home_result.stdout is defined
-  tags:
-    - config-language
-    - config-flutter
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact:
-    flutter_ansible_home: "{{ flutter_mac_ansible_home_result.stdout }}"
-  changed_when: false
-  when: flutter_mac_ansible_home_result.stdout is defined
   tags:
     - config-language
     - config-flutter

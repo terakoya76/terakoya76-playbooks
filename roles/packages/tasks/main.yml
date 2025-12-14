@@ -11,7 +11,7 @@
 
 - name: Get ansible_user home directory
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
-  register: packages_mac_ansible_home_result
+  register: packages_ansible_home_result
   changed_when: false
   when:
     - ansible_os_family == "Darwin"
@@ -24,15 +24,6 @@
     packages_ansible_home: "{{ packages_ansible_home_result.stdout }}"
   changed_when: false
   when: packages_ansible_home_result.stdout is defined
-  tags:
-    - config-base
-    - config-packages
-
-- name: Set the fact for the other scripts to use
-  ansible.builtin.set_fact:
-    packages_ansible_home: "{{ packages_mac_ansible_home_result.stdout }}"
-  changed_when: false
-  when: packages_mac_ansible_home_result.stdout is defined
   tags:
     - config-base
     - config-packages
