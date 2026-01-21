@@ -1,5 +1,6 @@
+---
 # For more information about stack's configuration, see
 # http://docs.haskellstack.org/en/stable/yaml_configuration/
 #
-packages: []
+packages: [ ]
 resolver: lts-21.24

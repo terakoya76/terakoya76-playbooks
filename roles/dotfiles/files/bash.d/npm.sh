@@ -1,1 +1,0 @@
-alias nr="npx nr"

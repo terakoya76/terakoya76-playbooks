@@ -144,10 +144,11 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.template:
-    src: "files/bash.d/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.bash.d/{{ item }}"
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.bash.d/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_shell_scripts }}"
+  with_fileglob:
+    - "files/bash.d/*.sh"
   tags:
     - config-base
     - config-dotfile
@@ -188,11 +189,12 @@
 - name: Place nvim init components
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/nvim/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_nvim_init_components }}"
+  with_fileglob:
+    - "files/nvim/*.lua"
   tags:
     - config-base
     - config-dotfile
@@ -200,34 +202,12 @@
 - name: Place nvim plugins
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/nvim/plugins/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/plugins/{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/plugins/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_nvim_plugins }}"
-  tags:
-    - config-base
-    - config-dotfile
-
-- name: Create target directory for nvim lualine
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_ansible_home }}/.config/nvim/lua/lualine"
-    state: directory
-    mode: "0755"
-  tags:
-    - config-base
-    - config-dotfile
-
-- name: Place nvim lualine custom functions
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/nvim/lualine/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.config/nvim/lua/lualine/{{ item }}"
-    mode: "0755"
-  with_items: "{{ dotfiles_nvim_lualine }}"
+  with_fileglob:
+    - "files/nvim/plugins/*.lua"
   tags:
     - config-base
     - config-dotfile
@@ -272,11 +252,12 @@
 - name: Place claude code command files
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/claude/commands/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.claude/commands/{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/commands/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_claude_code_command_files }}"
+  with_fileglob:
+    - "files/claude/commands/*"
   tags:
     - config-base
     - config-dotfile
@@ -295,11 +276,12 @@
 - name: Place claude code agent files
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/claude/agents/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.claude/agents/{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/agents/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_claude_code_agent_files }}"
+  with_fileglob:
+    - "files/claude/agents/*"
   tags:
     - config-base
     - config-dotfile
@@ -318,11 +300,36 @@
 - name: Place claude code hook files
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: "files/claude/hooks/{{ item }}"
-    dest: "{{ dotfiles_ansible_home }}/.claude/hooks/{{ item }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/hooks/{{ item | basename }}"
     mode: "0755"
-  with_items: "{{ dotfiles_claude_code_hook_files }}"
+  with_fileglob:
+    - "files/claude/hooks/*"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Create target directory for claude code rule fragments
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.claude/rules"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfile
+
+- name: Place claude code rule files
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_ansible_home }}/.claude/rules/{{ item | basename }}"
+    mode: "0755"
+  with_fileglob:
+    - "files/claude/rules/*"
   tags:
     - config-base
     - config-dotfile
@@ -441,7 +448,9 @@
     dest: "{{ dotfiles_ansible_home }}/{{ item }}"
     mode: "0755"
     backup: true
-  with_items: "{{ dotfiles_git_files }}"
+  with_items:
+    - .gitconfig
+    - .gitignore_global
   tags:
     - config-base
     - config-dotfile

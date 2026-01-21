@@ -1,6 +1,7 @@
 ---
 name: ansible-lint
-on: [pull_request]
+on:
+  - pull_request
 jobs:
   ansible-lint:
     name: Ansible Lint
