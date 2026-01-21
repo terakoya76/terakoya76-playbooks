@@ -3,6 +3,7 @@ galaxy_info:
   author: terakoya76
   description: Rust development environment setup
   license: MIT
+  min_ansible_version: "2.18"
   standalone: true
 dependencies:
   - role: packages

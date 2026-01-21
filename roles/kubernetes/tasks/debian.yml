@@ -283,6 +283,7 @@
   ansible.builtin.command: |
     helm plugin install https://github.com/jkroepke/helm-secrets
   when: kubernetes_helm_secrets_installed | failed
+  changed_when: true
   tags:
     - config-tool
     - config-kubernetes
@@ -291,6 +292,7 @@
   become: true
   ansible.builtin.command: helm plugin update secrets
   when: kubernetes_helm_secrets_installed | success
+  changed_when: false
   tags:
     - config-tool
     - config-kubernetes

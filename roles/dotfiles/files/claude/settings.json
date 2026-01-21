@@ -1,6 +1,9 @@
 {
   "permissions": {
     "allow": [
+      "Bash(ansible:*)",
+      "Bash(ansible-galaxy:*)",
+      "Bash(ansible-lint:*)",
       "Bash(awk:*)",
       "Bash(cat:*)",
       "Bash(cp:*)",
@@ -64,6 +67,7 @@
       "Bash(npm run lint:*)",
       "Bash(npm run test:*)",
       "Bash(npm test:*)",
+      "Bash(pip index:*)",
       "Bash(pkill:*)",
       "Bash(pnpm:*)",
       "Bash(pnpm add:*)",
@@ -94,6 +98,9 @@
       "Bash(tree:*)",
       "Bash(true)",
       "Bash(uv lock:*)",
+      "Bash(uv run ansible:*)",
+      "Bash(uv run ansible-galaxy:*)",
+      "Bash(uv run ansible-lint:*)",
       "Bash(uv run dbt compile:*)",
       "Bash(uv run dbt test:*)",
       "Bash(uv run sqlfluff:*)",
