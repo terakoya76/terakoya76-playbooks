@@ -13,6 +13,7 @@ node = "24"
 "npm:depcheck" = "latest"
 "npm:ts-prune" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
+"npm:happy-coder" = "latest"
 "npm:difit" = "latest"
 
 #----------------------
