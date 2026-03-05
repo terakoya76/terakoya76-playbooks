@@ -6,5 +6,7 @@
 	insteadOf = https://github.com/
 [core]
 	excludesfile = /home/terakoya76/.gitignore_global
+[ghq]
+  root = ~/ghq
 [commit]
 	gpgsign = true
