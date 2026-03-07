@@ -469,7 +469,7 @@
 - name: Place gwq config files
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
+  ansible.builtin.copy:
     src: "files/git/gwq.toml"
     dest: "{{ dotfiles_ansible_home }}/.config/gwq/config.toml"
     mode: "0755"
