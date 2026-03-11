@@ -53,6 +53,7 @@
       - direnv
       - evans
       - fzf
+      - gh
       - git
       - gnu-getopt
       - graphviz
