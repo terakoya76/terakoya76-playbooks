@@ -87,6 +87,8 @@
       - llvm
       # mise
       - mise
+      # security
+      - trivy
     state: present
   tags:
     - config-base

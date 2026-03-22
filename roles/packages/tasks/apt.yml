@@ -205,3 +205,32 @@
   tags:
     - config-base
     - config-packages
+
+- name: Add Trivy apt signing key
+  become: true
+  ansible.builtin.shell: set -o pipefail && wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /etc/apt/keyrings/trivy.gpg
+  args:
+    creates: /etc/apt/keyrings/trivy.gpg
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add Trivy apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main"
+    filename: trivy
+    state: present
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install Trivy
+  become: true
+  ansible.builtin.apt:
+    name:
+      - trivy
+    state: present
+  tags:
+    - config-base
+    - config-packages
