@@ -7,7 +7,7 @@
     mode: "0644"
     force: true
   tags:
-    - config-tool
+    - config-tools
     - config-tailscale
 
 - name: Add apt source
@@ -17,7 +17,7 @@
     filename: tailscale
     state: present
   tags:
-    - config-tool
+    - config-tools
     - config-tailscale
 
 - name: Install tailscale
@@ -29,7 +29,7 @@
     update_cache: true
   when: not ansible_check_mode
   tags:
-    - config-tool
+    - config-tools
     - config-tailscale
 
 - name: Install tailscale
@@ -43,7 +43,7 @@
   # notify: Up tailscale
   notify: Allow tailscale from fw
   tags:
-    - config-tool
+    - config-tools
     - config-tailscale
 
 # need an interaction
@@ -51,9 +51,9 @@
 #   become: true
 #   ansible.builtin.command: tailscale up
 #   tags:
-#     - config-tool
+#     - config-tools
 #     - config-tailscale
 #   notify: Allow tailscale from fw
 #   tags:
-#     - config-tool
+#     - config-tools
 #     - config-tailscale

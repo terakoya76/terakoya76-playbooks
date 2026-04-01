@@ -9,7 +9,7 @@
       curl -LsSf https://astral.sh/uv/install.sh | sh
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
 
 - name: Download xpanes
   become: true
@@ -19,14 +19,14 @@
     dest: /tmp/xpanes
     mode: "0755"
   tags:
-    - config-tool
+    - config-tools
 
 - name: Install xpanes
   become: true
   ansible.builtin.command: install -m 0755 /tmp/xpanes /usr/local/bin/xpanes
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
 
 # - name: Fetch Solarized Color Schema
 #   become: true
@@ -43,7 +43,7 @@
     state: present
     executable: pip3
   tags:
-    - config-tool
+    - config-tools
 
 - name: Install via cargo
   become: true
@@ -65,4 +65,4 @@
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   changed_when: false
   tags:
-    - config-tool
+    - config-tools

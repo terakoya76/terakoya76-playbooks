@@ -9,7 +9,7 @@
     group: "{{ ansible_user }}"
     mode: "0755"
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Place aws/config for awscli
@@ -21,7 +21,7 @@
     mode: "0755"
     backup: true
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Install awscli
@@ -32,7 +32,7 @@
       - jq
     state: present
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Download session-manager-plugin
@@ -41,7 +41,7 @@
     deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb
   when: aws_arch_result.stdout == "amd64"
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Download session-manager-plugin
@@ -50,7 +50,7 @@
     deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_arm64/session-manager-plugin.deb
   when: aws_arch_result.stdout == "arm64"
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Install lsec2
@@ -59,7 +59,7 @@
     deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{
       aws_arch_result.stdout }}.deb
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Install eksctl
@@ -74,5 +74,5 @@
     rm "$asset_name"
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
     - config-aws

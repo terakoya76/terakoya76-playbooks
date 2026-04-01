@@ -45,6 +45,13 @@ ls -la | head -20
 
 ---
 
+## Package Manager Detection
+
+Before running JS/TS commands, detect the package manager:
+- `pnpm-lock.yaml` exists -> use `pnpm add` / `pnpm dlx` instead of `npm i` / `npx`
+- `package-lock.json` exists -> use `npm`
+- `yarn.lock` exists -> use `yarn`
+
 ## Tools by Language/Ecosystem
 
 ### JavaScript / TypeScript

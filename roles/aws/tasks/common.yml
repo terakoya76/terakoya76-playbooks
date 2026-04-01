@@ -7,5 +7,5 @@
     state: present
     executable: pip3
   tags:
-    - config-tool
+    - config-tools
     - config-aws

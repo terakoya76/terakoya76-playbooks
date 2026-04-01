@@ -16,7 +16,7 @@
     - role: arm64_m4
     - role: esp32
     - role: raspberrypi
-    # config-tool
+    # config-tools
     - role: aws
     - role: cloudflared
     - role: gcp
