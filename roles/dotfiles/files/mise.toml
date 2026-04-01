@@ -46,7 +46,6 @@ go = "1"
 # terraform
 "go:github.com/plumber-cd/terraform-backend-git" = "latest"
 "go:github.com/terraform-docs/terraform-docs" = "latest"
-"go:github.com/aquasecurity/tfsec/cmd/tfsec" = "latest"
 
 #----------------------
 # terraform
