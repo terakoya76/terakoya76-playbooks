@@ -6,7 +6,7 @@
   when:
     - ansible_os_family == "Debian"
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Get ansible_user home directory (Darwin)
@@ -16,7 +16,7 @@
   when:
     - ansible_os_family == "Darwin"
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Set the fact for the other scripts to use
@@ -25,7 +25,7 @@
   changed_when: false
   when: (aws_ansible_home_result_debian.stdout is defined) or (aws_ansible_home_result_darwin.stdout is defined)
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Get os in lowercase
@@ -33,7 +33,7 @@
   register: aws_os_result
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: Get target arch
@@ -41,7 +41,7 @@
   register: aws_arch_result
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
     - config-aws
 
 - name: For all

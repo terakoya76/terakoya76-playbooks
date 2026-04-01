@@ -7,7 +7,7 @@
     mode: "0644"
     force: true
   tags:
-    - config-tool
+    - config-tools
     - config-gcp
 
 - name: Add apt source
@@ -16,7 +16,7 @@
     repo: "deb [signed-by=/etc/apt/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt cloud-sdk main"
     state: present
   tags:
-    - config-tool
+    - config-tools
     - config-gcp
 
 - name: Install google-cloud-cli
@@ -29,5 +29,5 @@
     update_cache: true
   when: not ansible_check_mode
   tags:
-    - config-tool
+    - config-tools
     - config-gcp

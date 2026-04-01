@@ -6,7 +6,7 @@
     name: universal-ctags/universal-ctags
     state: present
   tags:
-    - config-tool
+    - config-tools
 
 - name: Install ctags/gtags
   become: true
@@ -16,4 +16,4 @@
     state: present
     install_options: HEAD
   tags:
-    - config-tool
+    - config-tools

@@ -7,7 +7,7 @@
     - ansible_os_family == "Debian"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Get ansible_user home directory (Darwin)
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
@@ -17,7 +17,7 @@
     - ansible_os_family == "Darwin"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
@@ -26,7 +26,7 @@
   when: (dotfiles_ansible_home_result_debian.stdout is defined) or (dotfiles_ansible_home_result_darwin.stdout is defined)
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place Default Config
   become: true
@@ -43,7 +43,7 @@
     - ansible_os_family == "Debian"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place Default Config
   become: true
@@ -61,7 +61,7 @@
     - ansible_os_family == "Darwin"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Install bash-completion
   become: true
@@ -74,7 +74,7 @@
     - ansible_os_family == "Darwin"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Install bash-completion
   become: true
@@ -86,7 +86,7 @@
     - ansible_os_family == "Debian"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Fetch git-prompt.sh
   become: true
@@ -97,7 +97,7 @@
     mode: "0664"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Fetch aws-ps1
   become: true
@@ -107,7 +107,7 @@
     dest: "{{ dotfiles_ansible_home }}/awscli-ext"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Fetch kube-ps1
   become: true
@@ -117,7 +117,7 @@
     dest: "{{ dotfiles_ansible_home }}/kube-ps1"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Fetch z.sh
   become: true
@@ -127,7 +127,7 @@
     dest: "{{ dotfiles_ansible_home }}/z"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place Shell Files
   become: true
@@ -139,7 +139,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for nvim
   become: true
@@ -150,7 +150,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place init.lua for nvim
   become: true
@@ -161,7 +161,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place nvim lua files
   become: true
@@ -173,7 +173,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for claude code fragments
   become: true
@@ -184,7 +184,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place claude code setting global settings
   become: true
@@ -199,7 +199,7 @@
     - settings.json
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place claude code skill files
   become: true
@@ -211,7 +211,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place claude code agent files
   become: true
@@ -223,7 +223,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place claude code hook files
   become: true
@@ -235,7 +235,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place claude code rule files
   become: true
@@ -247,7 +247,7 @@
     directory_mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for translate-shell
   become: true
@@ -259,7 +259,7 @@
     recurse: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place .init.trans
   become: true
@@ -271,7 +271,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for mise
   become: true
@@ -282,7 +282,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
     - skip_ansible_lint
 
 - name: Place mise config
@@ -295,7 +295,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place .tmux.conf
   become: true
@@ -307,7 +307,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Fetch tpm
   become: true
@@ -317,7 +317,7 @@
     dest: "{{ dotfiles_ansible_home }}/.tmux/plugins/tpm"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for alacritty
   become: true
@@ -328,7 +328,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
     - skip_ansible_lint
 
 - name: Place alacritty.yml
@@ -341,7 +341,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place my.cnf
   become: true
@@ -353,7 +353,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place git config files
   become: true
@@ -368,7 +368,7 @@
     - .gitignore_global
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Create target directory for gwq
   become: true
@@ -379,7 +379,7 @@
     mode: "0755"
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place gwq config files
   become: true
@@ -391,7 +391,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place .ctags
   become: true
@@ -403,7 +403,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place .globalrc
   become: true
@@ -415,7 +415,7 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles
 
 - name: Place .tigrc
   become: true
@@ -427,4 +427,4 @@
     backup: true
   tags:
     - config-base
-    - config-dotfile
+    - config-dotfiles

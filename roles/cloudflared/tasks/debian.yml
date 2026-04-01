@@ -7,7 +7,7 @@
     mode: "0644"
     force: true
   tags:
-    - config-tool
+    - config-tools
     - config-cloudflared
 
 - name: Add apt source
@@ -17,7 +17,7 @@
     filename: cloudflare
     state: present
   tags:
-    - config-tool
+    - config-tools
     - config-cloudflared
 
 - name: Install cloudflared
@@ -27,5 +27,5 @@
       - mise
     state: present
   tags:
-    - config-tool
+    - config-tools
     - config-cloudflared

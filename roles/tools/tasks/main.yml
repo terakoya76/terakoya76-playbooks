@@ -6,7 +6,7 @@
   when:
     - ansible_os_family == "Debian"
   tags:
-    - config-tool
+    - config-tools
 
 - name: Get ansible_user home directory (Darwin)
   ansible.builtin.shell: set -o pipefail && finger "{{ ansible_user }}" | awk '/^Directory/ {print $2}'
@@ -15,7 +15,7 @@
   when:
     - ansible_os_family == "Darwin"
   tags:
-    - config-tool
+    - config-tools
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
@@ -23,21 +23,21 @@
   changed_when: false
   when: (tools_ansible_home_result_debian.stdout is defined) or (tools_ansible_home_result_darwin.stdout is defined)
   tags:
-    - config-tool
+    - config-tools
 
 - name: Get os in lowercase
   ansible.builtin.shell: set -o pipefail && uname | tr '[:upper:]' '[:lower:]'
   register: tools_os_result
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
 
 - name: Get target arch
   ansible.builtin.shell: set -o pipefail && uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/'
   register: tools_arch_result
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
 
 - name: For all
   ansible.builtin.import_tasks: common.yml

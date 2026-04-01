@@ -8,7 +8,7 @@
     chmod +x /usr/local/bin/ctags
   changed_when: false
   tags:
-    - config-tool
+    - config-tools
 
 - name: Install dependencies for whisper
   become: true
@@ -17,7 +17,7 @@
       - ffmpeg
     state: present
   tags:
-    - config-tool
+    - config-tools
 
 - name: Install whisper
   become: true
@@ -27,4 +27,4 @@
     state: present
     executable: pip3
   tags:
-    - config-tool
+    - config-tools
