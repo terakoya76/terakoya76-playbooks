@@ -11,7 +11,7 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 
 ### Supported Tags
 * config-base
-  * config-dotfile
+  * config-dotfiles
   * config-packages
 * config-language
   * config-flutter
@@ -23,11 +23,11 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-arm64-m4
   * config-esp32
   * config-raspberrypi
-* config-tool
+* config-tools
   * config-aws
   * config-gcp
   * config-kubernetes
-  * config-1password
+  * config-onepassword
   * config-cloudflared
   * config-tailscale
 
