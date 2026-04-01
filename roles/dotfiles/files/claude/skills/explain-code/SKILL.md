@@ -1,4 +1,10 @@
-# Explain Code Command
+---
+name: explain-code
+description: Analyze and explain complex code sections in any programming language with clear, comprehensive explanations.
+allowed-tools: Read, Glob, Grep
+---
+
+# Explain Code Skill
 
 Analyze and explain complex code sections in any programming language with clear, comprehensive explanations.
 
