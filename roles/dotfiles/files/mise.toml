@@ -39,6 +39,7 @@ go = "1"
 "go:github.com/go-delve/delve/cmd/dlv" = "latest"
 "go:github.com/spf13/cobra-cli" = "latest"
 "go:github.com/x-motemen/ghq" = "latest"
+"go:github.com/d-kuro/gwq/cmd/gwq" = "latest"
 # protobuf
 "go:github.com/golang/protobuf/protoc-gen-go" = "latest"
 "go:github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc" = "latest"
