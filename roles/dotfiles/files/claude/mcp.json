@@ -20,6 +20,10 @@
       "command": "npx",
       "args": ["-y", "mcp-deepwiki@latest"]
     },
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    },
     "serena": {
       "command": "uvx",
       "args": [

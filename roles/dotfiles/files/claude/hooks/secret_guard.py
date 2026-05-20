@@ -33,6 +33,8 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePath
 from typing import Any, Callable, Optional
 
+sys.dont_write_bytecode = True
+
 # Optional YAML support
 try:
     import yaml
@@ -194,7 +196,7 @@ def get_default_config() -> Config:
         sensitive_regex=DEFAULT_SENSITIVE_REGEX.copy(),
         file_reading_commands=DEFAULT_FILE_READING_COMMANDS,
         logging_enabled=False,
-        log_file=os.path.expanduser("~/.claude/hooks/secret_guard.log"),
+        log_file="/tmp/secret_guard.log",
         log_blocked=True,
         check_symlinks=True,
         case_insensitive=False,
