@@ -277,6 +277,7 @@
       "Bash(wget:*)"
     ]
   },
+  "model": "claude-opus-4-7",
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "memory",
@@ -337,6 +338,6 @@
     "gopls-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "theme": "dark",
-  "model": "claude-opus-4-7"
+  "tui": "default",
+  "theme": "dark"
 }
