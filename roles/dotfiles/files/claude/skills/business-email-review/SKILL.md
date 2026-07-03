@@ -1,5 +1,5 @@
 ---
-name: review-business-email
+name: business-email-review
 description: ビジネスメール（日本語・英語）を添削する skill。敬語・トーン・構成・明瞭さ・誤字脱字をチェックし、修正案と理由を提示する。ユーザーがメール本文を貼り付けた時、あるいは「メール添削」「このメールをレビュー」と依頼した時に使う。
 allowed-tools: Read, Write, Edit
 ---
