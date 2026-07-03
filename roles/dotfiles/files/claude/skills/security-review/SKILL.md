@@ -1,6 +1,7 @@
 ---
 name: security-review
 description: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.
+allowed-tools: Read, Glob, Grep, Bash(git diff:*), Bash(git log:*), Bash(npm audit:*), Bash(pnpm audit:*)
 ---
 
 # Security Review Skill
@@ -391,31 +392,31 @@ async function verifyTransaction(transaction: Transaction) {
 
 #### Regular Updates
 ```bash
-# Check for vulnerabilities
-npm audit
+# Check for vulnerabilities (use pnpm if pnpm-lock.yaml exists)
+npm audit          # or: pnpm audit
 
 # Fix automatically fixable issues
-npm audit fix
+npm audit fix      # or: pnpm audit --fix
 
 # Update dependencies
-npm update
+npm update         # or: pnpm update
 
 # Check for outdated packages
-npm outdated
+npm outdated       # or: pnpm outdated
 ```
 
 #### Lock Files
 ```bash
 # ALWAYS commit lock files
-git add package-lock.json
+git add package-lock.json  # or: pnpm-lock.yaml
 
 # Use in CI/CD for reproducible builds
-npm ci  # Instead of npm install
+npm ci             # or: pnpm install --frozen-lockfile
 ```
 
 #### Verification Steps
 - [ ] Dependencies up to date
-- [ ] No known vulnerabilities (npm audit clean)
+- [ ] No known vulnerabilities (npm/pnpm audit clean)
 - [ ] Lock files committed
 - [ ] Dependabot enabled on GitHub
 - [ ] Regular security updates

@@ -8,9 +8,9 @@ fi
 
 message="$1"
 curl -X POST https://slack.com/api/chat.postMessage \
-    -H "Authorization: Bearer $SLACK_TOKEN" \
-    -H "Content-type: application/json" \
-    --data "{
-        \"channel\": \"#claude-code\",
-        \"text\": \"${message}\"
-    }"
+  -H "Authorization: Bearer $SLACK_TOKEN" \
+  -H "Content-type: application/json" \
+  --data "{
+    \"channel\": \"#claude-code\",
+    \"text\": \"${message}\"
+  }"

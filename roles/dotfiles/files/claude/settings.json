@@ -6,6 +6,7 @@
       "Bash(ansible-lint:*)",
       "Bash(awk:*)",
       "Bash(cat:*)",
+      "Bash(command -v uv)",
       "Bash(convert:*)",
       "Bash(corepack --version)",
       "Bash(cp:*)",
@@ -28,6 +29,7 @@
       "Bash(gh repo view:*)",
       "Bash(gh run:*)",
       "Bash(gh search:*)",
+      "Bash(gh workflow *)",
       "Bash(git add:*)",
       "Bash(git branch:*)",
       "Bash(git checkout:*)",
@@ -40,6 +42,7 @@
       "Bash(git ls-tree:*)",
       "Bash(git merge:*)",
       "Bash(git mv:*)",
+      "Bash(git push:*)",
       "Bash(git rebase:*)",
       "Bash(git reset:*)",
       "Bash(git restore:*)",
@@ -71,12 +74,16 @@
       "Bash(make:*)",
       "Bash(mise --help:*)",
       "Bash(mise config:*)",
+      "Bash(mise env *)",
+      "Bash(mise exec *)",
       "Bash(mise install:*)",
       "Bash(mise ls:*)",
       "Bash(mise ls-remote:*)",
       "Bash(mise plugins ls-remote:*)",
       "Bash(mise settings:*)",
       "Bash(mise tasks:*)",
+      "Bash(mise trust *)",
+      "Bash(mise x *)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(netstat:*)",
@@ -169,6 +176,7 @@
       "WebFetch(domain:search.worldcat.org)",
       "WebFetch(domain:socket.dev)",
       "WebFetch(domain:stackleap.io)",
+      "WebFetch(domain:support.claude.com)",
       "WebFetch(domain:tanstack.com)",
       "WebFetch(domain:trivy.dev)",
       "WebFetch(domain:vite.dev)",
@@ -296,15 +304,13 @@
             "command": "uv run ~/.claude/hooks/secret_guard.py"
           }
         ]
-      }
-    ],
-    "UserPromptSubmit": [
+      },
       {
-        "matcher": "",
+        "matcher": "WebFetch",
         "hooks": [
           {
             "type": "command",
-            "command": "uv run ~/.claude/hooks/task_medium_prep_hook.py"
+            "command": "bash ~/.claude/hooks/webfetch-domain-allow.sh"
           }
         ]
       }
