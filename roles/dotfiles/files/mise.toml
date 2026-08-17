@@ -4,7 +4,7 @@ min_version = "2025.12.0"
 #----------------------
 # node
 #----------------------
-node = "24"
+node = "26"
 pnpm = "11"
 "npm:neovim" = "latest"
 "npm:@antfu/ni" = "latest"
@@ -14,7 +14,7 @@ pnpm = "11"
 "npm:depcheck" = "latest"
 "npm:ts-prune" = "latest"
 # coding agent
-"npm:@anthropic-ai/claude-code" = "latest"
+"npm:@anthropic-ai/claude-code" = { version = "latest", npm_args = "--ignore-scripts=false" }
 "npm:happy-coder" = "latest"
 "npm:difit" = "latest"
 "npm:skills" = "latest"
@@ -29,7 +29,7 @@ uv = "latest"
 #----------------------
 # ruby
 #----------------------
-ruby = "3"
+ruby = "4"
 
 #----------------------
 # go
@@ -63,3 +63,6 @@ _.path = ["{{config_root}}/node_modules/.bin"]
 
 [settings]
 fetch_remote_versions_timeout = "60s"
+
+[settings.aqua]
+baked_registry = false
