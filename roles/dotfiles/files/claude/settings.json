@@ -13,6 +13,7 @@
       "Bash(aws lambda get-function-configuration:*)",
       "Bash(aws secretsmanager get-secret-value:*)",
       "Bash(aws sts get-caller-identity:*)",
+      "Bash(apt-cache show:*)",
       "Bash(cat:*)",
       "Bash(command -v:*)",
       "Bash(convert:*)",
@@ -96,7 +97,7 @@
       "Bash(mise settings:*)",
       "Bash(mise tasks:*)",
       "Bash(mise trust)",
-      "Bash(mise x *)",
+      "Bash(mise x:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(netstat:*)",
@@ -152,6 +153,8 @@
       "Bash(wc:*)",
       "Bash(xargs:*)",
       "Bash(xxd:*)",
+      "EnterWorktree",
+      "ExitWorktree",
       "Read(//etc/apt/keyrings/**)",
       "Read(//etc/apt/sources.list.d/**)",
       "Read(//tmp/**)",
@@ -216,6 +219,8 @@
       "mcp__claude_ai_Figma__get_screenshot",
       "mcp__claude_ai_Figma__use_figma",
       "mcp__claude_ai_Figma__whoami",
+      "mcp__claude_ai_Google_Drive__create_file",
+      "mcp__claude_ai_Google_Drive__get_file_metadata",
       "mcp__claude_ai_Google_Drive__read_file_content",
       "mcp__claude_ai_Notion__notion-create-database",
       "mcp__claude_ai_Notion__notion-create-pages",
@@ -240,6 +245,7 @@
       "mcp__memory__search_nodes",
       "mcp__notion__notion-create-pages",
       "mcp__notion__notion-fetch",
+      "mcp__notion__notion-get-comments",
       "mcp__notion__notion-search",
       "mcp__notion__notion-update-page",
       "mcp__playwright__browser_click",
@@ -300,9 +306,10 @@
     ],
     "deny": [
       "Bash(wget:*)"
-    ]
+    ],
+    "blockReadsOutsideWorkingDirectories": false
   },
-  "model": "claude-opus-4-7",
+  "model": "opus[1m]",
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "memory",
@@ -358,9 +365,25 @@
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "crit@crit": true
+  },
+  "extraKnownMarketplaces": {
+    "crit": {
+      "source": {
+        "source": "github",
+        "repo": "tomasz-tomczyk/crit"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
   "tui": "default",
-  "theme": "dark"
+  "theme": "dark",
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(terraform apply:*) in aws/dev or any aws/{env} root — CLAUDE.md requires explicit human approval of the plan diff before apply, even with -auto-approve",
+      "Bash(terraform destroy:*) — repo explicitly warns that S3/DynamoDB renames or resource removal cause recreation of live, already-applied resources"
+    ]
+  }
 }
