@@ -31,6 +31,24 @@ ansible を再実行すれば他マシンや初期化後の自分にも同じ設
 
 これ以外の `~/.claude/` 配下（history.jsonl, sessions/, statsig/, projects/, tasks/, todos/, cache/, file-history/, backups/, plans/, plugins/, shell-snapshots/, session-env/, telemetry/, .credentials.json 等）は **絶対に触らない**。実行時データであり、リポジトリで管理する対象ではない。
 
+### settings.json の部分除外
+
+`terakoya76-playbooks` は public repo なので、`~/.claude/settings.json` の一部キーは同期対象から落とす。除外パスは以下:
+
+| 除外パス | 理由 |
+| --- | --- |
+| `.autoMode.environment` | Claude が業務リポジトリから自動収集した環境情報。org 名 / private repo 名 / S3 バケット名 / Secrets Manager エントリ名 / 内部サービス名が入るため public に出せない。マシンごとに再収集されるので同期する意味も無い |
+
+除外は jq で行う。**diff 時も適用時も同じフィルタを通す**（片方だけに掛けると毎回 phantom diff が出る）。
+
+```bash
+jq 'del(.autoMode.environment)' ~/.claude/settings.json
+```
+
+jq のデフォルト出力は `~/.claude/settings.json` の整形（2 space indent）とバイト一致するため、除外キー以外に差分は出ない。
+
+除外パスを増やすときはこの表に行を足し、`del()` の引数をカンマ区切りで並べる（例: `del(.autoMode.environment, .someOtherKey)`）。`.autoMode.soft_deny` は org 識別子を含まない deny ルールのみなので現状は同期対象。
+
 ## 実行ワークフロー
 
 ### 1. Pre-flight
@@ -40,6 +58,7 @@ ansible を再実行すれば他マシンや初期化後の自分にも同じ設
 - `pwd` → 末尾が `terakoya76-playbooks` か
 - `test -f ansible.cfg && test -d roles/dotfiles/files/claude && echo ok`
 - `test -d ~/.claude && echo ok`
+- `command -v rsync && command -v jq` → 両方必要（jq は settings.json の除外フィルタに使う）
 
 いずれか満たさない場合は中断し、何が無いかを 1 行でユーザーに伝える。
 （例: 「`roles/dotfiles/files/claude/` が見つかりません。playbooks リポジトリ直下で実行してください」）
@@ -48,11 +67,20 @@ ansible を再実行すれば他マシンや初期化後の自分にも同じ設
 
 7 アイテム分の diff を **並列** で取得する。
 
-**ファイル 3 個** (CLAUDE.md, settings.json, mcp.json):
+**ファイル 2 個** (CLAUDE.md, mcp.json) — そのまま比較:
 
 ```bash
 diff -u roles/dotfiles/files/claude/<name> ~/.claude/<name>
 ```
+
+**settings.json** — 除外フィルタを通した source と比較する:
+
+```bash
+jq 'del(.autoMode.environment)' ~/.claude/settings.json > "$TMP/settings.filtered.json"
+diff -u roles/dotfiles/files/claude/settings.json "$TMP/settings.filtered.json"
+```
+
+`$TMP` は scratchpad ディレクトリ。生の `~/.claude/settings.json` と dest を直接 diff しない（除外キー分が毎回差分として出てしまう）。
 
 差分が無ければ exit 0、あれば patch 形式。巨大な場合は冒頭 50 行程度に切る判断をしてよい（要約はユーザー提示時に行う）。
 
@@ -120,11 +148,19 @@ rsync -an --delete --itemize-changes ~/.claude/<name>/ roles/dotfiles/files/clau
 
 承認後（"yes" / 「適用して」/「OK」等）、各アイテムを順次適用する。`skip <名前>` 指示があれば該当のみ除外。
 
-**ファイル**:
+**ファイル 2 個** (CLAUDE.md, mcp.json):
 
 ```bash
 cp -f ~/.claude/<name> roles/dotfiles/files/claude/<name>
 ```
+
+**settings.json** — 除外フィルタを通して書き出す。`cp` は使わない:
+
+```bash
+jq 'del(.autoMode.environment)' ~/.claude/settings.json > roles/dotfiles/files/claude/settings.json
+```
+
+書き出し後、`jq -e '.' roles/dotfiles/files/claude/settings.json` で JSON として妥当か確認する（jq が途中で失敗すると dest が壊れた JSON になるため）。
 
 **ディレクトリ**:
 
@@ -152,6 +188,8 @@ rsync -a --delete ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
 - ansible → local の逆方向同期はこの skill では行わない（別 skill にすべき）
 - `~/.claude/` 配下の対象外ファイル（history.jsonl, sessions/, statsig/, projects/, tasks/, todos/, .credentials.json 等）は読まない・触らない
 - `--delete` を外す独自判断はしない（ミラー方針が崩れる）。意図的に dest 側のファイルを残したい場合は `skip <名前>` で対象アイテム自体を除外する
+- settings.json を `cp` でそのまま持ってこない。必ず `jq del()` フィルタを通す（除外キーが public repo に漏れる）
+- 除外パスを独自判断で増減しない。ユーザーが求めたら「settings.json の部分除外」表を更新してから適用する
 - 同期完了後に `git add` / `git commit` を勝手に走らせない
 - ansible task（`roles/dotfiles/tasks/main.yml`）の編集はしない（対象が増減したら別途相談）
 
@@ -165,3 +203,6 @@ rsync -a --delete ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
 - **`.git` や `node_modules` らしきもの**: 対象 7 アイテム配下にあるはずがないが、もし出現したら警告（ユーザーがミスっている可能性）
 - **CLAUDE.md が無いマシン**: skip。Pre-flight ではファイル単位で存在チェックし、無いものは静かに対象から外す（中断はしない）
 - **rsync が無い環境**: 中断してユーザーに `rsync` のインストールを案内（mac/Linux ともに標準で入っているはずだが念のため）
+- **jq が無い環境**: 中断して `jq` のインストールを案内する。除外フィルタ無しで settings.json を同期する回避策は取らない
+- **`~/.claude/settings.json` に `autoMode` が無い**: `del()` は存在しないパスに対して no-op なので、そのまま通してよい（エラーにならない）
+- **除外後 dest と差分ゼロ**: `.autoMode.environment` だけが変わったケース。「settings.json: 変更なし」と表示する（除外対象なので同期不要が正しい）

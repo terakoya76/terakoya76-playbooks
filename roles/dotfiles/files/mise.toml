@@ -14,7 +14,7 @@ pnpm = "11"
 "npm:depcheck" = "latest"
 "npm:ts-prune" = "latest"
 # coding agent
-"npm:@anthropic-ai/claude-code" = { version = "latest", npm_args = "--ignore-scripts=false" }
+"npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
 "npm:happy-coder" = "latest"
 "npm:difit" = "latest"
 "npm:skills" = "latest"
@@ -41,6 +41,7 @@ go = "1"
 "go:github.com/spf13/cobra-cli" = "latest"
 "go:github.com/x-motemen/ghq" = "latest"
 "go:github.com/d-kuro/gwq/cmd/gwq" = "latest"
+"go:github.com/tomasz-tomczyk/crit/cmd/crit" = "latest"
 # protobuf
 "go:github.com/golang/protobuf/protoc-gen-go" = "latest"
 "go:github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc" = "latest"
