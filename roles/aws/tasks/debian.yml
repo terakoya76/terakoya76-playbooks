@@ -24,11 +24,10 @@
     - config-tools
     - config-aws
 
-- name: Install awscli
+- name: Install jq for eksctl download (awscli itself is managed by mise)
   become: true
   ansible.builtin.apt:
     name:
-      - awscli
       - jq
     state: present
   tags:
