@@ -68,6 +68,18 @@ eksctl = "latest"
 "github:goldeneggg/lsec2" = { version = "latest", os = ["linux/x64", "macos/x64"] }
 
 #----------------------
+# kubernetes
+#----------------------
+kustomize = "latest"
+kubeseal = "latest"
+stern = "latest"
+sops = "latest"
+helmfile = "latest"
+"github:mumoshu/variant" = "latest"
+# sopsed only publishes a single macOS x86_64 binary
+"github:mumoshu/sopsed" = { version = "latest", asset_pattern = "sopsed", os = ["macos/x64"] }
+
+#----------------------
 # terraform
 #----------------------
 terraform = "latest"
