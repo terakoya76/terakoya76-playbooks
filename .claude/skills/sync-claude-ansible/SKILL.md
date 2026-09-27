@@ -49,6 +49,22 @@ jq のデフォルト出力は `~/.claude/settings.json` の整形（2 space ind
 
 除外パスを増やすときはこの表に行を足し、`del()` の引数をカンマ区切りで並べる（例: `del(.autoMode.environment, .someOtherKey)`）。`.autoMode.soft_deny` は org 識別子を含まない deny ルールのみなので現状は同期対象。
 
+### ディレクトリの部分除外
+
+ディレクトリ配下にも同期対象から落とすパスがある。除外パスは以下:
+
+| 対象 | 除外パス | 理由 |
+| --- | --- | --- |
+| `skills/` | `synced/` | claude.ai から自動同期される skill 群。`<uuid>_<uuid>` 形式のディレクトリ名が account / org 識別子で、org 固有の private skill も含まれるため public に出せない。マシンごとに再同期されるので管理する意味も無い |
+
+除外は rsync の `--exclude` で行う。**dry-run 時も適用時も同じオプションを付ける**（片方だけだとプレビューと実際の挙動がずれる）。`--exclude` されたパスは `--delete` の対象からも外れるため、ミラー方針は除外パス以外で維持される。
+
+```bash
+rsync -a --delete --exclude synced/ ~/.claude/skills/ roles/dotfiles/files/claude/skills/
+```
+
+除外パスを増やすときはこの表に行を足し、該当ディレクトリの rsync に `--exclude` を追加する。
+
 ## 実行ワークフロー
 
 ### 1. Pre-flight
@@ -88,6 +104,9 @@ diff -u roles/dotfiles/files/claude/settings.json "$TMP/settings.filtered.json"
 
 ```bash
 rsync -an --delete --itemize-changes ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
+
+# skills のみ「ディレクトリの部分除外」を適用する
+rsync -an --delete --itemize-changes --exclude synced/ ~/.claude/skills/ roles/dotfiles/files/claude/skills/
 ```
 
 `-a` mirror, `-n` dry-run, `--delete` で dest 側余剰を可視化, `--itemize-changes` で行頭フラグを得る。
@@ -166,6 +185,9 @@ jq 'del(.autoMode.environment)' ~/.claude/settings.json > roles/dotfiles/files/c
 
 ```bash
 rsync -a --delete ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
+
+# skills のみ「ディレクトリの部分除外」を適用する
+rsync -a --delete --exclude synced/ ~/.claude/skills/ roles/dotfiles/files/claude/skills/
 ```
 
 `--delete` を必ず付ける（ミラー方針）。末尾 `/` も忘れない。
@@ -190,6 +212,7 @@ rsync -a --delete ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
 - `--delete` を外す独自判断はしない（ミラー方針が崩れる）。意図的に dest 側のファイルを残したい場合は `skip <名前>` で対象アイテム自体を除外する
 - settings.json を `cp` でそのまま持ってこない。必ず `jq del()` フィルタを通す（除外キーが public repo に漏れる）
 - 除外パスを独自判断で増減しない。ユーザーが求めたら「settings.json の部分除外」表を更新してから適用する
+- skills の rsync から `--exclude synced/` を外さない（account / org 識別子と private skill が public repo に漏れる）。除外パスの増減は「ディレクトリの部分除外」表を更新してから行う
 - 同期完了後に `git add` / `git commit` を勝手に走らせない
 - ansible task（`roles/dotfiles/tasks/main.yml`）の編集はしない（対象が増減したら別途相談）
 
