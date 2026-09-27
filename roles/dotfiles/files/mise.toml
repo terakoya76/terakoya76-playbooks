@@ -23,8 +23,12 @@ pnpm = "12"
 # python
 #----------------------
 python = "3"
-ruff = "latest"
-uv = "latest"
+"pypi:ruff" = "latest"
+"pypi:uv" = "latest"
+"pypi:awsebcli" = "latest"
+"pypi:powerline-shell" = "latest"
+# ffmpeg is installed via apt in the tools role
+"pypi:openai-whisper" = { version = "latest", os = ["linux"] }
 
 #----------------------
 # ruby

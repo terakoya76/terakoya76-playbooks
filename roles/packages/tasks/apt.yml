@@ -41,6 +41,8 @@
       - software-properties-common
       - zlib1g-dev
       # independent utils
+      # ffmpeg is required by openai-whisper (installed via mise)
+      - ffmpeg
       - jq
       - multitime
       - translate-shell

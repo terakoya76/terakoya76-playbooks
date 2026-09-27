@@ -35,16 +35,6 @@
 # NOTE: check iceberg terminal theme when you're using MacOS
 #   https://cocopon.github.io/iceberg.vim/
 
-- name: Install powerline-shell
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.pip:
-    name: powerline-shell
-    state: present
-    executable: pip3
-  tags:
-    - config-tools
-
 - name: Install via cargo
   become: true
   become_user: "{{ ansible_user }}"
