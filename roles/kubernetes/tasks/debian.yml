@@ -127,32 +127,40 @@
     - config-tools
     - config-kubernetes
 
-- name: Check helm-secrets plugin
+- name: Place helm-secrets signing key
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      curl -fsSL https://github.com/jkroepke.gpg | gpg --batch --yes --dearmor -o /usr/share/keyrings/jkroepke.gpg
+  changed_when: false
+  tags:
+    - config-tools
+    - config-kubernetes
+
+# Helm 4 splits helm-secrets into three plugins (command, getter, post-renderer).
+# A pre-Helm 4 install is registered as a getter only, so `helm secrets` is missing
+# and the old plugin has to be removed before installing the split packages.
+# https://github.com/jkroepke/helm-secrets/wiki/Installation
+- name: Install helm-secrets plugins
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "helm secrets -h"
-  register: kubernetes_helm_secrets_installed
-  changed_when: false
-  ignore_errors: true
-  tags:
-    - config-tools
-    - config-kubernetes
-
-- name: Install helm-secrets plugin
-  become: true
-  ansible.builtin.command: |
-    helm plugin install https://github.com/jkroepke/helm-secrets
-  when: kubernetes_helm_secrets_installed | failed
-  changed_when: true
-  tags:
-    - config-tools
-    - config-kubernetes
-
-- name: Update helm-secrets plugin
-  become: true
-  ansible.builtin.command: helm plugin update secrets
-  when: kubernetes_helm_secrets_installed | success
-  changed_when: false
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      set -e
+      installed() { helm plugin list | awk 'NR > 1 { print $1 }' | grep -qx "$1"; }
+      if ! helm secrets -h >/dev/null 2>&1 && installed secrets; then
+        helm plugin uninstall secrets
+      fi
+      for plugin in secrets secrets-getter secrets-post-renderer; do
+        if ! installed "${plugin}"; then
+          helm plugin install --keyring /usr/share/keyrings/jkroepke.gpg "oci://ghcr.io/jkroepke/helm-secrets/${plugin}:latest"
+          echo "installed ${plugin}"
+        fi
+      done
+  register: kubernetes_helm_secrets_result
+  changed_when: "'installed ' in kubernetes_helm_secrets_result.stdout"
   tags:
     - config-tools
     - config-kubernetes
@@ -160,29 +168,30 @@
 - name: Check helm-diff plugin
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "helm diff -h"
+  ansible.builtin.command: helm diff version
   register: kubernetes_helm_diff_installed
   changed_when: false
-  ignore_errors: true
+  failed_when: false
   tags:
     - config-tools
     - config-kubernetes
 
 - name: Install helm-diff plugin
   become: true
-  ansible.builtin.command: |
-    helm plugin install https://github.com/databus23/helm-diff
-  changed_when: false
-  when: kubernetes_helm_diff_installed | failed
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: helm plugin install https://github.com/databus23/helm-diff
+  changed_when: true
+  when: kubernetes_helm_diff_installed.rc != 0
   tags:
     - config-tools
     - config-kubernetes
 
 - name: Update helm-diff plugin
   become: true
+  become_user: "{{ ansible_user }}"
   ansible.builtin.command: helm plugin update diff
   changed_when: false
-  when: kubernetes_helm_diff_installed | success
+  when: kubernetes_helm_diff_installed.rc == 0
   tags:
     - config-tools
     - config-kubernetes
