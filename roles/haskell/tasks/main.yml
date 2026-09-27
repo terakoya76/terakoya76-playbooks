@@ -4,7 +4,7 @@
   register: haskell_ansible_home_result_debian
   changed_when: false
   when:
-    - ansible_os_family == "Debian"
+    - ansible_facts.os_family == "Debian"
   tags:
     - config-language
     - config-haskell
@@ -14,7 +14,7 @@
   register: haskell_ansible_home_result_darwin
   changed_when: false
   when:
-    - ansible_os_family == "Darwin"
+    - ansible_facts.os_family == "Darwin"
   tags:
     - config-language
     - config-haskell
