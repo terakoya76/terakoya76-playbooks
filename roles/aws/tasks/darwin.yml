@@ -12,6 +12,7 @@
     - config-tools
     - config-aws
 
+# Only seed the file: aws configure sso adds profiles to it, and overwriting would drop them
 - name: Place aws/config for awscli
   become: true
   become_user: "{{ ansible_user }}"
@@ -19,7 +20,7 @@
     src: files/awsconfig
     dest: "{{ aws_ansible_home }}/.aws/config"
     mode: "0755"
-    backup: true
+    force: false
   tags:
     - config-tools
     - config-aws
