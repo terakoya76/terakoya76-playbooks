@@ -1,22 +1,44 @@
 ---
+# The 1password package's postinst rewrites the apt source as 1password.sources with its own
+# keyring and comments out 1password.list. Mirror exactly what it writes so both agree;
+# a second definition with a different Signed-By makes apt refuse to read any source.
 - name: Add apt signing key
   become: true
-  ansible.builtin.get_url:
-    url: https://downloads.1password.com/linux/keys/1password.asc
-    dest: /etc/apt/keyrings/1password.asc
-    mode: "0644"
-    force: true
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      curl -fsS https://downloads.1password.com/linux/keys/1password.asc \
+        | gpg --batch --yes --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  changed_when: false
+  tags:
+    - config-tools
+    - config-onepassword
+
+- name: Remove legacy apt source files
+  become: true
+  ansible.builtin.file:
+    path: "/etc/apt/sources.list.d/{{ item }}"
+    state: absent
+  loop:
+    - 1password.list
+    - 1password.list.distUpgrade
   tags:
     - config-tools
     - config-onepassword
 
 - name: Add apt source
   become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [arch={{ onepassword_arch_result.stdout }} signed-by=/etc/apt/keyrings/1password.asc] https://downloads.1password.com/linux/debian/{{ onepassword_arch_result.stdout
-      }} stable main" # yamllint disable-line rule:line-length
-    filename: 1password
-    state: present
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/1password.sources
+    mode: "0644"
+    content: |
+      # This file is automatically added and configured by the 1Password package. Modifications may be overwritten.
+      Types: deb
+      URIs: https://downloads.1password.com/linux/debian/{{ onepassword_arch_result.stdout }}
+      Suites: stable
+      Components: main
+      Architectures: {{ onepassword_arch_result.stdout }}
+      Signed-By: /usr/share/keyrings/1password-archive-keyring.gpg
   tags:
     - config-tools
     - config-onepassword
