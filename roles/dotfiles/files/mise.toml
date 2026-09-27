@@ -64,6 +64,8 @@ herdr = "latest"
 #----------------------
 "aws-cli" = "latest"
 eksctl = "latest"
+# lsec2 only publishes x86_64 binaries
+"github:goldeneggg/lsec2" = { version = "latest", os = ["linux/x64", "macos/x64"] }
 
 #----------------------
 # terraform
