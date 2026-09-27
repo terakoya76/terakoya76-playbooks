@@ -80,6 +80,12 @@ helmfile = "latest"
 "github:mumoshu/sopsed" = { version = "latest", asset_pattern = "sopsed", os = ["macos/x64"] }
 
 #----------------------
+# ctags
+#----------------------
+# universal-ctags only ships native builds via ctags-nightly-build (no macOS; the tools role installs it with Homebrew there)
+"github:universal-ctags/ctags-nightly-build" = { version = "latest", asset_pattern = "uctags-*-linux-x86_64.release.tar.gz", strip_components = 1, bin_path = "bin", os = ["linux/x64"] }
+
+#----------------------
 # terraform
 #----------------------
 terraform = "latest"
