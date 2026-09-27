@@ -4,7 +4,7 @@
   register: arduino_ansible_home_result_debian
   changed_when: false
   when:
-    - ansible_os_family == "Debian"
+    - ansible_facts.os_family == "Debian"
   tags:
     - config-iot
     - config-arduino
@@ -14,7 +14,7 @@
   register: arduino_ansible_home_result_darwin
   changed_when: false
   when:
-    - ansible_os_family == "Darwin"
+    - ansible_facts.os_family == "Darwin"
   tags:
     - config-iot
     - config-arduino
@@ -47,9 +47,9 @@
 - name: For debian
   ansible.builtin.import_tasks: debian.yml
   when:
-    - ansible_os_family == "Debian"
+    - ansible_facts.os_family == "Debian"
 
 - name: For darwin
   ansible.builtin.import_tasks: darwin.yml
   when:
-    - ansible_os_family == "Darwin"
+    - ansible_facts.os_family == "Darwin"

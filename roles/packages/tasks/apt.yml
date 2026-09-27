@@ -113,7 +113,7 @@
 - name: Add docker apt source
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts.distribution_release
       }} stable"
     filename: docker
     state: present
