@@ -11,6 +11,18 @@
   tags:
     - config-tools
 
+# herdr itself is installed by mise; this adds its agent skill for Claude Code.
+# https://herdr.dev/docs/agent-skill/
+- name: Install herdr agent skill
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command:
+    cmd: mise exec node npm:skills -- skills add herdrdev/herdr --skill herdr --global --yes --agent claude-code
+    chdir: "{{ tools_ansible_home }}"
+  changed_when: false
+  tags:
+    - config-tools
+
 - name: Download xpanes
   become: true
   become_user: "{{ ansible_user }}"
