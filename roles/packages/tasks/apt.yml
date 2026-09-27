@@ -234,3 +234,37 @@
   tags:
     - config-base
     - config-packages
+
+- name: Add PostgreSQL apt signing key
+  become: true
+  ansible.builtin.get_url:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    dest: /etc/apt/keyrings/pgdg.asc
+    mode: "0644"
+    force: true
+  tags:
+    - config-base
+    - config-packages
+
+# Hand-added legacy entry without signed-by; leaving it alongside the managed one makes apt fail with conflicting Signed-By values
+- name: Remove legacy PostgreSQL apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_facts.distribution_release }}-pgdg main"
+    filename: pgdg
+    state: absent
+    update_cache: false
+  tags:
+    - config-base
+    - config-packages
+
+- name: Add PostgreSQL apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ packages_arch_result.stdout }} signed-by=/etc/apt/keyrings/pgdg.asc] https://apt.postgresql.org/pub/repos/apt {{ ansible_facts.distribution_release
+      }}-pgdg main"
+    filename: pgdg
+    state: present
+  tags:
+    - config-base
+    - config-packages
