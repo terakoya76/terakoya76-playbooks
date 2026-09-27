@@ -11,6 +11,18 @@
   tags:
     - config-tools
 
+# herdr itself is installed by mise; this adds its agent skill for Claude Code.
+# https://herdr.dev/docs/agent-skill/
+- name: Install herdr agent skill
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command:
+    cmd: mise exec node npm:skills -- skills add herdrdev/herdr --skill herdr --global --yes --agent claude-code
+    chdir: "{{ tools_ansible_home }}"
+  changed_when: false
+  tags:
+    - config-tools
+
 - name: Download xpanes
   become: true
   become_user: "{{ ansible_user }}"
@@ -35,13 +47,13 @@
 # NOTE: check iceberg terminal theme when you're using MacOS
 #   https://cocopon.github.io/iceberg.vim/
 
-- name: Install powerline-shell
+# Crates track recent stable Rust (e.g. cargo-generate needs rustc >= 1.96), and the rust
+# role that also updates the toolchain is skipped when running with --tags config-tools.
+- name: Update stable Rust toolchain for cargo install
   become: true
   become_user: "{{ ansible_user }}"
-  ansible.builtin.pip:
-    name: powerline-shell
-    state: present
-    executable: pip3
+  ansible.builtin.command: bash -lc "rustup update stable"
+  changed_when: false
   tags:
     - config-tools
 

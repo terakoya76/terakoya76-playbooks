@@ -297,6 +297,29 @@
     - config-base
     - config-dotfiles
 
+- name: Create target directory for herdr
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.config/herdr"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Place herdr config
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/herdr/config.toml
+    dest: "{{ dotfiles_ansible_home }}/.config/herdr/config.toml"
+    mode: "0644"
+    backup: true
+  tags:
+    - config-base
+    - config-dotfiles
+
 - name: Place .tmux.conf
   become: true
   become_user: "{{ ansible_user }}"

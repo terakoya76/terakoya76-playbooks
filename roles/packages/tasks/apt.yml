@@ -1,4 +1,19 @@
 ---
+# The 1password package now manages 1password.sources itself; an older playbook-managed
+# 1password.list with a different Signed-By makes every apt operation fail, so remove it
+# before anything reads the apt cache (the onepassword role runs much later).
+- name: Remove legacy 1Password apt source
+  become: true
+  ansible.builtin.file:
+    path: "/etc/apt/sources.list.d/{{ item }}"
+    state: absent
+  loop:
+    - 1password.list
+    - 1password.list.distUpgrade
+  tags:
+    - config-base
+    - config-packages
+
 - name: Install Apt Packages
   become: true
   ansible.builtin.apt:
@@ -41,6 +56,8 @@
       - software-properties-common
       - zlib1g-dev
       # independent utils
+      # ffmpeg is required by openai-whisper (installed via mise)
+      - ffmpeg
       - jq
       - multitime
       - translate-shell

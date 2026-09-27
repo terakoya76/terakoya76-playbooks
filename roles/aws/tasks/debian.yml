@@ -12,6 +12,7 @@
     - config-tools
     - config-aws
 
+# Only seed the file: aws configure sso adds profiles to it, and overwriting would drop them
 - name: Place aws/config for awscli
   become: true
   become_user: "{{ ansible_user }}"
@@ -19,18 +20,7 @@
     src: files/awsconfig
     dest: "{{ aws_ansible_home }}/.aws/config"
     mode: "0755"
-    backup: true
-  tags:
-    - config-tools
-    - config-aws
-
-- name: Install awscli
-  become: true
-  ansible.builtin.apt:
-    name:
-      - awscli
-      - jq
-    state: present
+    force: false
   tags:
     - config-tools
     - config-aws
@@ -49,30 +39,6 @@
   ansible.builtin.apt:
     deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_arm64/session-manager-plugin.deb
   when: aws_arch_result.stdout == "arm64"
-  tags:
-    - config-tools
-    - config-aws
-
-- name: Install lsec2
-  become: true
-  ansible.builtin.apt:
-    deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{
-      aws_arch_result.stdout }}.deb
-  tags:
-    - config-tools
-    - config-aws
-
-- name: Install eksctl
-  become: true
-  ansible.builtin.shell: |
-    set -o pipefail
-    asset_name="eksctl_{{ ansible_facts.system }}_{{ aws_arch_result.stdout }}.tar.gz"
-    curl -s "https://api.github.com/repos/weaveworks/eksctl/releases/latest" | jq -r --arg NAME "$asset_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
-    tar zxvf "$asset_name"
-    chmod +x ./eksctl
-    mv ./eksctl {{ aws_eksctl_path }}
-    rm "$asset_name"
-  changed_when: false
   tags:
     - config-tools
     - config-aws

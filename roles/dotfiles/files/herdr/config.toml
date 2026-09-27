@@ -1,0 +1,43 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+
+# bash.d や PATH は ~/.bash_profile で読み込んでおり、login shell でしか読まれない。
+# herdr の既定 (auto) は Linux だと non-login shell で起動するため、tmux と同様に login shell にする。
+[terminal]
+shell_mode = "login"
+
+# prefix は herdr 既定 (ctrl+b) のまま、prefix 後のキーを tmux.conf に揃える (tmux の window は herdr の tab に対応させる)
+[keys]
+detach = "prefix+d"
+settings = "prefix+shift+s"
+
+new_tab = "prefix+c"
+rename_tab = "prefix+comma"
+next_tab = ["prefix+n", "prefix+t", "prefix+space", "prefix+ctrl+l"]
+previous_tab = ["prefix+p", "prefix+shift+t", "prefix+backspace", "prefix+ctrl+h"]
+
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+last_pane = "prefix+a"
+
+split_vertical = "prefix+v"
+split_horizontal = ["prefix+s", "prefix+minus"]
+
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+
+[ui]
+agent_panel_sort = "spaces"
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"], ["agent"]]
+
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
