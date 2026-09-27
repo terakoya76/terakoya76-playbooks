@@ -24,16 +24,6 @@
     - config-tools
     - config-aws
 
-- name: Install jq for eksctl download (awscli itself is managed by mise)
-  become: true
-  ansible.builtin.apt:
-    name:
-      - jq
-    state: present
-  tags:
-    - config-tools
-    - config-aws
-
 - name: Download session-manager-plugin
   become: true
   ansible.builtin.apt:
@@ -57,21 +47,6 @@
   ansible.builtin.apt:
     deb: https://github.com/goldeneggg/lsec2/releases/download/v{{ aws_lsec2_version }}/lsec2_{{ aws_lsec2_version }}_{{ aws_os_result.stdout }}_{{
       aws_arch_result.stdout }}.deb
-  tags:
-    - config-tools
-    - config-aws
-
-- name: Install eksctl
-  become: true
-  ansible.builtin.shell: |
-    set -o pipefail
-    asset_name="eksctl_{{ ansible_facts.system }}_{{ aws_arch_result.stdout }}.tar.gz"
-    curl -s "https://api.github.com/repos/weaveworks/eksctl/releases/latest" | jq -r --arg NAME "$asset_name" '.assets[] | select(.name | contains($NAME)) | .browser_download_url' | wget -q -i -
-    tar zxvf "$asset_name"
-    chmod +x ./eksctl
-    mv ./eksctl {{ aws_eksctl_path }}
-    rm "$asset_name"
-  changed_when: false
   tags:
     - config-tools
     - config-aws
