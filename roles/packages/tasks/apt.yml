@@ -28,6 +28,9 @@
       - cmake
       - curl
       - gcc
+      - ghostty
+      - gnome-shell-extension-manager
+      - gnome-tweaks
       - g++
       - make
       - xz-utils
