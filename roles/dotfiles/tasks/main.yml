@@ -451,3 +451,48 @@
   tags:
     - config-base
     - config-dotfiles
+
+- name: Create target directories for fcitx5
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.config/{{ item }}"
+    state: directory
+    mode: "0755"
+  with_items:
+    - autostart
+    - environment.d
+  when:
+    - ansible_facts.os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Place fcitx5 environment variables
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/fcitx5/environment.conf
+    dest: "{{ dotfiles_ansible_home }}/.config/environment.d/fcitx5.conf"
+    mode: "0644"
+    backup: true
+  when:
+    - ansible_facts.os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfiles
+
+# im-config's run_im only fires from Xsession, which GNOME on Wayland never sources,
+# so fcitx5 has to be launched through XDG autostart instead.
+- name: Autostart fcitx5 on login
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/fcitx5/org.fcitx.Fcitx5.desktop
+    dest: "{{ dotfiles_ansible_home }}/.config/autostart/org.fcitx.Fcitx5.desktop"
+    mode: "0644"
+  when:
+    - ansible_facts.os_family == "Debian"
+  tags:
+    - config-base
+    - config-dotfiles
