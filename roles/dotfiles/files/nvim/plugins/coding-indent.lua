@@ -2,15 +2,8 @@ return {
   'lukas-reineke/indent-blankline.nvim',
   dependencies = {
     'HiPhish/rainbow-delimiters.nvim',
-    'nvim-treesitter/nvim-treesitter',
   },
   config = function()
-    require('nvim-treesitter.configs').setup({
-      ensure_installed = { "python", "typescript" },
-      highlight = {
-        enable = true,
-      }
-    })
     local highlight = {
       "RainbowRed",
       "RainbowYellow",

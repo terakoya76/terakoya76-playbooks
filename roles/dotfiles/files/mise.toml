@@ -90,6 +90,12 @@ helmfile = "latest"
 #----------------------
 terraform = "latest"
 
+#----------------------
+# neovim
+#----------------------
+# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25
+tree-sitter = "latest"
+
 [env]
 #----------------------
 # node
