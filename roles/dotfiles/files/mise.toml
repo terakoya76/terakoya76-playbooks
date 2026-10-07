@@ -22,8 +22,8 @@ node = "26"
 # python
 #----------------------
 python = "3"
+"aqua:astral-sh/uv" = "latest"
 "pypi:ruff" = "latest"
-"pypi:uv" = "latest"
 "pypi:openai-whisper" = { version = "latest", os = ["linux"] }
 
 #----------------------
@@ -42,7 +42,10 @@ go = "1"
 "go:github.com/x-motemen/ghq" = "latest"
 "go:github.com/d-kuro/gwq/cmd/gwq" = "latest"
 "go:github.com/tomasz-tomczyk/crit/cmd/crit" = "latest"
+
+#----------------------
 # protobuf
+#----------------------
 "go:github.com/golang/protobuf/protoc-gen-go" = "latest"
 "go:github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc" = "latest"
 "go:github.com/ktr0731/evans" = "latest"
@@ -75,14 +78,29 @@ go = "1"
 "go:github.com/terraform-docs/terraform-docs" = "latest"
 
 #----------------------
-# dev
+# cli
+#----------------------
+"aqua:sharkdp/bat" = "latest"
+"aqua:dandavison/delta" = "latest"
+"aqua:eza-community/eza" = "latest"
+"github:cargo-generate/cargo-generate" = "latest"
+# tokei publishes no Linux binaries, so it builds with the rustup toolchain
+"cargo:tokei" = "latest"
+
+#----------------------
+# nvim
 #----------------------
 "aqua:herdrdev/herdr" = "latest"
+"aqua:sharkdp/fd" = "latest"
+"aqua:o2sh/onefetch" = "latest"
+"aqua:BurntSushi/ripgrep" = "latest"
 # nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25
 "aqua:tree-sitter/tree-sitter" = "latest"
+"pypi:powerline-shell" = "latest"
+# neovide only ships a .dmg for macOS
+"github:neovide/neovide" = { version = "latest", os = ["linux"] }
 # universal-ctags only ships native builds via ctags-nightly-build (no macOS; the tools role installs it with Homebrew there)
 "github:universal-ctags/ctags-nightly-build" = { version = "latest", asset_pattern = "uctags-*-linux-x86_64.release.tar.gz", strip_components = 1, bin_path = "bin", os = ["linux/x64"] }
-"pypi:powerline-shell" = "latest"
 
 #----------------------
 # streamdeck

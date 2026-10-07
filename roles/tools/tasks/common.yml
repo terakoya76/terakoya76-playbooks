@@ -1,16 +1,4 @@
 ---
-- name: Install uv
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      set -e
-      curl -LsSf https://astral.sh/uv/install.sh | sh
-  changed_when: false
-  tags:
-    - config-tools
-
 # herdr itself is installed by mise; this adds its agent skill for Claude Code.
 # https://herdr.dev/docs/agent-skill/
 - name: Install herdr agent skill
@@ -46,35 +34,3 @@
 # shell: git clone https://github.com/tomislav/osx-terminal.app-colors-solarized solarized.git
 # NOTE: check iceberg terminal theme when you're using MacOS
 #   https://cocopon.github.io/iceberg.vim/
-
-# Crates track recent stable Rust (e.g. cargo-generate needs rustc >= 1.96), and the rust
-# role that also updates the toolchain is skipped when running with --tags config-tools.
-- name: Update stable Rust toolchain for cargo install
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "rustup update stable"
-  changed_when: false
-  tags:
-    - config-tools
-
-- name: Install via cargo
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "cargo install {{ item }}"
-  with_items:
-    - alacritty
-    - bat
-    - cargo-generate
-    - exa
-    - fd-find
-    - git-delta
-    - neovide
-    - onefetch
-    - ripgrep
-    - tokei
-    - xsv
-  environment:
-    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-  changed_when: false
-  tags:
-    - config-tools

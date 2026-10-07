@@ -99,11 +99,11 @@
   become_user: "{{ ansible_user }}"
   community.general.homebrew_cask:
     name:
-      - alacritty
       - deepl
       - discord
       - docker
       - firefox
+      - ghostty
       - gitify
       - grammarly
       - google-japanese-ime

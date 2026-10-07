@@ -342,30 +342,6 @@
     - config-base
     - config-dotfiles
 
-- name: Create target directory for alacritty
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_ansible_home }}/.config/alacritty"
-    state: directory
-    mode: "0755"
-  tags:
-    - config-base
-    - config-dotfiles
-    - skip_ansible_lint
-
-- name: Place alacritty.yml
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.template:
-    src: files/alacritty.yml
-    dest: "{{ dotfiles_ansible_home }}/.config/alacritty/alacritty.yml"
-    mode: "0755"
-    backup: true
-  tags:
-    - config-base
-    - config-dotfiles
-
 - name: Place my.cnf
   become: true
   become_user: "{{ ansible_user }}"
