@@ -1,0 +1,34 @@
+{#- streamdeck-ui keys its state by the deck's serial number, so the same
+    layout is rendered for each deck found on the USB bus. Fields are read
+    with .get() because `b.keys` would resolve to dict.keys(). -#}
+{%- set icons_dir = streamdeck_ansible_home ~ '/.local/share/streamdeck-ui/icons' -%}
+{%- set scripts_dir = streamdeck_ansible_home ~ '/.local/share/streamdeck-ui/scripts' -%}
+{%- set pages = {} -%}
+{%- for b in streamdeck_buttons -%}
+{%-   set page = b.get('page', 0) | string -%}
+{%-   set _ = pages.update({page: pages.get(page, {})}) -%}
+{%-   set _ = pages[page].update({(b.get('button') | string): {
+        'state': 0,
+        'states': {'0': {
+          'text': b.get('text', ''),
+          'icon': (icons_dir ~ '/' ~ b.get('icon')) if b.get('icon') else '',
+          'keys': b.get('keys', ''),
+          'write': b.get('write', ''),
+          'command': (scripts_dir ~ '/' ~ b.get('script')) if b.get('script') else b.get('command', ''),
+          'brightness_change': 0,
+          'switch_page': b.get('switch_page', 0),
+          'switch_state': 0,
+          'text_vertical_align': '',
+          'text_horizontal_align': '',
+          'font': '',
+          'font_color': '',
+          'font_size': 0,
+          'background_color': ''
+        }}
+      }}) -%}
+{%- endfor -%}
+{%- set state = {} -%}
+{%- for serial in streamdeck_serials -%}
+{%-   set _ = state.update({serial: dict(streamdeck_deck_settings, buttons=pages)}) -%}
+{%- endfor -%}
+{{ {'state': state, 'streamdeck_ui_version': 2} | to_nice_json(indent=4) }}

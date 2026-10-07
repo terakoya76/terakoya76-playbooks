@@ -1,8 +1,8 @@
 # enable z
 . "$HOME/z/z.sh"
 
-# exa(ls)
-alias ls=exa
+# eza(ls)
+alias ls=eza
 alias ll="ls -l"
 
 # cat(bat)

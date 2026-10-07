@@ -5,7 +5,7 @@ min_version = "2025.12.0"
 # node
 #----------------------
 node = "26"
-pnpm = "12"
+"aqua:pnpm/pnpm" = "12"
 "npm:neovim" = "latest"
 "npm:@antfu/ni" = "latest"
 "npm:taze" = "latest"
@@ -16,18 +16,14 @@ pnpm = "12"
 # coding agent
 "npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
 "npm:happy-coder" = "latest"
-"npm:difit" = "latest"
 "npm:skills" = "latest"
 
 #----------------------
 # python
 #----------------------
 python = "3"
+"aqua:astral-sh/uv" = "latest"
 "pypi:ruff" = "latest"
-"pypi:uv" = "latest"
-"pypi:awsebcli" = "latest"
-"pypi:powerline-shell" = "latest"
-# ffmpeg is installed via apt in the tools role
 "pypi:openai-whisper" = { version = "latest", os = ["linux"] }
 
 #----------------------
@@ -46,49 +42,70 @@ go = "1"
 "go:github.com/x-motemen/ghq" = "latest"
 "go:github.com/d-kuro/gwq/cmd/gwq" = "latest"
 "go:github.com/tomasz-tomczyk/crit/cmd/crit" = "latest"
+
+#----------------------
 # protobuf
+#----------------------
 "go:github.com/golang/protobuf/protoc-gen-go" = "latest"
 "go:github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc" = "latest"
 "go:github.com/ktr0731/evans" = "latest"
-# terraform
-"go:github.com/plumber-cd/terraform-backend-git" = "latest"
-"go:github.com/terraform-docs/terraform-docs" = "latest"
-
-#----------------------
-# rust
-#----------------------
-herdr = "latest"
 
 #----------------------
 # aws
 #----------------------
-"aws-cli" = "latest"
-eksctl = "latest"
+"aqua:aws/aws-cli" = "latest"
+"aqua:eksctl-io/eksctl" = "latest"
+"pypi:awsebcli" = "latest"
 # lsec2 only publishes x86_64 binaries
 "github:goldeneggg/lsec2" = { version = "latest", os = ["linux/x64", "macos/x64"] }
 
 #----------------------
 # kubernetes
 #----------------------
-kustomize = "latest"
-kubeseal = "latest"
-stern = "latest"
-sops = "latest"
-helmfile = "latest"
-"github:mumoshu/variant" = "latest"
+"aqua:kubernetes-sigs/kustomize" = "latest"
+"aqua:bitnami/sealed-secrets" = "latest"
+"aqua:stern/stern" = "latest"
+"aqua:getsops/sops" = "latest"
+"aqua:helmfile/helmfile" = "latest"
 # sopsed only publishes a single macOS x86_64 binary
 "github:mumoshu/sopsed" = { version = "latest", asset_pattern = "sopsed", os = ["macos/x64"] }
 
 #----------------------
-# ctags
+# terraform
 #----------------------
+"aqua:hashicorp/terraform" = "latest"
+"go:github.com/plumber-cd/terraform-backend-git" = "latest"
+"go:github.com/terraform-docs/terraform-docs" = "latest"
+
+#----------------------
+# cli
+#----------------------
+"aqua:sharkdp/bat" = "latest"
+"aqua:dandavison/delta" = "latest"
+"aqua:eza-community/eza" = "latest"
+"github:cargo-generate/cargo-generate" = "latest"
+# tokei publishes no Linux binaries, so it builds with the rustup toolchain
+"cargo:tokei" = "latest"
+
+#----------------------
+# nvim
+#----------------------
+"aqua:herdrdev/herdr" = "latest"
+"aqua:sharkdp/fd" = "latest"
+"aqua:o2sh/onefetch" = "latest"
+"aqua:BurntSushi/ripgrep" = "latest"
+# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25
+"aqua:tree-sitter/tree-sitter" = "latest"
+"pypi:powerline-shell" = "latest"
+# neovide only ships a .dmg for macOS
+"github:neovide/neovide" = { version = "latest", os = ["linux"] }
 # universal-ctags only ships native builds via ctags-nightly-build (no macOS; the tools role installs it with Homebrew there)
 "github:universal-ctags/ctags-nightly-build" = { version = "latest", asset_pattern = "uctags-*-linux-x86_64.release.tar.gz", strip_components = 1, bin_path = "bin", os = ["linux/x64"] }
 
 #----------------------
-# terraform
+# streamdeck
 #----------------------
-terraform = "latest"
+"pypi:streamdeck-linux-gui" = { version = "latest", os = ["linux"] }
 
 [env]
 #----------------------

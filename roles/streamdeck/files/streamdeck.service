@@ -1,0 +1,15 @@
+[Unit]
+Description=Stream Deck UI (streamdeck-linux-gui)
+Documentation=https://streamdeck-linux-gui.github.io/streamdeck-linux-gui/
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+# -n starts hidden; open the window from the tray icon's "Configure" menu.
+ExecStart=%h/.local/share/mise/shims/streamdeck -n
+# Exiting from the tray menu returns 0 and should keep it stopped.
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target

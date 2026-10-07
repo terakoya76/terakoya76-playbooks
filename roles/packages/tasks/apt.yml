@@ -28,6 +28,9 @@
       - cmake
       - curl
       - gcc
+      - ghostty
+      - gnome-shell-extension-manager
+      - gnome-tweaks
       - g++
       - make
       - xz-utils
@@ -58,6 +61,8 @@
       # independent utils
       # ffmpeg is required by openai-whisper (installed via mise)
       - ffmpeg
+      - fcitx5
+      - fcitx5-mozc
       - jq
       - multitime
       - translate-shell
@@ -66,14 +71,10 @@
       - wtype
       # dev
       - direnv
-      # https://github.com/neovim/neovim/blob/master/INSTALL.md
-      # we chose appimage
-      # - neovim
       - vim
       - tmux
       - xclip
       - xsel
-      # - hadolint
       - shellcheck
       # llvm
       ## clang
