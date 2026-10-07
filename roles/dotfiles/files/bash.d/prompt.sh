@@ -9,7 +9,18 @@ add_line () {
 PROMPT_COMMAND='add_line'
 
 # bash-completions
-source /usr/local/etc/bash_completion
+# Ubuntu ships it under /usr/share; Homebrew's bash-completion lives under
+# /usr/local (Intel) or /opt/homebrew (Apple Silicon).
+for _bash_completion in \
+  /usr/share/bash-completion/bash_completion \
+  /opt/homebrew/etc/bash_completion \
+  /usr/local/etc/bash_completion; do
+  if [ -r "$_bash_completion" ]; then
+    source "$_bash_completion"
+    break
+  fi
+done
+unset _bash_completion
 
 # NOTE: need Menlo-for-Powerline
 #   https://github.com/abertsch/Menlo-for-Powerline
