@@ -1,0 +1,25 @@
+---
+- name: Get ansible_user home directory (Debian)
+  ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
+  register: streamdeck_ansible_home_result_debian
+  changed_when: false
+  when:
+    - ansible_facts.os_family == "Debian"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Set the fact for the other scripts to use
+  ansible.builtin.set_fact:
+    streamdeck_ansible_home: "{{ streamdeck_ansible_home_result_debian.stdout }}"
+  changed_when: false
+  when: streamdeck_ansible_home_result_debian.stdout is defined
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# streamdeck-linux-gui, Window Calls and ydotool are Linux/GNOME only.
+- name: For debian
+  ansible.builtin.import_tasks: debian.yml
+  when:
+    - ansible_facts.os_family == "Debian"

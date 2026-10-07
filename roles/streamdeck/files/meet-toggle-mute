@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Wayland replacement for:
+#   xdotool search --name '^Meet - .+$' windowactivate --sync key ctrl+d
+# Window lookup/focus goes through the Window Calls GNOME Shell extension
+# (https://github.com/ickyicky/window-calls) and the key press through ydotool,
+# because Wayland forbids ordinary clients from doing either.
+set -euo pipefail
+
+title_regex="${1:-^Meet - .+$}"
+export YDOTOOL_SOCKET="${YDOTOOL_SOCKET:-/run/user/$(id -u)/.ydotool_socket}"
+
+list_json=$(gdbus call --session \
+  --dest org.gnome.Shell \
+  --object-path /org/gnome/Shell/Extensions/Windows \
+  --method org.gnome.Shell.Extensions.Windows.List)
+
+# gdbus wraps the returned string as ('...',)
+win_id=$(python3 -c '
+import ast, json, re, sys
+windows = json.loads(ast.literal_eval(sys.argv[1])[0])
+pattern = re.compile(sys.argv[2])
+ids = [w["id"] for w in windows if pattern.search(w.get("title") or "")]
+print(ids[0] if ids else "")
+' "$list_json" "$title_regex")
+
+if [[ -z "$win_id" ]]; then
+  echo "no window matches: $title_regex" >&2
+  exit 1
+fi
+
+gdbus call --session \
+  --dest org.gnome.Shell \
+  --object-path /org/gnome/Shell/Extensions/Windows \
+  --method org.gnome.Shell.Extensions.Windows.Activate "$win_id" >/dev/null
+
+# Activate returns before focus actually moves; without this wait the key
+# press can land on the previously focused window.
+sleep 0.2
+
+# Linux input keycodes: 29 = KEY_LEFTCTRL, 32 = KEY_D
+ydotool key 29:1 32:1 32:0 29:0

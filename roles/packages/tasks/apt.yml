@@ -71,14 +71,10 @@
       - wtype
       # dev
       - direnv
-      # https://github.com/neovim/neovim/blob/master/INSTALL.md
-      # we chose appimage
-      # - neovim
       - vim
       - tmux
       - xclip
       - xsel
-      # - hadolint
       - shellcheck
       # llvm
       ## clang

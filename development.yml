@@ -22,5 +22,6 @@
     - role: gcp
     - role: kubernetes
     - role: onepassword
+    - role: streamdeck
     - role: tailscale
     - role: tools

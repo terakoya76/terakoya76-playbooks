@@ -1,0 +1,219 @@
+---
+# streamdeck-linux-gui (installed by mise) opens the deck via hidraw, so the
+# uaccess tag must also reach the hidraw node, not only the parent usb device.
+# Matching on vendor ID alone keeps newer models (e.g. MK.2 rev 00a5) working.
+# https://streamdeck-linux-gui.github.io/streamdeck-linux-gui/installation/
+- name: Place udev rules for Stream Deck
+  become: true
+  ansible.builtin.copy:
+    src: files/60-streamdeck.rules
+    dest: /etc/udev/rules.d/60-streamdeck.rules
+    mode: "0644"
+    backup: true
+  notify: Reload udev rules
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Wayland forbids ordinary clients from finding/focusing other windows, so
+# xdotool cannot drive native Wayland windows (e.g. Chrome with ozone).
+# Window Calls exposes window list/activate over D-Bus from inside GNOME Shell.
+# https://github.com/ickyicky/window-calls
+- name: Create GNOME Shell extension directory for Window Calls
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ streamdeck_ansible_home }}/.local/share/gnome-shell/extensions/{{ streamdeck_window_calls_uuid }}"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Download Window Calls GNOME Shell extension
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.get_url:
+    url: "https://extensions.gnome.org/download-extension/{{ streamdeck_window_calls_uuid }}.shell-extension.zip?version_tag={{ streamdeck_window_calls_version_tag }}"
+    dest: "/tmp/{{ streamdeck_window_calls_uuid }}-{{ streamdeck_window_calls_version_tag }}.zip"
+    mode: "0644"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Install Window Calls GNOME Shell extension
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ streamdeck_window_calls_uuid }}-{{ streamdeck_window_calls_version_tag }}.zip"
+    dest: "{{ streamdeck_ansible_home }}/.local/share/gnome-shell/extensions/{{ streamdeck_window_calls_uuid }}"
+    remote_src: true
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Read enabled GNOME Shell extensions
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: dbus-run-session -- dconf read /org/gnome/shell/enabled-extensions
+  register: streamdeck_enabled_extensions_result
+  changed_when: false
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# GNOME Shell on Wayland only loads newly installed extensions at the next login.
+- name: Enable Window Calls GNOME Shell extension
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command:
+    argv:
+      - dbus-run-session
+      - --
+      - dconf
+      - write
+      - /org/gnome/shell/enabled-extensions
+      - "{{ current | union([streamdeck_window_calls_uuid]) | to_json }}"
+  vars:
+    # dconf prints GVariant text such as "['a', 'b']", "@as []" or nothing when
+    # unset; without the type prefix it parses as a YAML flow sequence.
+    current: "{{ (streamdeck_enabled_extensions_result.stdout | default('', true) | regex_replace('^@as ', '') | from_yaml) or [] }}"
+  when: streamdeck_window_calls_uuid not in streamdeck_enabled_extensions_result.stdout
+  changed_when: true
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# ydotoold runs as the per-user ydotool.service the package enables; it can
+# open /dev/uinput without root thanks to the uaccess tag in 60-streamdeck.rules.
+# libhidapi-libusb0 is what streamdeck-linux-gui talks to the device through.
+- name: Install Stream Deck dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libhidapi-libusb0
+      - ydotool
+    state: present
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Create streamdeck-ui scripts directory
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/scripts"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Wayland stand-in for `xdotool search ... windowactivate key ctrl+d`,
+# referenced by absolute path from the Stream Deck mute button's command.
+- name: Place meet-toggle-mute script
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/meet-toggle-mute
+    dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/scripts/meet-toggle-mute"
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Create streamdeck-ui icons directory
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/icons"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Button icons referenced by absolute path from ~/.streamdeck_ui.json.
+- name: Place streamdeck-ui button icons
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: "files/icons/{{ item }}"
+    dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/icons/{{ item }}"
+    mode: "0644"
+  loop:
+    - logo-meet.png
+    - workspace-left.png
+    - workspace-right.png
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# The serial is read from the attached device rather than stored in the repo,
+# so the layout follows whichever Stream Deck is plugged into this machine.
+- name: Find attached Stream Deck serial numbers
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      for d in /sys/bus/usb/devices/*; do
+        if [ "$(cat "$d/idVendor" 2>/dev/null)" = "0fd9" ] && [ -r "$d/serial" ]; then
+          cat "$d/serial"
+        fi
+      done
+  register: streamdeck_serials_result
+  changed_when: false
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Overwrites button edits made in the streamdeck-ui window; change the layout
+# in defaults/main.yml instead. Restart streamdeck.service to pick it up.
+- name: Place streamdeck-ui config
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: streamdeck_ui.json.j2
+    dest: "{{ streamdeck_ansible_home }}/.streamdeck_ui.json"
+    mode: "0644"
+    backup: true
+  vars:
+    streamdeck_serials: "{{ streamdeck_serials_result.stdout_lines | unique }}"
+  when: streamdeck_serials_result.stdout_lines | length > 0
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Create systemd user unit directory
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ streamdeck_ansible_home }}/.config/systemd/user/graphical-session.target.wants"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Place streamdeck-linux-gui user unit
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/streamdeck.service
+    dest: "{{ streamdeck_ansible_home }}/.config/systemd/user/streamdeck.service"
+    mode: "0644"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Equivalent of `systemctl --user enable`, done by hand because the playbook
+# runs under sudo without access to the user's systemd instance.
+- name: Enable streamdeck-linux-gui user unit
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    src: ../streamdeck.service
+    dest: "{{ streamdeck_ansible_home }}/.config/systemd/user/graphical-session.target.wants/streamdeck.service"
+    state: link
+  tags:
+    - config-tools
+    - config-streamdeck

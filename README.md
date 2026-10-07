@@ -28,6 +28,7 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
   * config-gcp
   * config-kubernetes
   * config-onepassword
+  * config-streamdeck
   * config-cloudflared
   * config-tailscale
 

@@ -1,0 +1,30 @@
+---
+# version_tag pins Window Calls v21 (GNOME Shell 45-50).
+# Look up the tag for a newer release via
+# https://extensions.gnome.org/extension-info/?uuid=window-calls@domandoman.xyz&shell_version=<major>
+streamdeck_window_calls_uuid: window-calls@domandoman.xyz
+streamdeck_window_calls_version_tag: 69219
+
+# Applied to every Stream Deck attached when the playbook runs.
+streamdeck_deck_settings:
+  display_timeout: 1800
+  brightness: 99
+  brightness_dimmed: 0
+  rotation: 0
+  page: 0
+
+# Only assigned buttons are listed; streamdeck-ui fills the rest with blanks.
+# `icon` is a file under files/icons, `script` a file under files/ installed
+# to ~/.local/share/streamdeck-ui/scripts.
+streamdeck_buttons:
+  # Meet mic toggle
+  - button: 0
+    icon: logo-meet.png
+    script: meet-toggle-mute
+  # GNOME workspace left / right
+  - button: 13
+    icon: workspace-left.png
+    keys: ctrl+alt+left
+  - button: 14
+    icon: workspace-right.png
+    keys: ctrl+alt+right
