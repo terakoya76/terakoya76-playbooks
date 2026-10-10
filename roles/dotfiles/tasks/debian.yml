@@ -1,0 +1,64 @@
+---
+- name: Place Default Config
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.template:
+    src: files/{{ item }}
+    dest: "{{ dotfiles_ansible_home }}/.{{ item }}"
+    mode: "0755"
+    backup: true
+  with_items:
+    - bash_profile
+    - bashrc
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Install bash-completion
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bash-completion
+    state: present
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Create target directories for fcitx5
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.config/{{ item }}"
+    state: directory
+    mode: "0755"
+  with_items:
+    - autostart
+    - environment.d
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Place fcitx5 environment variables
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/fcitx5/environment.conf
+    dest: "{{ dotfiles_ansible_home }}/.config/environment.d/fcitx5.conf"
+    mode: "0644"
+    backup: true
+  tags:
+    - config-base
+    - config-dotfiles
+
+# im-config's run_im only fires from Xsession, which GNOME on Wayland never sources,
+# so fcitx5 has to be launched through XDG autostart instead.
+- name: Autostart fcitx5 on login
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/fcitx5/org.fcitx.Fcitx5.desktop
+    dest: "{{ dotfiles_ansible_home }}/.config/autostart/org.fcitx.Fcitx5.desktop"
+    mode: "0644"
+  tags:
+    - config-base
+    - config-dotfiles
