@@ -23,6 +23,33 @@
     - config-base
     - config-packages
 
+# Homebrew 7 refuses to load formulae from non-official taps until they are trusted.
+# Tap names below are the normalized form `brew tap` reports, so they match trust.json.
+- name: Brew Trust Check
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --json v1
+  register: packages_brew_trust_result
+  changed_when: false
+  check_mode: false
+  tags:
+    - config-base
+    - config-packages
+
+- name: Brew Trust -> evans avr px4
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --tap {{ item }}
+  with_items:
+    - ktr0731/evans
+    - osx-cross/avr
+    - px4/px4
+  when: item not in (packages_brew_trust_result.stdout | from_json).taps
+  changed_when: true
+  tags:
+    - config-base
+    - config-packages
+
 - name: Brew Untap
   become: true
   become_user: "{{ ansible_user }}"

@@ -8,6 +8,26 @@
   tags:
     - config-tools
 
+# Homebrew 7 refuses to load formulae from non-official taps until they are trusted
+- name: Brew Trust Check
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --json v1
+  register: tools_brew_trust_result
+  changed_when: false
+  check_mode: false
+  tags:
+    - config-tools
+
+- name: Trust ctags/gtags tap
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --tap universal-ctags/universal-ctags
+  when: "'universal-ctags/universal-ctags' not in (tools_brew_trust_result.stdout | from_json).taps"
+  changed_when: true
+  tags:
+    - config-tools
+
 - name: Install ctags/gtags
   become: true
   become_user: "{{ ansible_user }}"
