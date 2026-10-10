@@ -116,6 +116,8 @@
       - mise
       # security
       - trivy
+      # gpg
+      - pinentry-mac
     state: present
   tags:
     - config-base

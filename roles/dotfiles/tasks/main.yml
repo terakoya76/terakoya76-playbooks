@@ -141,6 +141,37 @@
     - config-base
     - config-dotfiles
 
+- name: Create target directory for gnupg
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ dotfiles_ansible_home }}/.gnupg"
+    state: directory
+    mode: "0700"
+  when:
+    - ansible_facts.os_family == "Darwin"
+  tags:
+    - config-base
+    - config-dotfiles
+
+# bash.d/gpg.sh sets GPG_TTY for the terminal pinentry, but that one fails wherever the
+# terminal cannot host the prompt (small or absent TTY). pinentry-mac prompts via the GUI.
+- name: Use pinentry-mac for gpg-agent
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_ansible_home }}/.gnupg/gpg-agent.conf"
+    regexp: '^pinentry-program '
+    line: pinentry-program /opt/homebrew/bin/pinentry-mac
+    create: true
+    mode: "0600"
+  when:
+    - ansible_facts.os_family == "Darwin"
+  notify: Restart gpg-agent
+  tags:
+    - config-base
+    - config-dotfiles
+
 - name: Create target directory for nvim
   become: true
   become_user: "{{ ansible_user }}"
