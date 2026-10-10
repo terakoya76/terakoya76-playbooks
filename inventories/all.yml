@@ -5,6 +5,10 @@ all:
       hosts: localhost
       vars:
         ansible_connection: local
+        # Pin the interpreter: discovery picks up whatever python is first on PATH, which
+        # with mise active is a version-manager one. Modules then run under a toolchain
+        # that is not the repo's, and under become they fail outright.
+        ansible_python_interpreter: "{{ playbook_dir }}/.venv/bin/python"
         group: ubuntu
         ansible_shell_executable: /bin/bash
         workdir: "~"

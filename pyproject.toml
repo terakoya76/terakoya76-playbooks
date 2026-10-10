@@ -8,3 +8,9 @@ dependencies = [
     "ansible>=13.0.0",
     "ansible-lint>=25.12.0",
 ]
+
+[tool.uv]
+# Build the venv on a uv-managed interpreter. A Homebrew python would make the venv
+# depend on a formula this very playbook upgrades with state: latest, and since
+# ansible_python_interpreter is pinned to this venv, losing it breaks every task.
+python-preference = "only-managed"

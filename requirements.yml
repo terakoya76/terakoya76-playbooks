@@ -1,4 +1,10 @@
 ---
+# Pinned on purpose: uv.lock pins ansible itself, but the collections that provide almost
+# every module here (community.general's homebrew*, snap) live outside the venv and are
+# resolved from collections_path, so without versions a run still picks up whatever
+# happens to be installed on the machine.
 collections:
-  - ansible.posix
-  - community.general
+  - name: ansible.posix
+    version: "2.1.0"
+  - name: community.general
+    version: "12.1.0"

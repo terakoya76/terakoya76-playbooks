@@ -2,11 +2,23 @@
 
 Setup develop environment with ansible
 
+## Setup
+
+ansible is pinned in `uv.lock` and its collections in `requirements.yml`, so a run uses
+those versions rather than whatever happens to be installed on the machine. The venv is
+built on a uv-managed interpreter, which keeps it independent of the Homebrew python that
+this playbook itself upgrades.
+
+```bash
+$ uv sync
+$ uv run ansible-galaxy install -r requirements.yml
+```
+
 ## Install/Update
 
 How to execute
 ```bash
-$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER}
+$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} -K
 ```
 
 ### Supported Tags
@@ -35,5 +47,5 @@ $ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=$
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ sudo ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="dotfiles : Get ansible_user home directory"
+$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} -K --start-at-task="dotfiles : Get ansible_user home directory"
 ```
