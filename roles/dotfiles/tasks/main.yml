@@ -297,6 +297,29 @@
     - config-base
     - config-dotfiles
 
+# Placing mise.toml only declares the toolchain; nothing installed it, so declared tools
+# (e.g. the tree-sitter CLI nvim-treesitter needs to build parsers) stayed missing.
+- name: Check for missing mise tools
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: mise ls --missing --json
+  register: dotfiles_mise_missing_result
+  changed_when: false
+  check_mode: false
+  tags:
+    - config-base
+    - config-dotfiles
+
+- name: Install missing mise tools
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: mise install
+  when: (dotfiles_mise_missing_result.stdout | from_json | length) > 0
+  changed_when: true
+  tags:
+    - config-base
+    - config-dotfiles
+
 - name: Create target directory for herdr
   become: true
   become_user: "{{ ansible_user }}"

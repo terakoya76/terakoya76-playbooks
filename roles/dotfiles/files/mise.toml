@@ -94,7 +94,8 @@ go = "1"
 "aqua:sharkdp/fd" = "latest"
 "aqua:o2sh/onefetch" = "latest"
 "aqua:BurntSushi/ripgrep" = "latest"
-# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25
+# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25,
+# and Homebrew's tree-sitter formula is library-only (the CLI moved to tree-sitter-cli).
 "aqua:tree-sitter/tree-sitter" = "latest"
 "pypi:powerline-shell" = "latest"
 # neovide only ships a .dmg for macOS
