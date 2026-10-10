@@ -82,9 +82,9 @@ go = "1"
 #----------------------
 "aqua:sharkdp/bat" = "latest"
 "aqua:dandavison/delta" = "latest"
-"aqua:eza-community/eza" = "latest"
 "github:cargo-generate/cargo-generate" = "latest"
-# tokei publishes no Linux binaries, so it builds with the rustup toolchain
+# eza ships no macOS binaries and tokei none for Linux, so both build with the rustup toolchain
+"cargo:eza" = "latest"
 "cargo:tokei" = "latest"
 
 #----------------------
