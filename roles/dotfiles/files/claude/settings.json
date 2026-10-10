@@ -380,6 +380,7 @@
       }
     }
   },
+  "language": "Japanese",
   "alwaysThinkingEnabled": true,
   "tui": "default",
   "theme": "dark",
@@ -389,5 +390,10 @@
       "Bash(terraform apply:*) in aws/dev or any aws/{env} root — CLAUDE.md requires explicit human approval of the plan diff before apply, even with -auto-approve",
       "Bash(terraform destroy:*) — repo explicitly warns that S3/DynamoDB renames or resource removal cause recreation of live, already-applied resources"
     ]
+  },
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "tap"
   }
 }
