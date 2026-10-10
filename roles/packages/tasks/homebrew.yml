@@ -8,7 +8,7 @@
     - config-base
     - config-packages
 
-- name: Brew Tap -> bundle core dupes services versions
+- name: Brew Tap
   become: true
   become_user: "{{ ansible_user }}"
   community.general.homebrew_tap:
@@ -18,17 +18,36 @@
       - ktr0731/evans
       - osx-cross/avr
       - PX4/homebrew-px4
+      - universal-ctags/universal-ctags
     state: present
   tags:
     - config-base
     - config-packages
 
-- name: Brew Untap
+# Homebrew 7 refuses to load formulae from non-official taps until they are trusted.
+# Tap names below are the normalized form `brew tap` reports, so they match trust.json.
+- name: Brew Trust Check
   become: true
   become_user: "{{ ansible_user }}"
-  community.general.homebrew_tap:
-    name: homebrew/boneyard
-    state: absent
+  ansible.builtin.command: brew trust --json v1
+  register: packages_brew_trust_result
+  changed_when: false
+  check_mode: false
+  tags:
+    - config-base
+    - config-packages
+
+- name: Brew Trust
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --tap {{ item }}
+  with_items:
+    - ktr0731/evans
+    - osx-cross/avr
+    - px4/px4
+    - universal-ctags/universal-ctags
+  when: item not in (packages_brew_trust_result.stdout | from_json).taps
+  changed_when: true
   tags:
     - config-base
     - config-packages
@@ -48,52 +67,66 @@
   community.general.homebrew:
     name:
       - bash-completion
-      - curl
       - cmake
+      - curl
       - direnv
-      - evans
       - fzf
       - gh
       - git
       - gnu-getopt
       - graphviz
+      - hadolint
       - imagemagick
       - jq
       - libmagic
+      - llvm
       - memcached
-      - mysql
+      - mise
+      - neovim
       - openssl
       - pandoc
+      - pinentry-mac
       - protobuf
       - python
       - readline
       - reattach-to-user-namespace
       - tig
+      - tmux
       - translate-shell
+      - trivy
+      - vim
       - wget
       - yq
       # AVR
       - avr-gcc
+      - avrdude
       - dfu-programmer
       - gcc-arm-none-eabi
-      - avrdude
-      # dev
-      - direnv
-      - neovim
-      - vim
-      - tmux
-      - hadolint
-      # llvm
-      - llvm
-      # mise
-      - mise
-      # security
-      - trivy
+      # ctags
+      - universal-ctags
+      # evans
+      - evans
+    state: latest
+  tags:
+    - config-base
+    - config-packages
+
+# mysql keeps 181MB of data under var/mysql and the installed 9.0.x is many majors
+# behind current. An in-place jump that far leaves a server that will not start, so this
+# one stays put and is upgraded by hand with the data migration it needs.
+- name: Brew Install (pinned)
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - mysql
     state: present
   tags:
     - config-base
     - config-packages
 
+# greedy is deliberately left at its default: 15 of these casks set auto_updates, so
+# brew skips them here and lets each app update itself rather than fighting its updater.
 - name: Install Homebrew cask packages
   become: true
   become_user: "{{ ansible_user }}"
@@ -123,7 +156,12 @@
       - vlc
       - xquartz
       - wireshark
-    state: present
+    state: latest
+    # upgrading a cask with privileged files (docker-desktop, wireshark, xquartz) makes
+    # brew call sudo, which has no terminal to prompt from inside a task. An empty answer
+    # at the prompt is omitted rather than passed on, so hosts with passwordless sudo keep
+    # working instead of handing brew a blank password.
+    sudo_password: "{{ ansible_become_pass | default(omit, true) }}"
   tags:
     - config-base
     - config-packages

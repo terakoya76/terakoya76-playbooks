@@ -1,0 +1,8 @@
+---
+# gpgconf --kill is the supported way to reload: there is no reload verb, and the agent
+# respawns from the new config on the next client request.
+- name: Restart gpg-agent
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: gpgconf --kill gpg-agent
+  changed_when: true

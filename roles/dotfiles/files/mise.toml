@@ -82,9 +82,9 @@ go = "1"
 #----------------------
 "aqua:sharkdp/bat" = "latest"
 "aqua:dandavison/delta" = "latest"
-"aqua:eza-community/eza" = "latest"
 "github:cargo-generate/cargo-generate" = "latest"
-# tokei publishes no Linux binaries, so it builds with the rustup toolchain
+# eza ships no macOS binaries and tokei none for Linux, so both build with the rustup toolchain
+"cargo:eza" = "latest"
 "cargo:tokei" = "latest"
 
 #----------------------
@@ -94,12 +94,13 @@ go = "1"
 "aqua:sharkdp/fd" = "latest"
 "aqua:o2sh/onefetch" = "latest"
 "aqua:BurntSushi/ripgrep" = "latest"
-# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25
+# nvim-treesitter (main branch) builds parsers with tree-sitter-cli >= 0.26.1; apt ships 0.25,
+# and Homebrew's tree-sitter formula is library-only (the CLI moved to tree-sitter-cli).
 "aqua:tree-sitter/tree-sitter" = "latest"
 "pypi:powerline-shell" = "latest"
 # neovide only ships a .dmg for macOS
 "github:neovide/neovide" = { version = "latest", os = ["linux"] }
-# universal-ctags only ships native builds via ctags-nightly-build (no macOS; the tools role installs it with Homebrew there)
+# universal-ctags only ships native builds via ctags-nightly-build (no macOS; the packages role installs it with Homebrew there)
 "github:universal-ctags/ctags-nightly-build" = { version = "latest", asset_pattern = "uctags-*-linux-x86_64.release.tar.gz", strip_components = 1, bin_path = "bin", os = ["linux/x64"] }
 
 #----------------------

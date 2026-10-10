@@ -5,6 +5,9 @@ exclude_paths:
   - roles/dotfiles/files/alacritty.yml
 
 warn_list:
+  # Package installs deliberately track latest: there is no lockfile here, so `present`
+  # does not pin anything, it just freezes whatever happened to be current on first run.
+  - package-latest
   - schema[meta]
   - meta-no-info
   - no-changed-when

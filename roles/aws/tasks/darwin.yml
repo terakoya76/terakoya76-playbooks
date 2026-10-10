@@ -35,6 +35,28 @@
     - config-tools
     - config-aws
 
+# Homebrew 7 refuses to load formulae from non-official taps until they are trusted
+- name: Brew Trust Check
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --json v1
+  register: aws_brew_trust_result
+  changed_when: false
+  check_mode: false
+  tags:
+    - config-tools
+    - config-aws
+
+- name: Trust saml2aws tap
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command: brew trust --tap versent/taps
+  when: "'versent/taps' not in (aws_brew_trust_result.stdout | from_json).taps"
+  changed_when: true
+  tags:
+    - config-tools
+    - config-aws
+
 - name: Install saml2aws
   become: true
   become_user: "{{ ansible_user }}"
