@@ -18,6 +18,7 @@
       - ktr0731/evans
       - osx-cross/avr
       - PX4/homebrew-px4
+      - universal-ctags/universal-ctags
     state: present
   tags:
     - config-base
@@ -36,7 +37,7 @@
     - config-base
     - config-packages
 
-- name: Brew Trust -> evans avr px4
+- name: Brew Trust -> evans avr px4 universal-ctags
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: brew trust --tap {{ item }}
@@ -44,6 +45,7 @@
     - ktr0731/evans
     - osx-cross/avr
     - px4/px4
+    - universal-ctags/universal-ctags
   when: item not in (packages_brew_trust_result.stdout | from_json).taps
   changed_when: true
   tags:
@@ -119,6 +121,18 @@
       # gpg
       - pinentry-mac
     state: present
+  tags:
+    - config-base
+    - config-packages
+
+- name: Brew Install -> HEAD
+  become: true
+  become_user: "{{ ansible_user }}"
+  community.general.homebrew:
+    name:
+      - universal-ctags
+    state: present
+    install_options: HEAD
   tags:
     - config-base
     - config-packages
