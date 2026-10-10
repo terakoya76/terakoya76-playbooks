@@ -18,8 +18,14 @@ $ uv run ansible-galaxy install -r requirements.yml
 
 How to execute
 ```bash
-$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} -K
+$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER}
 ```
+
+The playbook prompts for the become password instead of taking `-K`. Homebrew needs that
+password to upgrade casks that hold privileged files, and a password given to `-K` only
+reaches PlayContext, so it can never be templated into a task. Pass
+`-e ansible_become_pass=...` to skip the prompt in a non-interactive run, and leave the
+prompt empty on a host with passwordless sudo.
 
 ### Supported Tags
 * config-base
@@ -47,5 +53,5 @@ $ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user
 ### When failed
 use `--start-at-task` opt
 ```bash
-$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} -K --start-at-task="dotfiles : Get ansible_user home directory"
+$ uv run ansible-playbook -i inventories/all.yml development.yml -e ansible_user=${USER} --start-at-task="dotfiles : Get ansible_user home directory"
 ```

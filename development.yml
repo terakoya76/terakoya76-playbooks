@@ -2,6 +2,17 @@
 - name: Play for development env
   hosts:
     - "default"
+  # Prompted rather than taken from -K: a password supplied by -K only reaches
+  # PlayContext, so it cannot be templated into homebrew_cask's sudo_password, which brew
+  # needs to upgrade casks holding privileged files. As a variable it does both jobs.
+  # The empty default is what makes a non-interactive run safe: with no default, a closed
+  # stdin leaves the literal string "None" in the variable, which then fails every become
+  # task with a sudo error instead of falling back to passwordless sudo.
+  vars_prompt:
+    - name: ansible_become_pass
+      prompt: BECOME password
+      private: true
+      default: ""
   roles:
     # config-base
     - role: dotfiles

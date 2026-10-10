@@ -157,6 +157,11 @@
       - xquartz
       - wireshark
     state: latest
+    # upgrading a cask with privileged files (docker-desktop, wireshark, xquartz) makes
+    # brew call sudo, which has no terminal to prompt from inside a task. An empty answer
+    # at the prompt is omitted rather than passed on, so hosts with passwordless sudo keep
+    # working instead of handing brew a blank password.
+    sudo_password: "{{ ansible_become_pass | default(omit, true) }}"
   tags:
     - config-base
     - config-packages
