@@ -8,7 +8,7 @@
     - config-base
     - config-packages
 
-- name: Brew Tap -> bundle core dupes services versions
+- name: Brew Tap
   become: true
   become_user: "{{ ansible_user }}"
   community.general.homebrew_tap:
@@ -37,7 +37,7 @@
     - config-base
     - config-packages
 
-- name: Brew Trust -> evans avr px4 universal-ctags
+- name: Brew Trust
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: brew trust --tap {{ item }}
@@ -48,16 +48,6 @@
     - universal-ctags/universal-ctags
   when: item not in (packages_brew_trust_result.stdout | from_json).taps
   changed_when: true
-  tags:
-    - config-base
-    - config-packages
-
-- name: Brew Untap
-  become: true
-  become_user: "{{ ansible_user }}"
-  community.general.homebrew_tap:
-    name: homebrew/boneyard
-    state: absent
   tags:
     - config-base
     - config-packages
@@ -77,66 +67,66 @@
   community.general.homebrew:
     name:
       - bash-completion
-      - curl
       - cmake
+      - curl
       - direnv
-      - evans
       - fzf
       - gh
       - git
       - gnu-getopt
       - graphviz
+      - hadolint
       - imagemagick
       - jq
       - libmagic
+      - llvm
       - memcached
-      - mysql
+      - mise
+      - neovim
       - openssl
       - pandoc
+      - pinentry-mac
       - protobuf
       - python
       - readline
       - reattach-to-user-namespace
       - tig
+      - tmux
       - translate-shell
+      - trivy
+      - vim
       - wget
       - yq
       # AVR
       - avr-gcc
+      - avrdude
       - dfu-programmer
       - gcc-arm-none-eabi
-      - avrdude
-      # dev
-      - direnv
-      - neovim
-      - vim
-      - tmux
-      - hadolint
-      # llvm
-      - llvm
-      # mise
-      - mise
-      # security
-      - trivy
-      # gpg
-      - pinentry-mac
-    state: present
+      # ctags
+      - universal-ctags
+      # evans
+      - evans
+    state: latest
   tags:
     - config-base
     - config-packages
 
-- name: Brew Install -> HEAD
+# mysql keeps 181MB of data under var/mysql and the installed 9.0.x is many majors
+# behind current. An in-place jump that far leaves a server that will not start, so this
+# one stays put and is upgraded by hand with the data migration it needs.
+- name: Brew Install (pinned)
   become: true
   become_user: "{{ ansible_user }}"
   community.general.homebrew:
     name:
-      - universal-ctags
+      - mysql
     state: present
-    install_options: HEAD
   tags:
     - config-base
     - config-packages
 
+# greedy is deliberately left at its default: 15 of these casks set auto_updates, so
+# brew skips them here and lets each app update itself rather than fighting its updater.
 - name: Install Homebrew cask packages
   become: true
   become_user: "{{ ansible_user }}"
@@ -166,7 +156,7 @@
       - vlc
       - xquartz
       - wireshark
-    state: present
+    state: latest
   tags:
     - config-base
     - config-packages
