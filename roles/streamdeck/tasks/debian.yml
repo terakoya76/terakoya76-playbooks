@@ -143,6 +143,7 @@
     src: "files/icons/{{ item }}"
     dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/icons/{{ item }}"
     mode: "0644"
+  notify: Restart streamdeck-linux-gui
   loop: "{{ streamdeck_buttons | selectattr('icon', 'defined') | map(attribute='icon') | list }}"
   tags:
     - config-tools
@@ -166,7 +167,8 @@
     - config-streamdeck
 
 # Overwrites button edits made in the streamdeck-ui window; change the layout
-# in defaults/main.yml instead. Restart streamdeck.service to pick it up.
+# in defaults/main.yml instead. streamdeck-ui only reads it at startup, hence
+# the restart.
 - name: Place streamdeck-ui config
   become: true
   become_user: "{{ ansible_user }}"
@@ -175,6 +177,7 @@
     dest: "{{ streamdeck_ansible_home }}/.streamdeck_ui.json"
     mode: "0644"
     backup: true
+  notify: Restart streamdeck-linux-gui
   vars:
     streamdeck_serials: "{{ streamdeck_serials_result.stdout_lines | unique }}"
   when: streamdeck_serials_result.stdout_lines | length > 0
@@ -200,12 +203,16 @@
     src: files/streamdeck.service
     dest: "{{ streamdeck_ansible_home }}/.config/systemd/user/streamdeck.service"
     mode: "0644"
+  notify:
+    - Reload systemd user manager
+    - Restart streamdeck-linux-gui
   tags:
     - config-tools
     - config-streamdeck
 
-# Equivalent of `systemctl --user enable`, done by hand because the playbook
-# runs under sudo without access to the user's systemd instance.
+# Equivalent of `systemctl --user enable`, done by hand because it must also
+# work when the user's systemd manager is not running (e.g. first provisioning),
+# where `systemctl --user -M <user>@` cannot connect.
 - name: Enable streamdeck-linux-gui user unit
   become: true
   become_user: "{{ ansible_user }}"
