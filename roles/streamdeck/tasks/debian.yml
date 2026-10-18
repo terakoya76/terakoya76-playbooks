@@ -87,11 +87,13 @@
 # ydotoold runs as the per-user ydotool.service the package enables; it can
 # open /dev/uinput without root thanks to the uaccess tag in 60-streamdeck.rules.
 # libhidapi-libusb0 is what streamdeck-linux-gui talks to the device through.
+# x11-utils provides xprop for bring-1password-active-desktop.
 - name: Install Stream Deck dependencies
   become: true
   ansible.builtin.apt:
     name:
       - libhidapi-libusb0
+      - x11-utils
       - ydotool
     state: present
   tags:
@@ -109,15 +111,15 @@
     - config-tools
     - config-streamdeck
 
-# Wayland stand-in for `xdotool search ... windowactivate key ctrl+d`,
-# referenced by absolute path from the Stream Deck mute button's command.
-- name: Place meet-toggle-mute script
+# Referenced by absolute path from the Stream Deck buttons' commands.
+- name: Place streamdeck-ui button scripts
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.copy:
-    src: files/meet-toggle-mute
-    dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/scripts/meet-toggle-mute"
+    src: "files/{{ item }}"
+    dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/scripts/{{ item }}"
     mode: "0755"
+  loop: "{{ streamdeck_buttons | selectattr('script', 'defined') | map(attribute='script') | list }}"
   tags:
     - config-tools
     - config-streamdeck
@@ -141,10 +143,7 @@
     src: "files/icons/{{ item }}"
     dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/icons/{{ item }}"
     mode: "0644"
-  loop:
-    - logo-meet.png
-    - workspace-left.png
-    - workspace-right.png
+  loop: "{{ streamdeck_buttons | selectattr('icon', 'defined') | map(attribute='icon') | list }}"
   tags:
     - config-tools
     - config-streamdeck

@@ -17,8 +17,10 @@ streamdeck_deck_settings:
 # `icon` is a file under files/icons, `script` a file under files/ installed
 # to ~/.local/share/streamdeck-ui/scripts.
 streamdeck_buttons:
-  # Meet mic toggle
   - button: 0
+    icon: logo-1password.png
+    script: bring-1password-active-desktop
+  - button: 1
     icon: logo-meet.png
     script: meet-toggle-mute
   # GNOME workspace left / right
