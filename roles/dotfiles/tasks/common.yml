@@ -112,50 +112,20 @@
     - config-base
     - config-dotfiles
 
-- name: Place claude code skill files
+- name: Place claude code directories
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.copy:
-    src: "files/claude/skills/"
-    dest: "{{ dotfiles_ansible_home }}/.claude/skills/"
+    src: "files/claude/{{ item }}/"
+    dest: "{{ dotfiles_ansible_home }}/.claude/{{ item }}/"
     mode: "0755"
     directory_mode: "0755"
-  tags:
-    - config-base
-    - config-dotfiles
-
-- name: Place claude code agent files
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.copy:
-    src: "files/claude/agents/"
-    dest: "{{ dotfiles_ansible_home }}/.claude/agents/"
-    mode: "0755"
-    directory_mode: "0755"
-  tags:
-    - config-base
-    - config-dotfiles
-
-- name: Place claude code hook files
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.copy:
-    src: "files/claude/hooks/"
-    dest: "{{ dotfiles_ansible_home }}/.claude/hooks/"
-    mode: "0755"
-    directory_mode: "0755"
-  tags:
-    - config-base
-    - config-dotfiles
-
-- name: Place claude code rule files
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.copy:
-    src: "files/claude/rules/"
-    dest: "{{ dotfiles_ansible_home }}/.claude/rules/"
-    mode: "0755"
-    directory_mode: "0755"
+  with_items:
+    - skills
+    - agents
+    - hooks
+    - rules
+    - workflows
   tags:
     - config-base
     - config-dotfiles

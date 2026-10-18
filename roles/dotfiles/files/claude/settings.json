@@ -383,6 +383,7 @@
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
   "tui": "default",
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "autoMode": {
     "soft_deny": [
@@ -394,6 +395,6 @@
   "voiceEnabled": true,
   "voice": {
     "enabled": true,
-    "mode": "tap"
+    "mode": "hold"
   }
 }
