@@ -1,13 +1,11 @@
 ---
 - name: Install Arduino
-  become: true
-  become_user: "{{ aur_builder }}"
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
   vars:
-    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
-  kewlfft.aur.aur:
-    name: arduino-ide-bin
-    use: paru
-    state: present
+    packages_archlinux_names:
+      - arduino-ide-bin
   tags:
     - config-iot
     - config-arduino

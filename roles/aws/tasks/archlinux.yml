@@ -1,13 +1,11 @@
 ---
 - name: Install session-manager-plugin
-  become: true
-  become_user: "{{ aur_builder }}"
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
   vars:
-    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
-  kewlfft.aur.aur:
-    name: aws-session-manager-plugin
-    use: paru
-    state: present
+    packages_archlinux_names:
+      - aws-session-manager-plugin
   tags:
     - config-tools
     - config-aws

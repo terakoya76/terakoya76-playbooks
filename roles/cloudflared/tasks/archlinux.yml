@@ -1,10 +1,11 @@
 ---
 - name: Install cloudflared
-  become: true
-  community.general.pacman:
-    name:
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
       - cloudflared
-    state: present
   tags:
     - config-tools
     - config-cloudflared

@@ -1,9 +1,11 @@
 ---
 - name: Install rpi-imager
-  become: true
-  community.general.pacman:
-    name: rpi-imager
-    state: present
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
+      - rpi-imager
   tags:
     - config-iot
     - config-raspberrypi

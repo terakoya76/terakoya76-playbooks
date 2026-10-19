@@ -1,17 +1,13 @@
 ---
 - name: Install AUR Packages
-  become: true
-  become_user: "{{ aur_builder }}"
+  ansible.builtin.import_tasks: archlinux_aur_install.yml
   vars:
-    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
-  kewlfft.aur.aur:
-    name:
+    packages_archlinux_state: latest
+    packages_archlinux_names:
       - cursor-bin
       - multitime
       - slack-desktop
       - zoom
-    use: paru
-    state: latest
   tags:
     - config-base
     - config-packages

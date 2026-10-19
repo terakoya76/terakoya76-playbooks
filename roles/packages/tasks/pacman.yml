@@ -2,19 +2,22 @@
 # Arch does not support partial upgrades: syncing the database without upgrading and then
 # installing a package can pull in a library newer than what the rest of the system links
 # against. Upgrading once here keeps every later pacman task in the play consistent.
+# Omarchy leaves upgrades to `omarchy update`, which the install tasks then build on.
 - name: Upgrade Pacman Packages
   become: true
   community.general.pacman:
     update_cache: true
     upgrade: true
+  when: not is_omarchy
   tags:
     - config-base
     - config-packages
 
 - name: Install Pacman Packages
-  become: true
-  community.general.pacman:
-    name:
+  ansible.builtin.import_tasks: archlinux_pacman_install.yml
+  vars:
+    packages_archlinux_state: latest
+    packages_archlinux_names:
       - base-devel
       - bcc
       - bcc-libbpf-tools
@@ -89,7 +92,6 @@
       - discord
       - obsidian
       - spotify-launcher
-    state: latest
   tags:
     - config-base
     - config-packages
@@ -108,23 +110,23 @@
     - config-packages
 
 - name: Install Kernel Headers
-  become: true
-  community.general.pacman:
-    name: "{{ packages_kernels_result.stdout_lines | map('regex_replace', '$', '-headers') | list }}"
-    state: latest
+  ansible.builtin.import_tasks: archlinux_pacman_install.yml
+  vars:
+    packages_archlinux_state: latest
+    packages_archlinux_names: "{{ packages_kernels_result.stdout_lines | map('regex_replace', '$', '-headers') | list }}"
   when: packages_kernels_result.stdout_lines | length > 0
   tags:
     - config-base
     - config-packages
 
 - name: Install docker
-  become: true
-  community.general.pacman:
-    name:
+  ansible.builtin.import_tasks: archlinux_pacman_install.yml
+  vars:
+    packages_archlinux_state: latest
+    packages_archlinux_names:
       - docker
       - docker-buildx
       - docker-compose
-    state: latest
   tags:
     - config-base
     - config-packages
@@ -178,7 +180,8 @@
     - config-base
     - config-packages
 
-# paru resolves AUR dependencies of AUR packages, which plain makepkg cannot.
+# paru resolves AUR dependencies of AUR packages, which plain makepkg cannot. Omarchy
+# ships yay for that instead.
 - name: Install paru
   become: true
   become_user: "{{ aur_builder }}"
@@ -188,6 +191,7 @@
     name: paru
     use: makepkg
     state: present
+  when: not is_omarchy
   tags:
     - config-base
     - config-packages

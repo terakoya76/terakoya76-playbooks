@@ -24,3 +24,7 @@ all:
         # The pinned venv sits under ansible_user's home, which Arch creates as 0700, so
         # tasks running as aur_builder cannot execute it and use the system python instead.
         aur_builder_python_interpreter: /usr/bin/python3
+        # Archlinux only: Omarchy owns upgrades and package installs through its own
+        # commands, which the packages role's archlinux_*_install tasks defer to.
+        # Checked like ansible_become_exe above.
+        is_omarchy: "{{ '/usr/bin/omarchy' is exists }}"

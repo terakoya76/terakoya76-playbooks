@@ -1,0 +1,38 @@
+---
+- name: "Install with paru: {{ packages_archlinux_names | join(', ') }}"
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  kewlfft.aur.aur:
+    name: "{{ packages_archlinux_names }}"
+    use: paru
+    state: "{{ packages_archlinux_state }}"
+  when: not is_omarchy
+
+# pacman -T (read-only) prints the names nothing installed satisfies. Unlike the pacman -Q
+# behind omarchy-pkg-missing it honours provides, so a package Omarchy ships under another
+# name, such as mise-bin for mise, is not installed again over a conflicting one.
+- name: "Check missing on Omarchy: {{ packages_archlinux_names | join(', ') }}"
+  ansible.builtin.command:
+    argv: "{{ ['pacman', '-T'] + packages_archlinux_names }}"
+  register: packages_archlinux_missing_result
+  changed_when: false
+  failed_when: packages_archlinux_missing_result.rc not in [0, 127]
+  check_mode: false
+  when: is_omarchy
+
+# Omarchy's AUR installer drives its preinstalled yay, which, like paru, must not run as
+# root and needs pacman without a password prompt: exactly what aur_builder is set up for.
+- name: "Install with omarchy-pkg-aur-add: {{ packages_archlinux_names | join(', ') }}"
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  ansible.builtin.command:
+    argv: "{{ ['omarchy-pkg-aur-add'] + packages_archlinux_missing_result.stdout_lines }}"
+  # Only reached when the check above found something missing.
+  changed_when: true
+  when:
+    - is_omarchy
+    - packages_archlinux_missing_result.stdout_lines | length > 0

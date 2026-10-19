@@ -21,16 +21,13 @@
     - config-onepassword
 
 - name: Install 1Password App/CLI
-  become: true
-  become_user: "{{ aur_builder }}"
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
   vars:
-    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
-  kewlfft.aur.aur:
-    name:
+    packages_archlinux_names:
       - 1password
       - 1password-cli
-    use: paru
-    state: present
   when: not ansible_check_mode
   tags:
     - config-tools

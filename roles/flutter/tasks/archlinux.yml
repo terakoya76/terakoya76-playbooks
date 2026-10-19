@@ -8,16 +8,13 @@
     - config-flutter
 
 - name: Install flutter and android-studio
-  become: true
-  become_user: "{{ aur_builder }}"
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
   vars:
-    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
-  kewlfft.aur.aur:
-    name:
+    packages_archlinux_names:
       - flutter-bin
       - android-studio
-    use: paru
-    state: present
   tags:
     - config-language
     - config-flutter
@@ -26,23 +23,25 @@
 # Android SDK tools they served have been 64-bit only for years.
 # https://wiki.archlinux.org/title/KVM
 - name: Setup VM Accelaration
-  become: true
-  community.general.pacman:
-    name:
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
       - qemu-desktop
       - libvirt
       - dnsmasq
-    state: present
   tags:
     - config-language
     - config-flutter
 
 - name: Setup Remote Debugging
-  become: true
-  community.general.pacman:
-    name:
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
       - android-tools
-    state: present
   tags:
     - config-language
     - config-flutter

@@ -6,6 +6,12 @@ packages_archlinux_kernels:
   - linux-rt
   - linux-zen
 
+# Imported with tasks_from archlinux_pacman_install / archlinux_aur_install by the roles that
+# install Arch packages, each passing its own packages_archlinux_names. On Omarchy the state
+# is not honoured: its installers only add what is missing, and upgrades are left to
+# `omarchy update`.
+packages_archlinux_state: present
+
 packages_neovim_bin_path: /usr/local/bin/nvim
 
 packages_cursor_bin_path: /usr/local/bin/cursor
