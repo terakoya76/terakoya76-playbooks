@@ -4,3 +4,29 @@
   ansible.builtin.shell:
     cmd: udevadm control --reload-rules && udevadm trigger
   changed_when: true
+
+# The playbook runs as root under sudo, so `-M <user>@` reaches the user's
+# systemd instance without needing XDG_RUNTIME_DIR / DBUS_SESSION_BUS_ADDRESS.
+# The systemd_service module supports neither -M nor try-restart.
+# `-M` fails to connect when the user's manager is not running (logged out, no
+# linger), so both handlers skip that case; the manager reads the unit files
+# fresh when it next starts anyway.
+- name: Reload systemd user manager
+  become: true
+  ansible.builtin.shell: # noqa: command-instead-of-module
+    cmd: |
+      if systemctl is-active --quiet "user@$(id -u {{ ansible_user }}).service"; then
+        systemctl --user -M {{ ansible_user }}@ daemon-reload
+      fi
+  changed_when: true
+
+# try-restart leaves the service stopped if it was quit from the tray menu or
+# no graphical session is running.
+- name: Restart streamdeck-linux-gui
+  become: true
+  ansible.builtin.shell: # noqa: command-instead-of-module
+    cmd: |
+      if systemctl is-active --quiet "user@$(id -u {{ ansible_user }}).service"; then
+        systemctl --user -M {{ ansible_user }}@ try-restart streamdeck.service
+      fi
+  changed_when: true

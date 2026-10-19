@@ -1,6 +1,6 @@
 ---
 name: sync-claude-ansible
-description: ローカル ~/.claude/ 配下の Claude Code 設定 (CLAUDE.md, settings.json, mcp.json, agents/, hooks/, rules/, skills/) を、ansible が管理する terakoya76-playbooks リポジトリの roles/dotfiles/files/claude/ にミラーする。「ansible に反映」「claude config を sync」「dotfiles に取り込み」等と依頼されたとき、あるいは local で skill / agent / settings を更新した直後に使う。
+description: ローカル ~/.claude/ 配下の Claude Code 設定 (CLAUDE.md, settings.json, mcp.json, agents/, hooks/, rules/, skills/, workflows/) を、ansible が管理する terakoya76-playbooks リポジトリの roles/dotfiles/files/claude/ にミラーする。「ansible に反映」「claude config を sync」「dotfiles に取り込み」等と依頼されたとき、あるいは local で skill / agent / settings を更新した直後に使う。
 allowed-tools: Read, Bash(pwd:*), Bash(ls:*), Bash(test:*), Bash(stat:*), Bash(diff:*), Bash(rsync:*), Bash(cp:*), Bash(grep:*), Bash(git status:*), Bash(git diff:*)
 ---
 
@@ -28,6 +28,7 @@ ansible を再実行すれば他マシンや初期化後の自分にも同じ設
 - `~/.claude/hooks/` → `roles/dotfiles/files/claude/hooks/`
 - `~/.claude/rules/` → `roles/dotfiles/files/claude/rules/`
 - `~/.claude/skills/` → `roles/dotfiles/files/claude/skills/`
+- `~/.claude/workflows/` → `roles/dotfiles/files/claude/workflows/`
 
 これ以外の `~/.claude/` 配下（history.jsonl, sessions/, statsig/, projects/, tasks/, todos/, cache/, file-history/, backups/, plans/, plugins/, shell-snapshots/, session-env/, telemetry/, .credentials.json 等）は **絶対に触らない**。実行時データであり、リポジトリで管理する対象ではない。
 
@@ -82,7 +83,7 @@ rsync -a --delete --exclude synced/ --exclude .trash/ ~/.claude/skills/ roles/do
 
 ### 2. Dry-run diff
 
-7 アイテム分の diff を **並列** で取得する。
+8 アイテム分の diff を **並列** で取得する。
 
 **ファイル 2 個** (CLAUDE.md, mcp.json) — そのまま比較:
 
@@ -101,7 +102,7 @@ diff -u roles/dotfiles/files/claude/settings.json "$TMP/settings.filtered.json"
 
 差分が無ければ exit 0、あれば patch 形式。巨大な場合は冒頭 50 行程度に切る判断をしてよい（要約はユーザー提示時に行う）。
 
-**ディレクトリ 4 個** (agents, hooks, rules, skills):
+**ディレクトリ 5 個** (agents, hooks, rules, skills, workflows):
 
 ```bash
 rsync -an --delete --itemize-changes ~/.claude/<name>/ roles/dotfiles/files/claude/<name>/
@@ -149,6 +150,7 @@ rsync -an --delete --itemize-changes --exclude synced/ --exclude .trash/ ~/.clau
 - hooks/: 追加 N / 更新 N / 削除 N
 - rules/: 追加 N / 更新 N / 削除 N
 - skills/: 追加 N / 更新 N / 削除 N
+- workflows/: 追加 N / 更新 N / 削除 N
 
 ### 削除されるもの（dest 側に残っているが source に無い）
 - roles/dotfiles/files/claude/skills/<old-skill>/
@@ -224,7 +226,7 @@ rsync -a --delete --exclude synced/ --exclude .trash/ ~/.claude/skills/ roles/do
 - **`~/.claude/agents/` が空ディレクトリ**: source が空なら dest も空にする（mirror）。ただし source 自体が存在しない場合は pre-flight で中断
 - **改行コードや末尾改行のみの差分**: `diff -u` で実差分 0 行なら「変更なし」扱い
 - **巨大な diff**（settings.json が数百行変わる等）: 全行貼らず、追加 / 削除の代表行 + 「他 N 行」で要約
-- **`.git` や `node_modules` らしきもの**: 対象 7 アイテム配下にあるはずがないが、もし出現したら警告（ユーザーがミスっている可能性）
+- **`.git` や `node_modules` らしきもの**: 対象 8 アイテム配下にあるはずがないが、もし出現したら警告（ユーザーがミスっている可能性）
 - **CLAUDE.md が無いマシン**: skip。Pre-flight ではファイル単位で存在チェックし、無いものは静かに対象から外す（中断はしない）
 - **rsync が無い環境**: 中断してユーザーに `rsync` のインストールを案内（mac/Linux ともに標準で入っているはずだが念のため）
 - **jq が無い環境**: 中断して `jq` のインストールを案内する。除外フィルタ無しで settings.json を同期する回避策は取らない

@@ -1,6 +1,6 @@
 ---
 name: claude-profile
-description: Claude Code の認証アカウントを切り替えるための profile dir を管理する。`CLAUDE_CONFIG_DIR` で参照する `~/.claude`（private）と `~/.claude-<name>`（会社等）を分離しつつ、認証以外の設定（CLAUDE.md, settings.json, mcp.json, rules/, agents/, skills/, commands/, hooks/）は `~/.claude` から symlink して一元管理する。ユーザーが「Claude の認証を切り替えたい」「会社用 Claude profile を作って」等と依頼したときに使う。引数で profile 名（例: `my-company`）を受け取る。env の設定はユーザーの責務で、本 skill は profile dir の作成と symlink のメンテのみを行う。
+description: Claude Code の認証アカウントを切り替えるための profile dir を管理する。`CLAUDE_CONFIG_DIR` で参照する `~/.claude`（private）と `~/.claude-<name>`（会社等）を分離しつつ、認証以外の設定（CLAUDE.md, settings.json, mcp.json, rules/, agents/, skills/, commands/, hooks/, workflows/）は `~/.claude` から symlink して一元管理する。ユーザーが「Claude の認証を切り替えたい」「会社用 Claude profile を作って」等と依頼したときに使う。引数で profile 名（例: `my-company`）を受け取る。env の設定はユーザーの責務で、本 skill は profile dir の作成と symlink のメンテのみを行う。
 allowed-tools: Bash, Read, Edit, Write
 ---
 
@@ -11,7 +11,7 @@ allowed-tools: Bash, Read, Edit, Write
 - `~/.claude` は **private アカウント**（デフォルト）。
 - `~/.claude-<name>` は **別アカウント**（例: `~/.claude-my-company`）。
 - 認証関連 (credentials, sessions, history, projects, todos, plugins 等) は profile ごとに完全分離。
-- 認証以外の共有したい設定 (`CLAUDE.md`, `settings.json`, `mcp.json`, `rules/`, `agents/`, `skills/`, `commands/`, `hooks/`) は `~/.claude` から symlink で取り込み、一元管理する。
+- 認証以外の共有したい設定 (`CLAUDE.md`, `settings.json`, `mcp.json`, `rules/`, `agents/`, `skills/`, `commands/`, `hooks/`, `workflows/`) は `~/.claude` から symlink で取り込み、一元管理する。
 
 ## スコープ外
 
@@ -33,7 +33,7 @@ allowed-tools: Bash, Read, Edit, Write
 
 引数が省略された場合は **operation = `setup`**、name はユーザーに尋ねる。
 
-`skills/` `agents/` `commands/` `hooks/` `rules/` は **directory ごと symlink** するので、`~/.claude/skills/foo` のように内部にファイルを足しても profile 側から自動で見える。symlink を貼り直す専用 operation は持たない (top-level の `SHARED` 配列を変えたとき等は `setup` を再実行すれば idempotent に反映される)。
+`skills/` `agents/` `commands/` `hooks/` `rules/` `workflows/` は **directory ごと symlink** するので、`~/.claude/skills/foo` のように内部にファイルを足しても profile 側から自動で見える。symlink を貼り直す専用 operation は持たない (top-level の `SHARED` 配列を変えたとき等は `setup` を再実行すれば idempotent に反映される)。
 
 ## shared / per-profile の境界
 
@@ -48,6 +48,7 @@ commands/
 hooks/
 rules/
 skills/
+workflows/
 ```
 
 **per-profile (symlink しない — 各 dir で独立)**
@@ -107,7 +108,7 @@ chmod 700 "$PROFILE_DIR"
 shared 項目ごとに以下のロジック:
 
 ```bash
-SHARED=(CLAUDE.md settings.json mcp.json agents commands hooks rules skills)
+SHARED=(CLAUDE.md settings.json mcp.json agents commands hooks rules skills workflows)
 
 for item in "${SHARED[@]}"; do
   src="$HOME/.claude/$item"
@@ -141,7 +142,7 @@ done
 ### 5. unknown 項目の検知
 
 ```bash
-KNOWN_SHARED=(CLAUDE.md settings.json mcp.json agents commands hooks rules skills)
+KNOWN_SHARED=(CLAUDE.md settings.json mcp.json agents commands hooks rules skills workflows)
 KNOWN_PER_PROFILE=(.credentials.json projects sessions todos plans history.jsonl statsig telemetry debug cache shell-snapshots file-history session-env paste-cache tasks backups plugins mcp-needs-auth-cache.json policy-limits.json remote-settings.json stats-cache.json .last-cleanup .last-update-result.json .update.lock .DS_Store)
 
 # ~/.claude 直下を列挙して、上記いずれにも入らないものを抽出
@@ -162,7 +163,7 @@ KNOWN_PER_PROFILE=(.credentials.json projects sessions todos plans history.jsonl
 
 ```
 profile dir: ~/.claude-my-company
-linked: CLAUDE.md, settings.json, mcp.json, agents, commands, hooks, rules, skills
+linked: CLAUDE.md, settings.json, mcp.json, agents, commands, hooks, rules, skills, workflows
 
 次のステップはユーザー側で実施してください:
 
@@ -183,7 +184,7 @@ env の export 方法を skill が決め打ちで案内しない。ユーザー�
 for d in "$HOME"/.claude-*; do
   [ -d "$d" ] || continue
   echo "=== $d ==="
-  for item in CLAUDE.md settings.json mcp.json agents commands hooks rules skills; do
+  for item in CLAUDE.md settings.json mcp.json agents commands hooks rules skills workflows; do
     target="$d/$item"
     if [ -L "$target" ]; then
       echo "  $item -> $(readlink "$target")"

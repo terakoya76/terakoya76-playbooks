@@ -11,4 +11,11 @@ all:
         ansible_python_interpreter: "{{ playbook_dir }}/.venv/bin/python"
         group: ubuntu
         ansible_shell_executable: /bin/bash
+        # Ubuntu 25.10+ points `sudo` at sudo-rs, which wraps the `-p` prompt as
+        # "[sudo: <prompt>] Password:" so Ansible never sees its prompt and times out.
+        # Classic sudo stays installed as sudo.ws; with a local connection the
+        # controller-side `exists` test checks the target itself.
+        # TODO(https://github.com/ansible/ansible/pull/87622): drop once ansible-core
+        # in uv.lock ships the sudo-rs prompt fix.
+        ansible_become_exe: "{{ 'sudo.ws' if '/usr/bin/sudo.ws' is exists else 'sudo' }}"
         workdir: "~"
