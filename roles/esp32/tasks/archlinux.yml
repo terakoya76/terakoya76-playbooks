@@ -1,0 +1,28 @@
+---
+# python ships venv and the dev headers, and base-devel covers gcc, make and pkgconf.
+- name: Install dependencies for esp-idf
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
+      - base-devel
+      - git
+      - wget
+      - flex
+      - bison
+      - gperf
+      - python
+      - python-pip
+      - cmake
+      - ninja
+      - ccache
+      - libffi
+      - openssl
+      - dfu-util
+      - libusb
+      - curl
+      - libuv
+  tags:
+    - config-iot
+    - config-esp32

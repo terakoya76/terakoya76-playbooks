@@ -24,7 +24,7 @@
   become: true
   ansible.builtin.apt:
     name:
-      - mise
+      - cloudflared
     state: present
   tags:
     - config-tools

@@ -1,0 +1,13 @@
+---
+- name: Install AUR Packages
+  ansible.builtin.import_tasks: archlinux_aur_install.yml
+  vars:
+    packages_archlinux_state: latest
+    packages_archlinux_names:
+      - cursor-bin
+      - multitime
+      - slack-desktop
+      - zoom
+  tags:
+    - config-base
+    - config-packages

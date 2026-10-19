@@ -195,6 +195,9 @@
   become: true
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: mise install
+  # sudo's secure_path drops ~/.cargo/bin, where the cargo backend's rustup toolchain lives.
+  environment:
+    PATH: "{{ dotfiles_ansible_home }}/.cargo/bin:{{ ansible_facts.env.PATH }}"
   when: (dotfiles_mise_missing_result.stdout | from_json | length) > 0
   changed_when: true
   tags:

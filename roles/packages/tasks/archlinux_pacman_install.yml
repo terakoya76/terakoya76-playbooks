@@ -1,0 +1,31 @@
+---
+- name: "Install with pacman: {{ packages_archlinux_names | join(', ') }}"
+  become: true
+  community.general.pacman:
+    name: "{{ packages_archlinux_names }}"
+    state: "{{ packages_archlinux_state }}"
+  when: not is_omarchy
+
+# Omarchy owns system upgrades and refuses direct pacman upgrades, so packages go through
+# its own installer instead, which installs against the database `omarchy update` synced.
+# pacman -T (read-only) prints the names nothing installed satisfies. Unlike the pacman -Q
+# behind omarchy-pkg-missing it honours provides, so a package Omarchy ships under another
+# name, such as mise-bin for mise, is not installed again over a conflicting one.
+- name: "Check missing on Omarchy: {{ packages_archlinux_names | join(', ') }}"
+  ansible.builtin.command:
+    argv: "{{ ['pacman', '-T'] + packages_archlinux_names }}"
+  register: packages_archlinux_missing_result
+  changed_when: false
+  failed_when: packages_archlinux_missing_result.rc not in [0, 127]
+  check_mode: false
+  when: is_omarchy
+
+- name: "Install with omarchy-pkg-add: {{ packages_archlinux_names | join(', ') }}"
+  become: true
+  ansible.builtin.command:
+    argv: "{{ ['omarchy-pkg-add'] + packages_archlinux_missing_result.stdout_lines }}"
+  # Only reached when the check above found something missing.
+  changed_when: true
+  when:
+    - is_omarchy
+    - packages_archlinux_missing_result.stdout_lines | length > 0

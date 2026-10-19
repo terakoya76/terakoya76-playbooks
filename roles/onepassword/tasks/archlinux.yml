@@ -1,0 +1,34 @@
+---
+# makepkg verifies the downloaded tarballs against validpgpkeys, which has to be in the
+# keyring of the user doing the build.
+# https://support.1password.com/install-linux/#arch-linux
+- name: Import 1Password signing key for the AUR build user
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      if ! gpg --list-keys {{ onepassword_signing_key }} >/dev/null 2>&1; then
+        curl -fsS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
+        echo imported
+      fi
+  register: onepassword_signing_key_result
+  changed_when: "'imported' in onepassword_signing_key_result.stdout"
+  tags:
+    - config-tools
+    - config-onepassword
+
+- name: Install 1Password App/CLI
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
+  vars:
+    packages_archlinux_names:
+      - 1password
+      - 1password-cli
+  when: not ansible_check_mode
+  tags:
+    - config-tools
+    - config-onepassword

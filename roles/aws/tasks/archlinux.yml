@@ -1,0 +1,11 @@
+---
+- name: Install session-manager-plugin
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
+  vars:
+    packages_archlinux_names:
+      - aws-session-manager-plugin
+  tags:
+    - config-tools
+    - config-aws

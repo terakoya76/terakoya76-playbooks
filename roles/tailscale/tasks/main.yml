@@ -1,10 +1,10 @@
 ---
-- name: Get ansible_user home directory (Debian)
+- name: Get ansible_user home directory (Linux)
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: tailscale_ansible_home_result_debian
+  register: tailscale_ansible_home_result_linux
   changed_when: false
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
   tags:
     - config-tools
     - config-tailscale
@@ -21,9 +21,9 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    tailscale_ansible_home: "{{ tailscale_ansible_home_result_debian.stdout | default(tailscale_ansible_home_result_darwin.stdout | default('')) }}"
+    tailscale_ansible_home: "{{ tailscale_ansible_home_result_linux.stdout | default(tailscale_ansible_home_result_darwin.stdout | default('')) }}"
   changed_when: false
-  when: (tailscale_ansible_home_result_debian.stdout is defined) or (tailscale_ansible_home_result_darwin.stdout is defined)
+  when: (tailscale_ansible_home_result_linux.stdout is defined) or (tailscale_ansible_home_result_darwin.stdout is defined)
   tags:
     - config-tools
     - config-tailscale
@@ -48,6 +48,11 @@
   ansible.builtin.import_tasks: debian.yml
   when:
     - ansible_facts.os_family == "Debian"
+
+- name: For archlinux
+  ansible.builtin.import_tasks: archlinux.yml
+  when:
+    - ansible_facts.os_family == "Archlinux"
 
 - name: For darwin
   ansible.builtin.import_tasks: darwin.yml

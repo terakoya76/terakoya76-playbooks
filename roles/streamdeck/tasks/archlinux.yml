@@ -1,0 +1,39 @@
+---
+# hidapi provides the libhidapi-libusb streamdeck-linux-gui talks to the device through.
+# xorg-xprop provides xprop for bring-window-active-desktop.
+- name: Install Stream Deck dependencies
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
+      - hidapi
+      - xorg-xprop
+      - ydotool
+  tags:
+    - config-tools
+    - config-streamdeck
+
+- name: Create systemd user default.target.wants directory
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ streamdeck_ansible_home }}/.config/systemd/user/default.target.wants"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-streamdeck
+
+# Ubuntu's ydotool package enables its user unit on install; Arch's only ships it.
+# Linked by hand for the same reason as streamdeck.service in linux.yml.
+- name: Enable ydotool user unit
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    src: /usr/lib/systemd/user/ydotool.service
+    dest: "{{ streamdeck_ansible_home }}/.config/systemd/user/default.target.wants/ydotool.service"
+    state: link
+  tags:
+    - config-tools
+    - config-streamdeck

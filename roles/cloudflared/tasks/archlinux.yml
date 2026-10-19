@@ -1,0 +1,11 @@
+---
+- name: Install cloudflared
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_pacman_install
+  vars:
+    packages_archlinux_names:
+      - cloudflared
+  tags:
+    - config-tools
+    - config-cloudflared

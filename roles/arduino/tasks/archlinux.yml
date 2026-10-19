@@ -1,0 +1,23 @@
+---
+- name: Install Arduino
+  ansible.builtin.import_role:
+    name: packages
+    tasks_from: archlinux_aur_install
+  vars:
+    packages_archlinux_names:
+      - arduino-ide-bin
+  tags:
+    - config-iot
+    - config-arduino
+
+# The snap reaches serial ports through its own interface; a native install needs the
+# user in uucp, which owns /dev/ttyACM* and /dev/ttyUSB* on Arch.
+- name: Join uucp group for USB serial
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: uucp
+    append: true
+  tags:
+    - config-iot
+    - config-arduino

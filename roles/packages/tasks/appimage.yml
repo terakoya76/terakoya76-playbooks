@@ -31,6 +31,18 @@
 #     - config-base
 #     - config-packages
 
+# Nothing creates it until a desktop session first runs, so a fresh user lacks it.
+- name: Create applications directory
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ packages_ansible_home }}/.local/share/applications"
+    state: directory
+    mode: "0755"
+  tags:
+    - config-base
+    - config-packages
+
 - name: Register cursor app
   become: true
   ansible.builtin.template:

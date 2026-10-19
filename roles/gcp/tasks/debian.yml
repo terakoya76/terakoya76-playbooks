@@ -24,7 +24,7 @@
   ansible.builtin.apt:
     name:
       - google-cloud-cli
-      - google-cloud-cli-terraform-validator
+      - google-cloud-cli-terraform-tools
     state: present
     update_cache: true
   when: not ansible_check_mode

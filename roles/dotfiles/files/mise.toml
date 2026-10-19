@@ -1,4 +1,5 @@
-min_version = "2025.12.0"
+# 2026.10.12 added the per-tool python option openai-whisper uses below.
+min_version = "2026.10.12"
 
 [tools]
 #----------------------
@@ -15,7 +16,6 @@ node = "26"
 "npm:ts-prune" = "latest"
 # coding agent
 "npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
-"npm:happy-coder" = "latest"
 "npm:skills" = "latest"
 
 #----------------------
@@ -24,7 +24,8 @@ node = "26"
 python = "3"
 "aqua:astral-sh/uv" = "latest"
 "pypi:ruff" = "latest"
-"pypi:openai-whisper" = { version = "latest", os = ["linux"] }
+# torch lags new CPython releases, and python = "3" moves to the newest one before torch has wheels for it.
+"pypi:openai-whisper" = { version = "latest", os = ["linux"], python = "3.14" }
 
 #----------------------
 # ruby

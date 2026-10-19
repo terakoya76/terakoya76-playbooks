@@ -1,10 +1,10 @@
 ---
-- name: Get ansible_user home directory (Debian)
+- name: Get ansible_user home directory (Linux)
   ansible.builtin.shell: 'set -o pipefail && getent passwd "{{ ansible_user }}" | cut -d: -f6'
-  register: rust_ansible_home_result_debian
+  register: rust_ansible_home_result_linux
   changed_when: false
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
   tags:
     - config-language
     - config-rust
@@ -21,9 +21,9 @@
 
 - name: Set the fact for the other scripts to use
   ansible.builtin.set_fact:
-    rust_ansible_home: "{{ rust_ansible_home_result_debian.stdout | default(rust_ansible_home_result_darwin.stdout | default('')) }}"
+    rust_ansible_home: "{{ rust_ansible_home_result_linux.stdout | default(rust_ansible_home_result_darwin.stdout | default('')) }}"
   changed_when: false
-  when: (rust_ansible_home_result_debian.stdout is defined) or (rust_ansible_home_result_darwin.stdout is defined)
+  when: (rust_ansible_home_result_linux.stdout is defined) or (rust_ansible_home_result_darwin.stdout is defined)
   tags:
     - config-language
     - config-rust
@@ -33,6 +33,18 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.shell: set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
   changed_when: false
+  tags:
+    - config-language
+    - config-rust
+
+# The dotfiles role, which normally creates it, depends on this role and so runs after it.
+- name: Create target directory for shell files
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.file:
+    path: "{{ rust_ansible_home }}/.bash.d"
+    state: directory
+    mode: "0755"
   tags:
     - config-language
     - config-rust
