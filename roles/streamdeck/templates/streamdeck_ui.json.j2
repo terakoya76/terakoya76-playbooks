@@ -1,6 +1,7 @@
 {#- streamdeck-ui keys its state by the deck's serial number, so the same
     layout is rendered for each deck found on the USB bus. Fields are read
-    with .get() because `b.keys` would resolve to dict.keys(). -#}
+    with .get() because `b.keys` would resolve to dict.keys(). streamdeck-ui
+    runs `command` through shlex.split, hence the quoted script arguments. -#}
 {%- set icons_dir = streamdeck_ansible_home ~ '/.local/share/streamdeck-ui/icons' -%}
 {%- set scripts_dir = streamdeck_ansible_home ~ '/.local/share/streamdeck-ui/scripts' -%}
 {%- set pages = {} -%}
@@ -14,7 +15,7 @@
           'icon': (icons_dir ~ '/' ~ b.get('icon')) if b.get('icon') else '',
           'keys': b.get('keys', ''),
           'write': b.get('write', ''),
-          'command': (scripts_dir ~ '/' ~ b.get('script')) if b.get('script') else b.get('command', ''),
+          'command': (([scripts_dir ~ '/' ~ b.get('script')] + b.get('args', [])) | map('quote') | join(' ')) if b.get('script') else b.get('command', ''),
           'brightness_change': 0,
           'switch_page': b.get('switch_page', 0),
           'switch_state': 0,

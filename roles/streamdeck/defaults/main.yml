@@ -15,12 +15,21 @@ streamdeck_deck_settings:
 
 # Only assigned buttons are listed; streamdeck-ui fills the rest with blanks.
 # `icon` is a file under files/icons, `script` a file under files/ installed
-# to ~/.local/share/streamdeck-ui/scripts.
+# to ~/.local/share/streamdeck-ui/scripts, and `args` the arguments passed to it.
 streamdeck_buttons:
   - button: 0
     icon: logo-1password.png
-    script: bring-1password-active-desktop
+    script: bring-window-active-desktop
+    args:
+      - com.onepassword.OnePassword  # wm_class, as in the Window Calls List output
+      - 1password  # launch command, run when no window exists
   - button: 1
+    icon: logo-brave.png
+    script: bring-window-active-desktop
+    args:
+      - brave  # wm_class
+      - brave  # launch command
+  - button: 2
     icon: logo-meet.png
     script: meet-toggle-mute
   # GNOME workspace left / right
