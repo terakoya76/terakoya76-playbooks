@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-# Moves the 1Password main window to the current workspace and focuses it,
-# instead of letting GNOME jump to the workspace the window lives on.
+# Moves a window of <wm_class> to the current workspace and focuses it,
+# instead of letting GNOME jump to the workspace the window lives on. When no
+# such window exists, runs <launch command>, whose new window maps on the
+# current workspace.
 # Window lookup/move/focus goes through the Window Calls GNOME Shell extension
 # (https://github.com/ickyicky/window-calls), because Wayland forbids ordinary
 # clients from doing so.
 set -euo pipefail
 
-readonly wm_class=com.onepassword.OnePassword
+if (($# < 2)); then
+  echo "usage: ${0##*/} <wm_class> <launch command>..." >&2
+  exit 2
+fi
+readonly wm_class=$1
+readonly launch=("${@:2}")
 
 windows_call() {
   gdbus call --session \
@@ -21,13 +28,15 @@ if ! list_json=$(windows_call List); then
 fi
 
 # gdbus wraps the returned string as ('...',).
+# List follows the stacking order (bottom to top), so the last match is the
+# window of an app with several windows (e.g. a browser) used most recently.
 if ! selection=$(python3 -c '
 import ast, json, sys
 windows = json.loads(ast.literal_eval(sys.argv[1])[0])
-NORMAL_WINDOW = 0  # Meta.WindowType.NORMAL; Quick Access popups use other types
+NORMAL_WINDOW = 0  # Meta.WindowType.NORMAL; popups such as 1Password Quick Access use other types
 targets = [w["id"] for w in windows if w.get("wm_class") == sys.argv[2] and w.get("window_type") == NORMAL_WINDOW]
 current = [w["workspace"] for w in windows if w.get("in_current_workspace") and w.get("workspace", -1) >= 0]
-print(targets[0] if targets else "")
+print(targets[-1] if targets else "")
 print(current[0] if current else "")
 ' "$list_json" "$wm_class"); then
   echo "Could not parse the Window Calls List reply; is the extension version supported?" >&2
@@ -37,11 +46,10 @@ mapfile -t fields <<<"$selection"
 win_id=${fields[0]:-}
 current_ws=${fields[1]:-}
 
-# With 1Password running in the tray (--silent) the main window is closed;
-# invoking it again opens the window, and new windows map on the current
-# workspace.
+# Also covers apps that keep running in the tray with their window closed
+# (1Password --silent): invoking them again opens the window.
 if [[ -z $win_id ]]; then
-  exec 1password
+  exec "${launch[@]}"
 fi
 
 # Window Calls does not expose the active workspace index, so an empty

@@ -87,7 +87,7 @@
 # ydotoold runs as the per-user ydotool.service the package enables; it can
 # open /dev/uinput without root thanks to the uaccess tag in 60-streamdeck.rules.
 # libhidapi-libusb0 is what streamdeck-linux-gui talks to the device through.
-# x11-utils provides xprop for bring-1password-active-desktop.
+# x11-utils provides xprop for bring-window-active-desktop.
 - name: Install Stream Deck dependencies
   become: true
   ansible.builtin.apt:
@@ -119,7 +119,7 @@
     src: "files/{{ item }}"
     dest: "{{ streamdeck_ansible_home }}/.local/share/streamdeck-ui/scripts/{{ item }}"
     mode: "0755"
-  loop: "{{ streamdeck_buttons | selectattr('script', 'defined') | map(attribute='script') | list }}"
+  loop: "{{ streamdeck_buttons | selectattr('script', 'defined') | map(attribute='script') | unique | list }}"
   tags:
     - config-tools
     - config-streamdeck
