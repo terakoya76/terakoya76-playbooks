@@ -84,19 +84,6 @@
     - config-iot
     - config-esp32
 
-- name: Add Xtensa target
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.command: bash -lc "rustup target add {{ item }}"
-  with_items:
-    - xtensa-esp32-espidf # For ESP32
-    - xtensa-esp32s2-espidf # For ESP32-S2
-    - xtensa-esp32s3-espidf # For ESP32-S3
-  changed_when: false
-  tags:
-    - config-iot
-    - config-esp32
-
 - name: Install espup
   become: true
   become_user: "{{ ansible_user }}"
@@ -104,6 +91,20 @@
   environment:
     CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   changed_when: false
+  tags:
+    - config-iot
+    - config-esp32
+
+# Upstream rustup ships no prebuilt std for the Xtensa targets (ESP32, ESP32-S2, ESP32-S3),
+# so `rustup target add` cannot install them. espup installs Espressif's forked toolchain,
+# which carries them, as the rustup toolchain "esp".
+# https://docs.espressif.com/projects/rust/book/getting-started/toolchain.html
+- name: Install Xtensa toolchain
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command:
+    cmd: bash -lc "espup install"
+    creates: "{{ esp32_ansible_home }}/.rustup/toolchains/esp"
   tags:
     - config-iot
     - config-esp32
