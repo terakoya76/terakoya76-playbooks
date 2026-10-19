@@ -1,0 +1,24 @@
+---
+- name: Install kubectl, helm and sops dependencies
+  become: true
+  community.general.pacman:
+    name:
+      - kubectl
+      - helm
+      - age
+      - gnupg
+    state: present
+  tags:
+    - config-tools
+    - config-kubernetes
+
+# Unlike Ubuntu, Arch has no /usr/share/keyrings for linux.yml to place the helm-secrets key in.
+- name: Create keyrings directory
+  become: true
+  ansible.builtin.file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: "0755"
+  tags:
+    - config-tools
+    - config-kubernetes

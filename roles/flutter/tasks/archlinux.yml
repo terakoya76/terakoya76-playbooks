@@ -1,0 +1,48 @@
+---
+- name: Point flutter at the AUR android-studio
+  ansible.builtin.set_fact:
+    flutter_android_studio_dir: "{{ flutter_archlinux_android_studio_dir }}"
+    flutter_java_home_path: "{{ flutter_archlinux_java_home_path }}"
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Install flutter and android-studio
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  kewlfft.aur.aur:
+    name:
+      - flutter-bin
+      - android-studio
+    use: paru
+    state: present
+  tags:
+    - config-language
+    - config-flutter
+
+# The i386 libraries Ubuntu installs are skipped: they need the multilib repo, and the
+# Android SDK tools they served have been 64-bit only for years.
+# https://wiki.archlinux.org/title/KVM
+- name: Setup VM Accelaration
+  become: true
+  community.general.pacman:
+    name:
+      - qemu-desktop
+      - libvirt
+      - dnsmasq
+    state: present
+  tags:
+    - config-language
+    - config-flutter
+
+- name: Setup Remote Debugging
+  become: true
+  community.general.pacman:
+    name:
+      - android-tools
+    state: present
+  tags:
+    - config-language
+    - config-flutter

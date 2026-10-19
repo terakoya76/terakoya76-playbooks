@@ -1,2 +1,6 @@
 ---
-flutter_java_home_path: /snap/android-studio/current/android-studio/jre/bin/java
+flutter_debian_android_studio_dir: /snap/android-studio/current
+flutter_debian_java_home_path: /snap/android-studio/current/jbr
+
+flutter_archlinux_android_studio_dir: /opt/android-studio
+flutter_archlinux_java_home_path: /opt/android-studio/jbr

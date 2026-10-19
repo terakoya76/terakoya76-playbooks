@@ -1,0 +1,193 @@
+---
+# Arch does not support partial upgrades: syncing the database without upgrading and then
+# installing a package can pull in a library newer than what the rest of the system links
+# against. Upgrading once here keeps every later pacman task in the play consistent.
+- name: Upgrade Pacman Packages
+  become: true
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install Pacman Packages
+  become: true
+  community.general.pacman:
+    name:
+      - base-devel
+      - bcc
+      - bcc-libbpf-tools
+      - python-bcc
+      - ca-certificates
+      - clang
+      - cmake
+      - curl
+      - ghostty
+      - extension-manager
+      - gnome-tweaks
+      - xz
+      - zlib
+      - git
+      # Ubuntu ships an ssh client in the base install; .gitconfig rewrites GitHub URLs to ssh.
+      - openssh
+      - imagemagick
+      - ncurses
+      - libffi
+      - gmp
+      - fontconfig
+      - freetype2
+      - libxcb
+      - file
+      - mariadb-libs
+      - readline
+      - openssl
+      - libyaml
+      # Arch only ships MariaDB; its client speaks the MySQL protocol.
+      - mariadb-clients
+      - pkgconf
+      - pandoc-cli
+      - protobuf
+      - python
+      - python-pip
+      - rclone
+      - unzip
+      - wget
+      # ffmpeg is required by openai-whisper (installed via mise)
+      - ffmpeg
+      # Ubuntu pulls the GTK/Qt im modules in as recommends; pacman never does, and
+      # without them fcitx5 cannot type into GTK or Qt apps.
+      - fcitx5
+      - fcitx5-configtool
+      - fcitx5-gtk
+      - fcitx5-mozc
+      - fcitx5-qt
+      - jq
+      - translate-shell
+      - tree
+      - wireshark-qt
+      - wtype
+      - direnv
+      - neovim
+      - vim
+      - tmux
+      - xclip
+      - xsel
+      - shellcheck
+      # clang bundles clang-format, clang-tidy, clangd and libclang, which Ubuntu splits out
+      - libc++
+      - libc++abi
+      - openmp
+      - lld
+      - lldb
+      - llvm
+      - llvm-libs
+      # Official on Arch, so unlike Ubuntu these need no third-party repository
+      - github-cli
+      - mise
+      - trivy
+      - discord
+      - obsidian
+      - spotify-launcher
+    state: latest
+  tags:
+    - config-base
+    - config-packages
+
+# Each Arch kernel flavour has its own headers package. Matched against the installed
+# kernels rather than the running one: the -Syu above may just have replaced it, which
+# removes /usr/lib/modules/$(uname -r) until the next boot.
+- name: List installed kernels
+  ansible.builtin.command: pacman -Qq {{ packages_archlinux_kernels | join(' ') }}
+  register: packages_kernels_result
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install Kernel Headers
+  become: true
+  community.general.pacman:
+    name: "{{ packages_kernels_result.stdout_lines | map('regex_replace', '$', '-headers') | list }}"
+    state: latest
+  when: packages_kernels_result.stdout_lines | length > 0
+  tags:
+    - config-base
+    - config-packages
+
+- name: Install docker
+  become: true
+  community.general.pacman:
+    name:
+      - docker
+      - docker-buildx
+      - docker-compose
+    state: latest
+  tags:
+    - config-base
+    - config-packages
+
+# Unlike docker-ce on Ubuntu, the Arch package does not enable itself on install.
+- name: Enable docker
+  become: true
+  ansible.builtin.systemd_service:
+    name: docker.socket
+    enabled: true
+    state: started
+  when: not ansible_check_mode
+  tags:
+    - config-base
+    - config-packages
+
+- name: Join docker group
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+  tags:
+    - config-base
+    - config-packages
+
+# makepkg refuses to run as root, and an AUR helper running as ansible_user would prompt
+# for a sudo password that no task can answer. kewlfft.aur's recommended setup is a
+# dedicated build user that may run pacman, and only pacman, without a password.
+# https://github.com/kewlfft/ansible-aur#create-the-aur_builder-user
+- name: Create AUR build user
+  become: true
+  ansible.builtin.user:
+    name: "{{ aur_builder }}"
+    system: true
+    shell: /usr/bin/nologin
+    create_home: true
+    home: "/var/lib/{{ aur_builder }}"
+  tags:
+    - config-base
+    - config-packages
+
+- name: Allow AUR build user to run pacman
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/11-install-{{ aur_builder }}"
+    content: "{{ aur_builder }} ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    mode: "0440"
+    validate: visudo -cf %s
+  tags:
+    - config-base
+    - config-packages
+
+# paru resolves AUR dependencies of AUR packages, which plain makepkg cannot.
+- name: Install paru
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  kewlfft.aur.aur:
+    name: paru
+    use: makepkg
+    state: present
+  tags:
+    - config-base
+    - config-packages

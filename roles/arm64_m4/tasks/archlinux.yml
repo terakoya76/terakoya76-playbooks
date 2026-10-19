@@ -1,0 +1,23 @@
+---
+- name: Install dependencies
+  become: true
+  community.general.pacman:
+    name:
+      - minicom
+      - libusb
+      - sdl2-compat
+    state: present
+  tags:
+    - config-iot
+    - config-arm64-m4
+
+# Arch owns serial devices by uucp; it has no dialout group.
+- name: Join uucp group for USB serial
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: uucp
+    append: true
+  tags:
+    - config-iot
+    - config-arm64-m4

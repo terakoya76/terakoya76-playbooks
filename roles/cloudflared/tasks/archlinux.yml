@@ -1,0 +1,10 @@
+---
+- name: Install cloudflared
+  become: true
+  community.general.pacman:
+    name:
+      - cloudflared
+    state: present
+  tags:
+    - config-tools
+    - config-cloudflared

@@ -1,0 +1,10 @@
+---
+- name: Install bash-completion
+  become: true
+  community.general.pacman:
+    name:
+      - bash-completion
+    state: present
+  tags:
+    - config-base
+    - config-dotfiles

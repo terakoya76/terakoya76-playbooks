@@ -1,0 +1,17 @@
+---
+- name: Install AUR Packages
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  kewlfft.aur.aur:
+    name:
+      - cursor-bin
+      - multitime
+      - slack-desktop
+      - zoom
+    use: paru
+    state: latest
+  tags:
+    - config-base
+    - config-packages

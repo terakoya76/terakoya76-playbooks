@@ -38,18 +38,18 @@
       - git
       - imagemagick
       - libc6-dev
-      - libncurses5-dev
+      - libncurses-dev
       - libffi-dev
       - libgmp-dev
       - libfontconfig1-dev
-      - libfreetype6-dev
+      - libfreetype-dev
       - libxcb-xfixes0-dev
       - libmagic-dev
       - libmysqlclient-dev
-      - libreadline6-dev
+      - libreadline-dev
       - libssl-dev
       - libyaml-dev
-      - mysql-client-core-8.0
+      - mysql-client-core
       - pkg-config
       - pandoc
       - protobuf-compiler
@@ -64,7 +64,6 @@
       - fcitx5
       - fcitx5-mozc
       - jq
-      - multitime
       - translate-shell
       - tree
       - wireshark
@@ -84,7 +83,6 @@
       - clang
       - clangd
       - libclang-dev
-      - libclang1
       - python3-clang
       ## libc
       - libc++-dev
@@ -156,7 +154,7 @@
   become: true
   ansible.builtin.user:
     name: "{{ ansible_user }}"
-    groups: dialout
+    groups: docker
     append: true
   tags:
     - config-base
@@ -226,7 +224,7 @@
 
 - name: Add Trivy apt signing key
   become: true
-  ansible.builtin.shell: set -o pipefail && wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /etc/apt/keyrings/trivy.gpg
+  ansible.builtin.shell: set -o pipefail && curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /etc/apt/keyrings/trivy.gpg
   args:
     creates: /etc/apt/keyrings/trivy.gpg
   tags:

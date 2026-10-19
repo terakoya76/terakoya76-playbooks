@@ -27,6 +27,19 @@ reaches PlayContext, so it can never be templated into a task. Pass
 `-e ansible_become_pass=...` to skip the prompt in a non-interactive run, and leave the
 prompt empty on a host with passwordless sudo.
 
+### Supported Platforms
+* Ubuntu (apt / snap / AppImage)
+* Arch Linux (pacman / AUR)
+* macOS (Homebrew)
+
+On Arch Linux, AUR packages are built with [paru](https://github.com/Morganamilo/paru) through
+the `kewlfft.aur` collection. makepkg refuses to run as root, so the packages role creates a
+system user `aur_builder` (override with `-e aur_builder=...`) that may run `pacman`, and only
+`pacman`, without a password, and builds every AUR package as that user. The role also runs
+`pacman -Syu` first, because Arch does not support partial upgrades.
+Run `config-packages` (or the whole playbook) once before any narrower `--tags` run on a
+fresh Arch host, since the other roles rely on the AUR build user and paru it sets up.
+
 ### Supported Tags
 * config-base
   * config-dotfiles
@@ -49,6 +62,15 @@ prompt empty on a host with passwordless sudo.
   * config-streamdeck
   * config-cloudflared
   * config-tailscale
+
+### Test in a container
+`tests/run.sh` runs the playbook in a throwaway Arch Linux or Ubuntu container with systemd as
+PID 1, which needs Docker with `--privileged` on a cgroup v2 host. Arguments after the distro
+are passed to `ansible-playbook`.
+```bash
+$ ./tests/run.sh archlinux --tags config-base
+$ ./tests/run.sh ubuntu --tags config-base
+```
 
 ### When failed
 use `--start-at-task` opt

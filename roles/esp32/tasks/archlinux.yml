@@ -1,0 +1,27 @@
+---
+# python ships venv and the dev headers, and base-devel covers gcc, make and pkgconf.
+- name: Install dependencies for esp-idf
+  become: true
+  community.general.pacman:
+    name:
+      - base-devel
+      - git
+      - wget
+      - flex
+      - bison
+      - gperf
+      - python
+      - python-pip
+      - cmake
+      - ninja
+      - ccache
+      - libffi
+      - openssl
+      - dfu-util
+      - libusb
+      - curl
+      - libuv
+    state: present
+  tags:
+    - config-iot
+    - config-esp32

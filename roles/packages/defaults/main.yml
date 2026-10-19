@@ -1,4 +1,11 @@
 ---
+packages_archlinux_kernels:
+  - linux
+  - linux-hardened
+  - linux-lts
+  - linux-rt
+  - linux-zen
+
 packages_neovim_bin_path: /usr/local/bin/nvim
 
 packages_cursor_bin_path: /usr/local/bin/cursor

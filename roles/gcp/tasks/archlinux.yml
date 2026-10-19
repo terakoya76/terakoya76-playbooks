@@ -1,0 +1,15 @@
+---
+# The AUR has no terraform-tools component, so only the CLI is installed here.
+- name: Install google-cloud-cli
+  become: true
+  become_user: "{{ aur_builder }}"
+  vars:
+    ansible_python_interpreter: "{{ aur_builder_python_interpreter }}"
+  kewlfft.aur.aur:
+    name: google-cloud-cli
+    use: paru
+    state: present
+  when: not ansible_check_mode
+  tags:
+    - config-tools
+    - config-gcp

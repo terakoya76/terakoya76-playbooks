@@ -1,0 +1,9 @@
+---
+- name: Install rpi-imager
+  become: true
+  community.general.pacman:
+    name: rpi-imager
+    state: present
+  tags:
+    - config-iot
+    - config-raspberrypi

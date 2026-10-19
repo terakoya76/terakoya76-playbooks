@@ -7,3 +7,9 @@ galaxy_info:
   standalone: true
 dependencies:
   - role: packages
+  # mise.toml builds eza and tokei with cargo, which comes from rustup. Tagged like this role
+  # so that a --tags config-base run, which installs the mise tools, installs rustup too.
+  - role: rust
+    tags:
+      - config-base
+      - config-dotfiles

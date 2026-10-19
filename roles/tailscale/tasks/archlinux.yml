@@ -1,0 +1,23 @@
+---
+- name: Install tailscale
+  become: true
+  community.general.pacman:
+    name:
+      - tailscale
+    state: present
+  tags:
+    - config-tools
+    - config-tailscale
+
+# Ubuntu's package enables tailscaled on install; Arch's does not. Arch also ships no
+# firewall by default, so there is no ufw rule to add as the Debian handler does.
+- name: Enable tailscaled
+  become: true
+  ansible.builtin.systemd_service:
+    name: tailscaled
+    enabled: true
+    state: started
+  when: not ansible_check_mode
+  tags:
+    - config-tools
+    - config-tailscale

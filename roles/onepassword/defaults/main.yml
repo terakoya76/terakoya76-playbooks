@@ -1,1 +1,4 @@
 ---
+# Fingerprint of the GPG key 1Password signs its Linux releases with: the validpgpkeys of
+# the 1password and 1password-cli AUR PKGBUILDs, and the key ID in the Debian debsig paths.
+onepassword_signing_key: 3FEF9748469ADBE15DA7CA80AC2D62742012EA22

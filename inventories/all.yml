@@ -19,3 +19,8 @@ all:
         # in uv.lock ships the sudo-rs prompt fix.
         ansible_become_exe: "{{ 'sudo.ws' if '/usr/bin/sudo.ws' is exists else 'sudo' }}"
         workdir: "~"
+        # Archlinux only: the account AUR packages are built as. See the packages role.
+        aur_builder: aur_builder
+        # The pinned venv sits under ansible_user's home, which Arch creates as 0700, so
+        # tasks running as aur_builder cannot execute it and use the system python instead.
+        aur_builder_python_interpreter: /usr/bin/python3
