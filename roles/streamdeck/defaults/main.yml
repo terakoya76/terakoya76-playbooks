@@ -30,6 +30,13 @@ streamdeck_buttons:
       - brave  # wm_class
       - brave  # launch command
   - button: 2
+    icon: logo-spotify.png
+    script: bring-window-active-desktop
+    args:
+      - Spotify  # wm_class
+      # Arch ships the client through spotify-launcher, which installs no `spotify` command
+      - "{{ 'spotify-launcher' if ansible_facts.os_family == 'Archlinux' else 'spotify' }}"
+  - button: 3
     icon: logo-meet.png
     script: meet-toggle-mute
   # GNOME workspace left / right
