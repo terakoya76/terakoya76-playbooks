@@ -113,8 +113,11 @@
   ansible.builtin.import_tasks: archlinux_pacman_install.yml
   vars:
     packages_archlinux_state: latest
-    packages_archlinux_names: "{{ packages_kernels_result.stdout_lines | map('regex_replace', '$', '-headers') | list }}"
-  when: packages_kernels_result.stdout_lines | length > 0
+    # Defaulted because archlinux_pacman_install.yml templates this into its task names,
+    # which Ansible renders even on hosts where the listing task above was skipped.
+    packages_archlinux_kernel_headers: "{{ packages_kernels_result.stdout_lines | default([]) | map('regex_replace', '$', '-headers') | list }}"
+    packages_archlinux_names: "{{ packages_archlinux_kernel_headers }}"
+  when: packages_archlinux_kernel_headers | length > 0
   tags:
     - config-base
     - config-packages

@@ -67,6 +67,7 @@
   community.general.homebrew:
     name:
       - bash-completion
+      - ca-certificates
       - cmake
       - curl
       - direnv
@@ -125,8 +126,11 @@
     - config-base
     - config-packages
 
-# greedy is deliberately left at its default: 15 of these casks set auto_updates, so
-# brew skips them here and lets each app update itself rather than fighting its updater.
+# 15 of these casks set auto_updates and are kept current by their own updater. Homebrew 7
+# upgrades such casks by default as soon as the app bundle falls behind the tap, which fights
+# those updaters: for an app whose updater promoted it to root ownership, brew needs a sudo
+# prompt it cannot get from inside a task and leaves a half-upgraded copy in the Caskroom.
+# greedy is left at its default for the same reason.
 - name: Install Homebrew cask packages
   become: true
   become_user: "{{ ansible_user }}"
@@ -162,6 +166,8 @@
     # at the prompt is omitted rather than passed on, so hosts with passwordless sudo keep
     # working instead of handing brew a blank password.
     sudo_password: "{{ ansible_become_pass | default(omit, true) }}"
+  environment:
+    HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS: "1"
   tags:
     - config-base
     - config-packages

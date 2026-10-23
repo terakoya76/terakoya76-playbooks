@@ -18,3 +18,13 @@ fi
 
 export LANG=ja_JP.UTF-8
 export PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+# /usr/bin/curl and Apple's git link against the system LibreSSL, which takes its CA list
+# from a bundle under /etc/ssl that Apple ships and refreshes on its own schedule; it still
+# trusted the revoked emSign ECC Root CA - G3 intermediates days after their revocation.
+# Homebrew's curl and git read Homebrew's ca-certificates instead, so prepend: /etc/paths
+# puts /usr/bin ahead of anything appended. curl is keg-only and has no /opt/homebrew/bin
+# symlink, hence its own entry.
+if [ -d /opt/homebrew/bin ]; then
+	export PATH=/opt/homebrew/opt/curl/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
+fi
