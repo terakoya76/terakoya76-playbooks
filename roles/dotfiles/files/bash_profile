@@ -16,7 +16,11 @@ if [ -f "$HOME/.env" ]; then
 	. "$HOME/.env"
 fi
 
-export LANG=ja_JP.UTF-8
+# A LANG naming an ungenerated locale breaks Python's locale setup, ansible included, so on
+# a fresh machine the playbook that generates ja_JP.UTF-8 could not run at all.
+if locale -a 2>/dev/null | grep -qiE '^ja_JP\.utf-?8$'; then
+	export LANG=ja_JP.UTF-8
+fi
 export PATH=$PATH:$HOME/.local/bin:$HOME/bin
 
 # /usr/bin/curl and Apple's git link against the system LibreSSL, which takes its CA list
