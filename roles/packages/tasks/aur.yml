@@ -6,7 +6,6 @@
     packages_archlinux_names:
       - cursor-bin
       - multitime
-      - slack-desktop
       - zoom
   tags:
     - config-base
