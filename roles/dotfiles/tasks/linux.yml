@@ -24,6 +24,7 @@
   with_items:
     - autostart
     - environment.d
+    - fcitx5
   tags:
     - config-base
     - config-dotfiles
@@ -36,6 +37,21 @@
     dest: "{{ dotfiles_ansible_home }}/.config/environment.d/fcitx5.conf"
     mode: "0644"
     backup: true
+  tags:
+    - config-base
+    - config-dotfiles
+
+# Only seeds a profile that does not exist yet: the right keyboard layout differs per machine,
+# so a profile already tuned on the host, by hand or through fcitx5-configtool, is kept.
+- name: Place fcitx5 input method profile
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.copy:
+    src: files/fcitx5/profile
+    dest: "{{ dotfiles_ansible_home }}/.config/fcitx5/profile"
+    mode: "0600"
+    force: false
+  notify: Apply fcitx5 input method group
   tags:
     - config-base
     - config-dotfiles

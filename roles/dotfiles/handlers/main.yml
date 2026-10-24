@@ -6,3 +6,20 @@
   become_user: "{{ ansible_user }}"
   ansible.builtin.command: gpgconf --kill gpg-agent
   changed_when: true
+
+# A running fcitx5 keeps the input method groups in memory and writes them back over the
+# profile on exit; ReloadConfig (fcitx5-remote -r) does not re-read them. Pushing the group
+# over D-Bus applies it at once and makes fcitx5 save it, so keep these items in sync with
+# files/fcitx5/profile. busctl -M <user>@ reaches the user's bus from the root playbook, and
+# the call is skipped when no fcitx5 owns the name (logged out, or not started yet).
+- name: Apply fcitx5 input method group
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      bus="busctl --user -M {{ ansible_user }}@"
+      if systemctl is-active --quiet "user@$(id -u {{ ansible_user }}).service" \
+        && $bus status org.fcitx.Fcitx5 >/dev/null 2>&1; then
+        $bus call org.fcitx.Fcitx5 /controller org.fcitx.Fcitx.Controller1 \
+          SetInputMethodGroupInfo 'ssa(ss)' Default us 2 keyboard-us "" mozc ""
+      fi
+  changed_when: true
