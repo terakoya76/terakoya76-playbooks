@@ -107,10 +107,13 @@
     - config-base
     - config-packages
 
+# A container reports the host's kernel, whose headers Ubuntu does not package unless the
+# host is itself Ubuntu.
 - name: Install Kernel Modules
   become: true
   ansible.builtin.shell: apt install -y linux-headers-$(uname -r)
   changed_when: false
+  when: ansible_facts.virtualization_type != "docker"
   tags:
     - config-base
     - config-packages
