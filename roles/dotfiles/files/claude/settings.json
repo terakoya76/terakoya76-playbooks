@@ -342,28 +342,6 @@
           }
         ]
       }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.message' | xargs -I {} ~/.claude/hooks/notify_slack.sh '{}'"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify_slack.sh 'Complete the whole task'"
-          }
-        ]
-      }
     ]
   },
   "enabledPlugins": {
