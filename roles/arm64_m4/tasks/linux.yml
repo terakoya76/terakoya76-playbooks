@@ -36,10 +36,12 @@
     - config-iot
     - config-arm64-m4
 
+# tests/*/Dockerfile masks udevd, so there is no daemon to reload in a container.
 - name: Reload udev rules for wio-terminal
   become: true
   ansible.builtin.command: udevadm control --reload-rules
   changed_when: false
+  when: ansible_facts.virtualization_type != "docker"
   tags:
     - config-iot
     - config-arm64-m4

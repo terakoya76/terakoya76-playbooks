@@ -1,9 +1,13 @@
 ---
+# Skipped in a container: a privileged one shares the host's /sys, so `udevadm trigger`
+# would replay uevents for the host's devices and tear down its graphical session, and
+# tests/*/Dockerfile masks udevd anyway.
 - name: Reload udev rules
   become: true
   ansible.builtin.shell:
     cmd: udevadm control --reload-rules && udevadm trigger
   changed_when: true
+  when: ansible_facts.virtualization_type != "docker"
 
 # The playbook runs as root under sudo, so `-M <user>@` reaches the user's
 # systemd instance without needing XDG_RUNTIME_DIR / DBUS_SESSION_BUS_ADDRESS.

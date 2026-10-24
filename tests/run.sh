@@ -17,12 +17,19 @@ container="${image}-$$"
 
 docker build -t "$image" -f "$repo/tests/$distro/Dockerfile" "$repo/tests/$distro"
 trap 'docker rm -f "$container" >/dev/null 2>&1 || true' EXIT
-# securityfs is passed through for snapd, which needs the host's AppArmor to run snap hooks.
-docker run -d --name "$container" --privileged --cgroupns=host \
-  -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /sys/kernel/security:/sys/kernel/security \
+# Not --privileged: that hands the container the host's /dev and a writable /sys, through
+# which its systemd hangs up the host's VTs and replays the host's uevents, killing the
+# desktop session. SYS_ADMIN lets systemd mount and manage its private cgroup namespace.
+# snapd needs fuse for squashfuse, securityfs and MAC_ADMIN to load AppArmor profiles for
+# snap hooks, and the rest of the file capabilities snap-confine refuses to run without.
+docker run -d --name "$container" --cgroupns=private \
+  --cap-add SYS_ADMIN --cap-add MAC_ADMIN --cap-add DAC_READ_SEARCH --cap-add SYS_PTRACE \
+  --cap-add SYS_RESOURCE --device /dev/fuse \
+  --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
+  --tmpfs /run --tmpfs /run/lock -v /sys/kernel/security:/sys/kernel/security \
   -v "$repo:/src:ro" "$image" >/dev/null
 # Polled rather than `is-system-running --wait`, which gives up at once while D-Bus is not
-# up yet. "degraded" is fine: units such as getty fail in a container but do not matter here.
+# up yet. "degraded" is fine: a unit failing for lack of hardware does not matter here.
 for _ in $(seq 120); do
   case $(docker exec "$container" systemctl is-system-running 2>/dev/null) in
     running | degraded) break ;;

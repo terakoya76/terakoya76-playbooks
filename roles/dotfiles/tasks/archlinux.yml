@@ -9,3 +9,14 @@
   tags:
     - config-base
     - config-dotfiles
+
+# bash_profile exports LANG=ja_JP.UTF-8, but Arch generates only the locales uncommented in
+# /etc/locale.gen (en_US by default), so every shell warns from setlocale until it exists.
+- name: Generate ja_JP.UTF-8 locale
+  become: true
+  community.general.locale_gen:
+    name: ja_JP.UTF-8
+    state: present
+  tags:
+    - config-base
+    - config-dotfiles
